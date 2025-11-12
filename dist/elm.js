@@ -8249,6 +8249,9 @@ var $author$project$Main$charToGenerator = F2(
 			return $elm$random$Random$constant('');
 		}
 	});
+var $elm$random$Random$addOne = function (value) {
+	return _Utils_Tuple2(1, value);
+};
 var $elm$core$Basics$abs = function (n) {
 	return (n < 0) ? (-n) : n;
 };
@@ -8311,32 +8314,89 @@ var $elm$random$Random$weighted = F2(
 			A2($elm$random$Random$getByWeight, first, others),
 			A2($elm$random$Random$float, 0, total));
 	});
+var $elm$random$Random$uniform = F2(
+	function (value, valueList) {
+		return A2(
+			$elm$random$Random$weighted,
+			$elm$random$Random$addOne(value),
+			A2($elm$core$List$map, $elm$random$Random$addOne, valueList));
+	});
 var $author$project$Main$elementToGenerator = F2(
 	function (phonology, element) {
-		if (!element.$) {
-			var _char = element.a;
-			return A2($author$project$Main$charToGenerator, phonology, _char);
-		} else {
-			var _char = element.a;
-			return A2(
-				$elm$random$Random$andThen,
-				function (include) {
-					return include ? A2($author$project$Main$charToGenerator, phonology, _char) : $elm$random$Random$constant('');
-				},
-				A2(
-					$elm$random$Random$weighted,
-					_Utils_Tuple2(50, true),
-					_List_fromArray(
-						[
-							_Utils_Tuple2(50, false)
-						])));
+		switch (element.$) {
+			case 0:
+				var _char = element.a;
+				return A2($author$project$Main$charToGenerator, phonology, _char);
+			case 1:
+				var _char = element.a;
+				return A2(
+					$elm$random$Random$andThen,
+					function (include) {
+						return include ? A2($author$project$Main$charToGenerator, phonology, _char) : $elm$random$Random$constant('');
+					},
+					A2(
+						$elm$random$Random$weighted,
+						_Utils_Tuple2(50, true),
+						_List_fromArray(
+							[
+								_Utils_Tuple2(50, false)
+							])));
+			default:
+				var chars = element.a;
+				if (!chars.b) {
+					return $elm$random$Random$constant('');
+				} else {
+					var first = chars.a;
+					var rest = chars.b;
+					return A2(
+						$elm$random$Random$andThen,
+						$author$project$Main$charToGenerator(phonology),
+						A2($elm$random$Random$uniform, first, rest));
+				}
 		}
 	});
+var $author$project$Main$Choice = function (a) {
+	return {$: 2, a: a};
+};
 var $author$project$Main$Optional = function (a) {
 	return {$: 1, a: a};
 };
 var $author$project$Main$Required = function (a) {
 	return {$: 0, a: a};
+};
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var $author$project$Main$extractUntilCloseParenHelper = F2(
+	function (chars, acc) {
+		extractUntilCloseParenHelper:
+		while (true) {
+			if (!chars.b) {
+				return _Utils_Tuple2(
+					$elm$core$List$reverse(acc),
+					_List_Nil);
+			} else {
+				if (')' === chars.a) {
+					var rest = chars.b;
+					return _Utils_Tuple2(
+						$elm$core$List$reverse(acc),
+						rest);
+				} else {
+					var c = chars.a;
+					var rest = chars.b;
+					var $temp$chars = rest,
+						$temp$acc = A2($elm$core$List$cons, c, acc);
+					chars = $temp$chars;
+					acc = $temp$acc;
+					continue extractUntilCloseParenHelper;
+				}
+			}
+		}
+	});
+var $author$project$Main$extractUntilCloseParen = function (chars) {
+	return A2($author$project$Main$extractUntilCloseParenHelper, chars, _List_Nil);
 };
 var $author$project$Main$parsePatternHelper = F2(
 	function (chars, acc) {
@@ -8347,24 +8407,53 @@ var $author$project$Main$parsePatternHelper = F2(
 			} else {
 				if ('(' === chars.a) {
 					var rest = chars.b;
-					if ((rest.b && rest.b.b) && (')' === rest.b.a)) {
-						var _char = rest.a;
-						var _v2 = rest.b;
-						var remaining = _v2.b;
+					var _v1 = $author$project$Main$extractUntilCloseParen(rest);
+					var content = _v1.a;
+					var remaining = _v1.b;
+					var contentStr = $elm$core$String$fromList(content);
+					if (A2($elm$core$String$contains, '|', contentStr)) {
+						var choices = A2(
+							$elm$core$List$filterMap,
+							A2(
+								$elm$core$Basics$composeR,
+								$elm$core$String$uncons,
+								$elm$core$Maybe$map($elm$core$Tuple$first)),
+							A2($elm$core$String$split, '|', contentStr));
 						var $temp$chars = remaining,
 							$temp$acc = A2(
 							$elm$core$List$cons,
-							$author$project$Main$Optional(_char),
+							$author$project$Main$Choice(choices),
 							acc);
 						chars = $temp$chars;
 						acc = $temp$acc;
 						continue parsePatternHelper;
 					} else {
-						var $temp$chars = rest,
-							$temp$acc = acc;
-						chars = $temp$chars;
-						acc = $temp$acc;
-						continue parsePatternHelper;
+						if ($elm$core$List$length(content) === 1) {
+							var _v2 = $elm$core$List$head(content);
+							if (!_v2.$) {
+								var _char = _v2.a;
+								var $temp$chars = remaining,
+									$temp$acc = A2(
+									$elm$core$List$cons,
+									$author$project$Main$Optional(_char),
+									acc);
+								chars = $temp$chars;
+								acc = $temp$acc;
+								continue parsePatternHelper;
+							} else {
+								var $temp$chars = remaining,
+									$temp$acc = acc;
+								chars = $temp$chars;
+								acc = $temp$acc;
+								continue parsePatternHelper;
+							}
+						} else {
+							var $temp$chars = remaining,
+								$temp$acc = acc;
+							chars = $temp$chars;
+							acc = $temp$acc;
+							continue parsePatternHelper;
+						}
 					}
 				} else {
 					var _char = chars.a;
@@ -15275,11 +15364,6 @@ var $author$project$Main$UpdateRuleReplacementInput = function (a) {
 var $author$project$Main$UpdateRuleTargetInput = function (a) {
 	return {$: 66, a: a};
 };
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
 var $author$project$Main$selectRuleTypeFromString = function (str) {
 	switch (str) {
 		case 'Assimilation':
