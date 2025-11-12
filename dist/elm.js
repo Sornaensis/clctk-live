@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.b$.bK === region.b3.bK)
+	if (region.b0.bL === region.b4.bL)
 	{
-		return 'on line ' + region.b$.bK;
+		return 'on line ' + region.b0.bL;
 	}
-	return 'on lines ' + region.b$.bK + ' through ' + region.b3.bK;
+	return 'on lines ' + region.b0.bL + ' through ' + region.b4.bL;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.cB,
+		impl.cD,
+		impl.cN,
 		impl.cL,
-		impl.cJ,
 		function() { return function() {} }
 	);
 });
@@ -2719,9 +2719,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		cC: func(record.cC),
-		cI: record.cI,
-		cG: record.cG
+		cE: func(record.cE),
+		cK: record.cK,
+		cI: record.cI
 	}
 });
 
@@ -2989,11 +2989,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.cC;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.cI;
+		var message = !tag ? value : tag < 3 ? value.a : value.cE;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.cK;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.cG) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.cI) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3943,11 +3943,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.cB,
+		impl.cD,
+		impl.cN,
 		impl.cL,
-		impl.cJ,
 		function(sendToApp, initialModel) {
-			var view = impl.cM;
+			var view = impl.cO;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3979,12 +3979,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.cB,
+		impl.cD,
+		impl.cN,
 		impl.cL,
-		impl.cJ,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.b_ && impl.b_(sendToApp)
-			var view = impl.cM;
+			var divertHrefToApp = impl.b$ && impl.b$(sendToApp)
+			var view = impl.cO;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3992,12 +3992,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.cu);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.cw);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.cK) && (_VirtualDom_doc.title = title = doc.cK);
+				(title !== doc.cM) && (_VirtualDom_doc.title = title = doc.cM);
 			});
 		}
 	);
@@ -4053,12 +4053,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.cD;
-	var onUrlRequest = impl.cE;
+	var onUrlChange = impl.cF;
+	var onUrlRequest = impl.cG;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		b_: function(sendToApp)
+		b$: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4074,9 +4074,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.ch === next.ch
-							&& curr.b6 === next.b6
-							&& curr.cd.a === next.cd.a
+							&& curr.cj === next.cj
+							&& curr.b8 === next.b8
+							&& curr.cf.a === next.cf.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4084,13 +4084,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		cB: function(flags)
+		cD: function(flags)
 		{
-			return A3(impl.cB, flags, _Browser_getUrl(), key);
+			return A3(impl.cD, flags, _Browser_getUrl(), key);
 		},
-		cM: impl.cM,
-		cL: impl.cL,
-		cJ: impl.cJ
+		cO: impl.cO,
+		cN: impl.cN,
+		cL: impl.cL
 	});
 }
 
@@ -4156,17 +4156,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { cz: 'hidden', cv: 'visibilitychange' }
+		? { cB: 'hidden', cx: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { cz: 'mozHidden', cv: 'mozvisibilitychange' }
+		? { cB: 'mozHidden', cx: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { cz: 'msHidden', cv: 'msvisibilitychange' }
+		? { cB: 'msHidden', cx: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { cz: 'webkitHidden', cv: 'webkitvisibilitychange' }
-		: { cz: 'hidden', cv: 'visibilitychange' };
+		? { cB: 'webkitHidden', cx: 'webkitvisibilitychange' }
+		: { cB: 'hidden', cx: 'visibilitychange' };
 }
 
 
@@ -4247,12 +4247,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		cl: _Browser_getScene(),
-		co: {
-			cq: _Browser_window.pageXOffset,
-			cr: _Browser_window.pageYOffset,
-			cp: _Browser_doc.documentElement.clientWidth,
-			s: _Browser_doc.documentElement.clientHeight
+		cn: _Browser_getScene(),
+		cq: {
+			cs: _Browser_window.pageXOffset,
+			ct: _Browser_window.pageYOffset,
+			cr: _Browser_doc.documentElement.clientWidth,
+			t: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4262,8 +4262,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		cp: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		s: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		cr: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		t: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4286,15 +4286,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			cl: {
-				cp: node.scrollWidth,
-				s: node.scrollHeight
+			cn: {
+				cr: node.scrollWidth,
+				t: node.scrollHeight
 			},
-			co: {
-				cq: node.scrollLeft,
-				cr: node.scrollTop,
-				cp: node.clientWidth,
-				s: node.clientHeight
+			cq: {
+				cs: node.scrollLeft,
+				ct: node.scrollTop,
+				cr: node.clientWidth,
+				t: node.clientHeight
 			}
 		};
 	});
@@ -4324,18 +4324,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			cl: _Browser_getScene(),
-			co: {
-				cq: x,
-				cr: y,
-				cp: _Browser_doc.documentElement.clientWidth,
-				s: _Browser_doc.documentElement.clientHeight
+			cn: _Browser_getScene(),
+			cq: {
+				cs: x,
+				ct: y,
+				cr: _Browser_doc.documentElement.clientWidth,
+				t: _Browser_doc.documentElement.clientHeight
 			},
-			cx: {
-				cq: x + rect.left,
-				cr: y + rect.top,
-				cp: rect.width,
-				s: rect.height
+			cz: {
+				cs: x + rect.left,
+				ct: y + rect.top,
+				cr: rect.width,
+				t: rect.height
 			}
 		};
 	});
@@ -4859,25 +4859,25 @@ var $elm$core$Array$treeFromBuilder = F2(
 	});
 var $elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.J) {
+		if (!builder.L) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.O),
+				$elm$core$Elm$JsArray$length(builder.Q),
 				$elm$core$Array$shiftStep,
 				$elm$core$Elm$JsArray$empty,
-				builder.O);
+				builder.Q);
 		} else {
-			var treeLen = builder.J * $elm$core$Array$branchFactor;
+			var treeLen = builder.L * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.S) : builder.S;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.J);
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.T) : builder.T;
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.L);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.O) + treeLen,
+				$elm$core$Elm$JsArray$length(builder.Q) + treeLen,
 				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
 				tree,
-				builder.O);
+				builder.Q);
 		}
 	});
 var $elm$core$Basics$idiv = _Basics_idiv;
@@ -4890,7 +4890,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{S: nodeList, J: (len / $elm$core$Array$branchFactor) | 0, O: tail});
+					{T: nodeList, L: (len / $elm$core$Array$branchFactor) | 0, Q: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -4957,7 +4957,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {b5: fragment, b6: host, cb: path, cd: port_, ch: protocol, ci: query};
+		return {b7: fragment, b8: host, cd: path, cf: port_, cj: protocol, ck: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5264,72 +5264,73 @@ var $author$project$Main$init = function (_v0) {
 			aV: 'phonology',
 			aH: '',
 			a6: '',
-			bE: 'noun',
-			bF: '',
+			bG: 'noun',
+			bH: '',
 			a7: $elm$core$Maybe$Nothing,
 			a8: '',
-			w: 0,
+			x: 0,
 			aB: 1,
 			i: '',
 			aW: $elm$core$Maybe$Nothing,
-			W: $elm$core$Maybe$Nothing,
-			bG: $elm$core$Maybe$Nothing,
+			X: $elm$core$Maybe$Nothing,
+			b6: $elm$core$Maybe$Nothing,
 			ba: '',
 			bb: '',
-			bH: 'all',
 			bI: 'all',
-			A: _List_Nil,
+			bJ: 'all',
+			B: _List_Nil,
 			aJ: 0,
 			aY: '',
 			bc: '',
 			bd: '',
 			be: $elm$core$Maybe$Nothing,
 			bf: '',
-			bJ: false,
+			bK: false,
 			bg: '',
-			bL: 4,
+			bM: 4,
 			a_: 2,
 			a$: 2,
 			ai: '',
 			as: '',
 			at: '',
+			bh: $elm$core$Maybe$Nothing,
 			aE: 1,
 			au: '',
 			aF: '',
-			bh: '',
 			bi: '',
 			bj: '',
 			bk: '',
+			bl: '',
 			a: {
 				_: '',
 				o: 1,
 				c: {
-					A: _List_Nil,
-					g: _List_Nil,
-					j: {p: _List_Nil, D: _List_Nil, Y: _List_Nil, x: _List_Nil},
+					B: _List_Nil,
+					e: _List_Nil,
+					j: {p: _List_Nil, q: _List_Nil, P: _List_Nil, y: _List_Nil},
 					b: 'Proto-Language',
 					n: {
 						k: _List_fromArray(
 							[
 								{
-								H: 'C',
+								J: 'C',
 								b: 'Consonants',
-								t: _List_fromArray(
+								u: _List_fromArray(
 									['p', 't', 'k', 'm', 'n', 's', 'l', 'r'])
 							},
 								{
-								H: 'V',
+								J: 'V',
 								b: 'Vowels',
-								t: _List_fromArray(
+								u: _List_fromArray(
 									['a', 'e', 'i', 'o', 'u'])
 							}
 							]),
-						T: _List_Nil,
-						q: {aC: 0, R: _List_Nil},
+						U: _List_Nil,
+						r: {aC: 0, S: _List_Nil},
 						aa: _List_fromArray(
 							[
-								{b: 'CV', v: 'CV'},
-								{b: 'CVC', v: 'CVC'}
+								{b: 'CV', w: 'CV'},
+								{b: 'CVC', w: 'CVC'}
 							])
 					}
 				},
@@ -5338,44 +5339,45 @@ var $author$project$Main$init = function (_v0) {
 			},
 			aL: _List_Nil,
 			Z: _List_Nil,
-			bM: $elm$core$Maybe$Nothing,
-			bl: $elm$core$Maybe$Nothing,
+			bN: $elm$core$Maybe$Nothing,
+			bm: $elm$core$Maybe$Nothing,
 			aM: '',
 			aN: '',
-			bm: $elm$core$Maybe$Nothing,
-			bn: '',
+			bn: $elm$core$Maybe$Nothing,
 			bo: '',
 			bp: '',
 			bq: '',
 			br: '',
+			bs: '',
 			aO: 0,
 			a3: '',
 			aP: '',
-			bs: '',
-			bt: 'C',
+			bt: '',
+			bu: 'C',
 			ap: _List_Nil,
-			bN: $elm$core$Maybe$Nothing,
+			bO: $elm$core$Maybe$Nothing,
 			ax: _List_Nil,
-			E: _List_Nil,
-			bu: false,
+			F: _List_Nil,
 			bv: false,
+			bw: false,
 			aQ: true,
 			a4: false,
-			bO: false,
-			bw: false,
-			aq: false,
+			bP: false,
 			bx: false,
 			by: false,
+			aq: false,
+			bz: false,
+			bA: false,
 			aG: true,
 			aR: '',
 			ay: '',
 			az: '',
-			bP: 'CV',
+			bQ: 'CV',
 			aS: '',
-			bA: 3,
+			bC: 3,
 			aT: 1,
-			B: _List_Nil,
-			bB: _List_Nil,
+			E: _List_Nil,
+			bD: _List_Nil,
 			ad: '',
 			ak: '',
 			ae: '',
@@ -5392,32 +5394,32 @@ var $author$project$Main$init = function (_v0) {
 				])));
 };
 var $author$project$Main$ImportDataReceived = function (a) {
-	return {$: 36, a: a};
+	return {$: 37, a: a};
 };
 var $author$project$Main$LexiconCSVImported = function (a) {
-	return {$: 141, a: a};
+	return {$: 142, a: a};
 };
 var $author$project$Main$LoadedFromStorage = function (a) {
-	return {$: 38, a: a};
-};
-var $author$project$Main$ReceivedAllProjects = function (a) {
-	return {$: 126, a: a};
-};
-var $author$project$Main$ReceivedAllTemplates = function (a) {
-	return {$: 116, a: a};
-};
-var $author$project$Main$ReceivedCurrentTime = function (a) {
 	return {$: 39, a: a};
 };
-var $author$project$Main$ReceivedPreferences = function (a) {
-	return {$: 117, a: a};
-};
-var $author$project$Main$ReceivedProject = function (a) {
+var $author$project$Main$ReceivedAllProjects = function (a) {
 	return {$: 127, a: a};
 };
+var $author$project$Main$ReceivedAllTemplates = function (a) {
+	return {$: 117, a: a};
+};
+var $author$project$Main$ReceivedCurrentTime = function (a) {
+	return {$: 40, a: a};
+};
+var $author$project$Main$ReceivedPreferences = function (a) {
+	return {$: 118, a: a};
+};
+var $author$project$Main$ReceivedProject = function (a) {
+	return {$: 128, a: a};
+};
 var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $author$project$Main$Redo = {$: 149};
-var $author$project$Main$Undo = {$: 148};
+var $author$project$Main$Redo = {$: 150};
+var $author$project$Main$Undo = {$: 149};
 var $author$project$Main$UpdatePhonemeInput = function (a) {
 	return {$: 0, a: a};
 };
@@ -5441,7 +5443,7 @@ var $elm$browser$Browser$Events$MySub = F3(
 	});
 var $elm$browser$Browser$Events$State = F2(
 	function (subs, pids) {
-		return {cc: pids, cm: subs};
+		return {ce: pids, co: subs};
 	});
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
@@ -5673,7 +5675,7 @@ var $elm$core$Dict$merge = F6(
 	});
 var $elm$browser$Browser$Events$Event = F2(
 	function (key, event) {
-		return {b4: event, b7: key};
+		return {b5: event, b9: key};
 	});
 var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
 var $elm$browser$Browser$Events$spawn = F3(
@@ -5748,7 +5750,7 @@ var $elm$browser$Browser$Events$onEffects = F3(
 			stepLeft,
 			stepBoth,
 			stepRight,
-			state.cc,
+			state.ce,
 			$elm$core$Dict$fromList(newSubs),
 			_Utils_Tuple3(_List_Nil, $elm$core$Dict$empty, _List_Nil));
 		var deadPids = _v0.a;
@@ -5794,8 +5796,8 @@ var $elm$core$List$filterMap = F2(
 	});
 var $elm$browser$Browser$Events$onSelfMsg = F3(
 	function (router, _v0, state) {
-		var key = _v0.b7;
-		var event = _v0.b4;
+		var key = _v0.b9;
+		var event = _v0.b5;
 		var toMessage = function (_v2) {
 			var subKey = _v2.a;
 			var _v3 = _v2.b;
@@ -5804,7 +5806,7 @@ var $elm$browser$Browser$Events$onSelfMsg = F3(
 			var decoder = _v3.c;
 			return _Utils_eq(subKey, key) ? A2(_Browser_decodeEvent, decoder, event) : $elm$core$Maybe$Nothing;
 		};
-		var messages = A2($elm$core$List$filterMap, toMessage, state.cm);
+		var messages = A2($elm$core$List$filterMap, toMessage, state.co);
 		return A2(
 			$elm$core$Task$andThen,
 			function (_v1) {
@@ -5859,7 +5861,7 @@ var $author$project$Main$subscriptions = function (_v0) {
 };
 var $author$project$Main$DisplayOrthography = 1;
 var $author$project$Main$WordsGenerated = function (a) {
-	return {$: 32, a: a};
+	return {$: 33, a: a};
 };
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
@@ -5882,35 +5884,31 @@ var $elm$core$List$any = F2(
 			}
 		}
 	});
-var $author$project$Main$applyMorphemeToForm = F2(
-	function (baseForm, morpheme) {
-		var _v0 = morpheme.I;
-		switch (_v0) {
-			case 1:
-				return _Utils_ap(baseForm, morpheme.e);
-			case 0:
-				return _Utils_ap(morpheme.e, baseForm);
-			case 2:
-				var rest = A2($elm$core$String$dropLeft, 1, baseForm);
-				var firstChar = A2($elm$core$String$left, 1, baseForm);
-				return _Utils_ap(
-					firstChar,
-					_Utils_ap(morpheme.e, rest));
-			default:
-				var parts = A2($elm$core$String$split, '-', morpheme.e);
-				if ((parts.b && parts.b.b) && (!parts.b.b.b)) {
-					var prefix = parts.a;
-					var _v2 = parts.b;
-					var suffix = _v2.a;
-					return _Utils_ap(
-						prefix,
-						_Utils_ap(baseForm, suffix));
-				} else {
-					return _Utils_ap(morpheme.e, baseForm);
-				}
-		}
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
 	});
-var $elm$core$Basics$not = _Basics_not;
+var $elm$core$String$cons = _String_cons;
+var $elm$core$String$fromChar = function (_char) {
+	return A2($elm$core$String$cons, _char, '');
+};
+var $elm$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			$elm$core$List$any,
+			function (a) {
+				return _Utils_eq(a, x);
+			},
+			xs);
+	});
+var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$core$String$replace = F3(
 	function (before, after, string) {
 		return A2(
@@ -5918,6 +5916,110 @@ var $elm$core$String$replace = F3(
 			after,
 			A2($elm$core$String$split, before, string));
 	});
+var $author$project$Main$applyMorpheme = F2(
+	function (morpheme, base) {
+		if ($elm$core$String$isEmpty(base)) {
+			return base;
+		} else {
+			var morphForm = A3(
+				$elm$core$String$replace,
+				'...',
+				'',
+				A3($elm$core$String$replace, '-', '', morpheme.g));
+			var _v0 = morpheme.K;
+			switch (_v0) {
+				case 0:
+					return _Utils_ap(morphForm, base);
+				case 1:
+					return _Utils_ap(base, morphForm);
+				case 2:
+					var vowels = _List_fromArray(
+						['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']);
+					var insertAt = F3(
+						function (position, infix, string) {
+							var before = A2($elm$core$String$left, position, string);
+							var after = A2($elm$core$String$dropLeft, position, string);
+							return _Utils_ap(
+								before,
+								_Utils_ap(infix, after));
+						});
+					var findFirstVowelPosition = F2(
+						function (idx, str) {
+							findFirstVowelPosition:
+							while (true) {
+								var _v1 = $elm$core$String$uncons(str);
+								if (_v1.$ === 1) {
+									return $elm$core$Maybe$Nothing;
+								} else {
+									var _v2 = _v1.a;
+									var _char = _v2.a;
+									var rest = _v2.b;
+									if (A2(
+										$elm$core$List$member,
+										$elm$core$String$fromChar(_char),
+										vowels)) {
+										return $elm$core$Maybe$Just(idx);
+									} else {
+										var $temp$idx = idx + 1,
+											$temp$str = rest;
+										idx = $temp$idx;
+										str = $temp$str;
+										continue findFirstVowelPosition;
+									}
+								}
+							}
+						});
+					var _v3 = A2(findFirstVowelPosition, 0, base);
+					if (!_v3.$) {
+						var pos = _v3.a;
+						return A3(insertAt, pos + 1, morphForm, base);
+					} else {
+						var _v4 = $elm$core$String$uncons(base);
+						if (!_v4.$) {
+							var _v5 = _v4.a;
+							var firstChar = _v5.a;
+							var rest = _v5.b;
+							return _Utils_ap(
+								$elm$core$String$fromChar(firstChar),
+								_Utils_ap(morphForm, rest));
+						} else {
+							return base;
+						}
+					}
+				default:
+					var parts = A2($elm$core$String$contains, '-', morpheme.g) ? A2(
+						$elm$core$List$filter,
+						function (s) {
+							return (s !== '...') && (s !== '');
+						},
+						A2($elm$core$String$split, '-', morpheme.g)) : (A2($elm$core$String$contains, '...', morpheme.g) ? A2($elm$core$String$split, '...', morpheme.g) : _List_Nil);
+					_v6$2:
+					while (true) {
+						if (parts.b) {
+							if (parts.b.b) {
+								if (!parts.b.b.b) {
+									var prefix = parts.a;
+									var _v7 = parts.b;
+									var suffix = _v7.a;
+									return _Utils_ap(
+										prefix,
+										_Utils_ap(base, suffix));
+								} else {
+									break _v6$2;
+								}
+							} else {
+								var prefix = parts.a;
+								return _Utils_ap(prefix, base);
+							}
+						} else {
+							break _v6$2;
+						}
+					}
+					return _Utils_ap(base, morphForm);
+			}
+		}
+	});
+var $elm$core$Basics$not = _Basics_not;
 var $author$project$Main$replaceAfterPattern = F4(
 	function (target, replacement, before, word) {
 		var pattern = _Utils_ap(before, target);
@@ -5962,17 +6064,6 @@ var $author$project$Main$applyRule = F2(
 var $author$project$Main$applyMorphophonemicRules = F2(
 	function (rules, word) {
 		return A3($elm$core$List$foldl, $author$project$Main$applyRule, word, rules);
-	});
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
 	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
@@ -6036,15 +6127,6 @@ var $elm$core$List$drop = F2(
 				}
 			}
 		}
-	});
-var $elm$core$List$member = F2(
-	function (x, xs) {
-		return A2(
-			$elm$core$List$any,
-			function (a) {
-				return _Utils_eq(a, x);
-			},
-			xs);
 	});
 var $author$project$Main$isVowelChar = function (c) {
 	return A2(
@@ -6417,10 +6499,10 @@ var $author$project$Main$applySoundChange = F4(
 	});
 var $author$project$Main$applySoundChangeToWord = F4(
 	function (pattern, replacement, context, lexeme) {
-		var newForm = A4($author$project$Main$applySoundChange, pattern, replacement, context, lexeme.e);
+		var newForm = A4($author$project$Main$applySoundChange, pattern, replacement, context, lexeme.g);
 		return _Utils_update(
 			lexeme,
-			{e: newForm});
+			{g: newForm});
 	});
 var $author$project$Main$CodaRestriction = 2;
 var $author$project$Main$Dissimilation = 1;
@@ -6430,69 +6512,69 @@ var $author$project$Main$englishTemplate = {
 	o: 0,
 	aZ: true,
 	c: {
-		A: _List_Nil,
-		g: _List_Nil,
+		B: _List_Nil,
+		e: _List_Nil,
 		j: {
 			p: _List_fromArray(
 				[
 					{
 					b: 'Number',
-					Q: _List_fromArray(
+					R: _List_fromArray(
 						['singular', 'plural'])
 				},
 					{
 					b: 'Tense',
-					Q: _List_fromArray(
+					R: _List_fromArray(
 						['present', 'past', 'future'])
 				},
 					{
 					b: 'Person',
-					Q: _List_fromArray(
+					R: _List_fromArray(
 						['1st', '2nd', '3rd'])
 				}
 				]),
-			D: _List_fromArray(
+			q: _List_fromArray(
 				[
-					{G: 'Number', e: '-s', C: 'PL', I: 1, P: 'plural'},
-					{G: 'Tense', e: '-ed', C: 'PST', I: 1, P: 'past'},
-					{G: '', e: '-ing', C: 'PROG', I: 1, P: ''}
+					{C: 'Number', g: '-s', D: 'PL', K: 1, G: 'plural'},
+					{C: 'Tense', g: '-ed', D: 'PST', K: 1, G: 'past'},
+					{C: '', g: '-ing', D: 'PROG', K: 1, G: ''}
 				]),
-			Y: _List_fromArray(
+			P: _List_fromArray(
 				[
 					{ar: 'V_', d: 's becomes z after vowels', b: 'Voicing Assimilation', aj: 'z', a2: 0, ab: 's'},
 					{ar: 'e_', d: 'e deletes before another e', b: 'E-deletion', aj: '', a2: 1, ab: 'e'}
 				]),
-			x: _List_Nil
+			y: _List_Nil
 		},
 		b: 'New English-like Language',
 		n: {
 			k: _List_fromArray(
 				[
 					{
-					H: 'C',
+					J: 'C',
 					b: 'Consonants',
-					t: _List_fromArray(
+					u: _List_fromArray(
 						['p', 'b', 't', 'd', 'k', 'g', 'f', 'v', 'θ', 'ð', 's', 'z', 'ʃ', 'ʒ', 'h', 'tʃ', 'dʒ', 'm', 'n', 'ŋ', 'l', 'r', 'w', 'j'])
 				},
 					{
-					H: 'V',
+					J: 'V',
 					b: 'Vowels',
-					t: _List_fromArray(
+					u: _List_fromArray(
 						['i', 'ɪ', 'e', 'ɛ', 'æ', 'ɑ', 'ɔ', 'o', 'ʊ', 'u', 'ʌ', 'ə'])
 				}
 				]),
-			T: _List_fromArray(
+			U: _List_fromArray(
 				[
-					{w: 0, d: 'Illegal cluster: *tl', y: 'tl'},
-					{w: 0, d: 'Illegal cluster: *dl', y: 'dl'},
-					{w: 1, d: 'ŋ not allowed in syllable onset', y: 'ŋ'},
-					{w: 2, d: 'h not allowed in syllable coda', y: 'h'},
-					{w: 2, d: 'w not allowed in syllable coda', y: 'w'},
-					{w: 2, d: 'j not allowed in syllable coda', y: 'j'}
+					{x: 0, d: 'Illegal cluster: *tl', z: 'tl'},
+					{x: 0, d: 'Illegal cluster: *dl', z: 'dl'},
+					{x: 1, d: 'ŋ not allowed in syllable onset', z: 'ŋ'},
+					{x: 2, d: 'h not allowed in syllable coda', z: 'h'},
+					{x: 2, d: 'w not allowed in syllable coda', z: 'w'},
+					{x: 2, d: 'j not allowed in syllable coda', z: 'j'}
 				]),
-			q: {
+			r: {
 				aC: 0,
-				R: _List_fromArray(
+				S: _List_fromArray(
 					[
 						{d: 'voiceless bilabial stop', h: 'p', f: 'p'},
 						{d: 'voiced bilabial stop', h: 'b', f: 'b'},
@@ -6534,12 +6616,12 @@ var $author$project$Main$englishTemplate = {
 			},
 			aa: _List_fromArray(
 				[
-					{b: 'V', v: 'V'},
-					{b: 'CV', v: 'CV'},
-					{b: 'CVC', v: 'CVC'},
-					{b: 'CVCC', v: 'CVCC'},
-					{b: 'CCV', v: 'CCV'},
-					{b: 'CCVC', v: 'CCVC'}
+					{b: 'V', w: 'V'},
+					{b: 'CV', w: 'CV'},
+					{b: 'CVC', w: 'CVC'},
+					{b: 'CVCC', w: 'CVCC'},
+					{b: 'CCV', w: 'CCV'},
+					{b: 'CCVC', w: 'CCVC'}
 				])
 		}
 	},
@@ -6552,66 +6634,66 @@ var $author$project$Main$quenyaTemplate = {
 	o: 0,
 	aZ: true,
 	c: {
-		A: _List_Nil,
-		g: _List_Nil,
+		B: _List_Nil,
+		e: _List_Nil,
 		j: {
 			p: _List_fromArray(
 				[
 					{
 					b: 'Number',
-					Q: _List_fromArray(
+					R: _List_fromArray(
 						['singular', 'plural', 'dual'])
 				},
 					{
 					b: 'Case',
-					Q: _List_fromArray(
+					R: _List_fromArray(
 						['nominative', 'genitive', 'dative', 'accusative', 'locative', 'instrumental'])
 				}
 				]),
-			D: _List_fromArray(
+			q: _List_fromArray(
 				[
-					{G: 'Number', e: '-r', C: 'PL', I: 1, P: 'plural'},
-					{G: 'Number', e: '-t', C: 'DU', I: 1, P: 'dual'},
-					{G: 'Case', e: '-o', C: 'GEN', I: 1, P: 'genitive'},
-					{G: 'Case', e: '-n', C: 'DAT', I: 1, P: 'dative'},
-					{G: 'Case', e: '-eː', C: 'ACC', I: 1, P: 'accusative'},
-					{G: 'Case', e: '-seː', C: 'LOC', I: 1, P: 'locative'},
-					{G: 'Case', e: '-nen', C: 'INST', I: 1, P: 'instrumental'}
+					{C: 'Number', g: '-r', D: 'PL', K: 1, G: 'plural'},
+					{C: 'Number', g: '-t', D: 'DU', K: 1, G: 'dual'},
+					{C: 'Case', g: '-o', D: 'GEN', K: 1, G: 'genitive'},
+					{C: 'Case', g: '-n', D: 'DAT', K: 1, G: 'dative'},
+					{C: 'Case', g: '-eː', D: 'ACC', K: 1, G: 'accusative'},
+					{C: 'Case', g: '-seː', D: 'LOC', K: 1, G: 'locative'},
+					{C: 'Case', g: '-nen', D: 'INST', K: 1, G: 'instrumental'}
 				]),
-			Y: _List_fromArray(
+			P: _List_fromArray(
 				[
 					{ar: '', d: 'e becomes i in certain contexts', b: 'Vowel Harmony', aj: 'i', a2: 2, ab: 'e'}
 				]),
-			x: _List_Nil
+			y: _List_Nil
 		},
 		b: 'New Quenya-like Language',
 		n: {
 			k: _List_fromArray(
 				[
 					{
-					H: 'C',
+					J: 'C',
 					b: 'Consonants',
-					t: _List_fromArray(
+					u: _List_fromArray(
 						['p', 't', 'k', 'm', 'n', 'ɲ', 'ŋ', 'f', 's', 'h', 'l', 'r', 'w', 'j'])
 				},
 					{
-					H: 'V',
+					J: 'V',
 					b: 'Vowels',
-					t: _List_fromArray(
+					u: _List_fromArray(
 						['a', 'e', 'i', 'o', 'u', 'aː', 'eː', 'iː', 'oː', 'uː'])
 				}
 				]),
-			T: _List_fromArray(
+			U: _List_fromArray(
 				[
-					{w: 0, d: 'Illegal cluster: *nm', y: 'nm'},
-					{w: 0, d: 'Illegal cluster: *fn', y: 'fn'},
-					{w: 1, d: 'ŋ not allowed in syllable onset', y: 'ŋ'},
-					{w: 2, d: 'h not allowed in syllable coda', y: 'h'},
-					{w: 4, d: 'w not allowed word-finally', y: 'w'}
+					{x: 0, d: 'Illegal cluster: *nm', z: 'nm'},
+					{x: 0, d: 'Illegal cluster: *fn', z: 'fn'},
+					{x: 1, d: 'ŋ not allowed in syllable onset', z: 'ŋ'},
+					{x: 2, d: 'h not allowed in syllable coda', z: 'h'},
+					{x: 4, d: 'w not allowed word-finally', z: 'w'}
 				]),
-			q: {
+			r: {
 				aC: 0,
-				R: _List_fromArray(
+				S: _List_fromArray(
 					[
 						{d: 'voiceless bilabial stop', h: 'p', f: 'p'},
 						{d: 'voiceless alveolar stop', h: 't', f: 't'},
@@ -6641,10 +6723,10 @@ var $author$project$Main$quenyaTemplate = {
 			},
 			aa: _List_fromArray(
 				[
-					{b: 'V', v: 'V'},
-					{b: 'CV', v: 'CV'},
-					{b: 'CVV', v: 'CVV'},
-					{b: 'CVC', v: 'CVC'}
+					{b: 'V', w: 'V'},
+					{b: 'CV', w: 'CV'},
+					{b: 'CVV', w: 'CVV'},
+					{b: 'CVC', w: 'CVC'}
 				])
 		}
 	},
@@ -6691,21 +6773,21 @@ var $author$project$Main$Project = F5(
 var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $author$project$Main$Language = F5(
 	function (name, phonology, morphology, lexicon, generatedWords) {
-		return {A: generatedWords, g: lexicon, j: morphology, b: name, n: phonology};
+		return {B: generatedWords, e: lexicon, j: morphology, b: name, n: phonology};
 	});
-var $author$project$Main$Lexeme = F7(
-	function (form, orthography, definition, pos, etymology, semanticLinks, categories) {
-		return {k: categories, N: definition, U: etymology, e: form, q: orthography, z: pos, u: semanticLinks};
+var $author$project$Main$Lexeme = F8(
+	function (form, orthography, definition, pos, etymology, semanticLinks, categories, morphemes) {
+		return {k: categories, I: definition, V: etymology, g: form, q: morphemes, r: orthography, A: pos, v: semanticLinks};
 	});
 var $elm$json$Json$Decode$list = _Json_decodeList;
-var $elm$json$Json$Decode$map7 = _Json_map7;
+var $elm$json$Json$Decode$map8 = _Json_map8;
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;
 var $author$project$Main$removeSyllableSeparators = function (word) {
 	return A3($elm$core$String$replace, '.', '', word);
 };
 var $author$project$Main$SemanticLinks = F3(
 	function (synonyms, antonyms, related) {
-		return {F: antonyms, K: related, M: synonyms};
+		return {H: antonyms, M: related, O: synonyms};
 	});
 var $elm$json$Json$Decode$map3 = _Json_map3;
 var $author$project$Main$semanticLinksDecoder = A4(
@@ -6723,8 +6805,8 @@ var $author$project$Main$semanticLinksDecoder = A4(
 		$elm$json$Json$Decode$field,
 		'related',
 		$elm$json$Json$Decode$list($elm$json$Json$Decode$string)));
-var $author$project$Main$lexemeDecoder = A8(
-	$elm$json$Json$Decode$map7,
+var $author$project$Main$lexemeDecoder = A9(
+	$elm$json$Json$Decode$map8,
 	$author$project$Main$Lexeme,
 	A2($elm$json$Json$Decode$field, 'form', $elm$json$Json$Decode$string),
 	$elm$json$Json$Decode$oneOf(
@@ -6749,7 +6831,7 @@ var $author$project$Main$lexemeDecoder = A8(
 			[
 				A2($elm$json$Json$Decode$field, 'semanticLinks', $author$project$Main$semanticLinksDecoder),
 				$elm$json$Json$Decode$succeed(
-				{F: _List_Nil, K: _List_Nil, M: _List_Nil})
+				{H: _List_Nil, M: _List_Nil, O: _List_Nil})
 			])),
 	$elm$json$Json$Decode$oneOf(
 		_List_fromArray(
@@ -6759,15 +6841,24 @@ var $author$project$Main$lexemeDecoder = A8(
 				'categories',
 				$elm$json$Json$Decode$list($elm$json$Json$Decode$string)),
 				$elm$json$Json$Decode$succeed(_List_Nil)
+			])),
+	$elm$json$Json$Decode$oneOf(
+		_List_fromArray(
+			[
+				A2(
+				$elm$json$Json$Decode$field,
+				'morphemes',
+				$elm$json$Json$Decode$list($elm$json$Json$Decode$string)),
+				$elm$json$Json$Decode$succeed(_List_Nil)
 			])));
 var $elm$json$Json$Decode$map5 = _Json_map5;
 var $author$project$Main$Morphology = F4(
 	function (features, morphemes, paradigms, morphophonemicRules) {
-		return {p: features, D: morphemes, Y: morphophonemicRules, x: paradigms};
+		return {p: features, q: morphemes, P: morphophonemicRules, y: paradigms};
 	});
 var $author$project$Main$GrammaticalFeature = F2(
 	function (name, values) {
-		return {b: name, Q: values};
+		return {b: name, R: values};
 	});
 var $author$project$Main$grammaticalFeatureDecoder = A3(
 	$elm$json$Json$Decode$map2,
@@ -6780,7 +6871,7 @@ var $author$project$Main$grammaticalFeatureDecoder = A3(
 var $elm$json$Json$Decode$map4 = _Json_map4;
 var $author$project$Main$Morpheme = F5(
 	function (form, gloss, morphemeType, feature, value) {
-		return {G: feature, e: form, C: gloss, I: morphemeType, P: value};
+		return {C: feature, g: form, D: gloss, K: morphemeType, G: value};
 	});
 var $author$project$Main$Circumfix = 3;
 var $author$project$Main$Infix = 2;
@@ -6846,11 +6937,11 @@ var $author$project$Main$morphophonemicRuleDecoder = A7(
 	A2($elm$json$Json$Decode$field, 'description', $elm$json$Json$Decode$string));
 var $author$project$Main$Paradigm = F4(
 	function (name, pos, baseForm, featureCombinations) {
-		return {aA: baseForm, V: featureCombinations, b: name, z: pos};
+		return {aA: baseForm, W: featureCombinations, b: name, A: pos};
 	});
 var $author$project$Main$FeatureCombination = F2(
 	function (features, form) {
-		return {p: features, e: form};
+		return {p: features, g: form};
 	});
 var $author$project$Main$featureCombinationDecoder = A3(
 	$elm$json$Json$Decode$map2,
@@ -6915,11 +7006,11 @@ var $author$project$Main$morphologyDecoder = A5(
 			])));
 var $author$project$Main$Phonology = F4(
 	function (categories, patterns, constraints, orthography) {
-		return {k: categories, T: constraints, q: orthography, aa: patterns};
+		return {k: categories, U: constraints, r: orthography, aa: patterns};
 	});
 var $author$project$Main$PhonotacticConstraint = F3(
 	function (constraintType, sequence, description) {
-		return {w: constraintType, d: description, y: sequence};
+		return {x: constraintType, d: description, z: sequence};
 	});
 var $author$project$Main$NoWordInitial = 3;
 var $author$project$Main$constraintTypeDecoder = A2(
@@ -6949,7 +7040,7 @@ var $author$project$Main$constraintDecoder = A4(
 	A2($elm$json$Json$Decode$field, 'description', $elm$json$Json$Decode$string));
 var $author$project$Main$Orthography = F2(
 	function (graphemeMappings, displayMode) {
-		return {aC: displayMode, R: graphemeMappings};
+		return {aC: displayMode, S: graphemeMappings};
 	});
 var $author$project$Main$GraphemeMapping = F3(
 	function (phoneme, grapheme, description) {
@@ -6999,7 +7090,7 @@ var $author$project$Main$orthographyDecoder = A3(
 			])));
 var $author$project$Main$SoundCategory = F3(
 	function (name, label, sounds) {
-		return {H: label, b: name, t: sounds};
+		return {J: label, b: name, u: sounds};
 	});
 var $author$project$Main$soundCategoryDecoder = A4(
 	$elm$json$Json$Decode$map3,
@@ -7027,7 +7118,7 @@ var $author$project$Main$soundCategoryDecoder = A4(
 		$elm$json$Json$Decode$list($elm$json$Json$Decode$string)));
 var $author$project$Main$SyllablePattern = F2(
 	function (name, pattern) {
-		return {b: name, v: pattern};
+		return {b: name, w: pattern};
 	});
 var $author$project$Main$syllablePatternDecoder = A3(
 	$elm$json$Json$Decode$map2,
@@ -7059,7 +7150,7 @@ var $author$project$Main$phonologyDecoder = A5(
 			[
 				A2($elm$json$Json$Decode$field, 'orthography', $author$project$Main$orthographyDecoder),
 				$elm$json$Json$Decode$succeed(
-				{aC: 0, R: _List_Nil})
+				{aC: 0, S: _List_Nil})
 			])));
 var $author$project$Main$languageDecoder = A6(
 	$elm$json$Json$Decode$map5,
@@ -7071,7 +7162,7 @@ var $author$project$Main$languageDecoder = A6(
 			[
 				A2($elm$json$Json$Decode$field, 'morphology', $author$project$Main$morphologyDecoder),
 				$elm$json$Json$Decode$succeed(
-				{p: _List_Nil, D: _List_Nil, Y: _List_Nil, x: _List_Nil})
+				{p: _List_Nil, q: _List_Nil, P: _List_Nil, y: _List_Nil})
 			])),
 	A2(
 		$elm$json$Json$Decode$field,
@@ -7173,13 +7264,13 @@ var $author$project$Main$encodeSemanticLinks = function (links) {
 			[
 				_Utils_Tuple2(
 				'synonyms',
-				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, links.M)),
+				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, links.O)),
 				_Utils_Tuple2(
 				'antonyms',
-				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, links.F)),
+				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, links.H)),
 				_Utils_Tuple2(
 				'related',
-				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, links.K))
+				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, links.M))
 			]));
 };
 var $author$project$Main$encodeLexeme = function (lexeme) {
@@ -7188,25 +7279,28 @@ var $author$project$Main$encodeLexeme = function (lexeme) {
 			[
 				_Utils_Tuple2(
 				'form',
-				$elm$json$Json$Encode$string(lexeme.e)),
+				$elm$json$Json$Encode$string(lexeme.g)),
 				_Utils_Tuple2(
 				'orthography',
-				$elm$json$Json$Encode$string(lexeme.q)),
+				$elm$json$Json$Encode$string(lexeme.r)),
 				_Utils_Tuple2(
 				'definition',
-				$elm$json$Json$Encode$string(lexeme.N)),
+				$elm$json$Json$Encode$string(lexeme.I)),
 				_Utils_Tuple2(
 				'pos',
-				$elm$json$Json$Encode$string(lexeme.z)),
+				$elm$json$Json$Encode$string(lexeme.A)),
 				_Utils_Tuple2(
 				'etymology',
-				$elm$json$Json$Encode$string(lexeme.U)),
+				$elm$json$Json$Encode$string(lexeme.V)),
 				_Utils_Tuple2(
 				'semanticLinks',
-				$author$project$Main$encodeSemanticLinks(lexeme.u)),
+				$author$project$Main$encodeSemanticLinks(lexeme.v)),
 				_Utils_Tuple2(
 				'categories',
-				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, lexeme.k))
+				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, lexeme.k)),
+				_Utils_Tuple2(
+				'morphemes',
+				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, lexeme.q))
 			]));
 };
 var $author$project$Main$encodeGrammaticalFeature = function (feature) {
@@ -7218,7 +7312,7 @@ var $author$project$Main$encodeGrammaticalFeature = function (feature) {
 				$elm$json$Json$Encode$string(feature.b)),
 				_Utils_Tuple2(
 				'values',
-				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, feature.Q))
+				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, feature.R))
 			]));
 };
 var $author$project$Main$encodeMorphemeType = function (morphemeType) {
@@ -7242,19 +7336,19 @@ var $author$project$Main$encodeMorpheme = function (morpheme) {
 			[
 				_Utils_Tuple2(
 				'form',
-				$elm$json$Json$Encode$string(morpheme.e)),
+				$elm$json$Json$Encode$string(morpheme.g)),
 				_Utils_Tuple2(
 				'gloss',
-				$elm$json$Json$Encode$string(morpheme.C)),
+				$elm$json$Json$Encode$string(morpheme.D)),
 				_Utils_Tuple2(
 				'morphemeType',
-				$author$project$Main$encodeMorphemeType(morpheme.I)),
+				$author$project$Main$encodeMorphemeType(morpheme.K)),
 				_Utils_Tuple2(
 				'feature',
-				$elm$json$Json$Encode$string(morpheme.G)),
+				$elm$json$Json$Encode$string(morpheme.C)),
 				_Utils_Tuple2(
 				'value',
-				$elm$json$Json$Encode$string(morpheme.P))
+				$elm$json$Json$Encode$string(morpheme.G))
 			]));
 };
 var $author$project$Main$encodeRuleType = function (ruleType) {
@@ -7316,7 +7410,7 @@ var $author$project$Main$encodeFeatureCombination = function (combination) {
 					combination.p)),
 				_Utils_Tuple2(
 				'form',
-				$elm$json$Json$Encode$string(combination.e))
+				$elm$json$Json$Encode$string(combination.g))
 			]));
 };
 var $author$project$Main$encodeParadigm = function (paradigm) {
@@ -7328,13 +7422,13 @@ var $author$project$Main$encodeParadigm = function (paradigm) {
 				$elm$json$Json$Encode$string(paradigm.b)),
 				_Utils_Tuple2(
 				'pos',
-				$elm$json$Json$Encode$string(paradigm.z)),
+				$elm$json$Json$Encode$string(paradigm.A)),
 				_Utils_Tuple2(
 				'baseForm',
 				$elm$json$Json$Encode$string(paradigm.aA)),
 				_Utils_Tuple2(
 				'featureCombinations',
-				A2($elm$json$Json$Encode$list, $author$project$Main$encodeFeatureCombination, paradigm.V))
+				A2($elm$json$Json$Encode$list, $author$project$Main$encodeFeatureCombination, paradigm.W))
 			]));
 };
 var $author$project$Main$encodeMorphology = function (morphology) {
@@ -7346,13 +7440,13 @@ var $author$project$Main$encodeMorphology = function (morphology) {
 				A2($elm$json$Json$Encode$list, $author$project$Main$encodeGrammaticalFeature, morphology.p)),
 				_Utils_Tuple2(
 				'morphemes',
-				A2($elm$json$Json$Encode$list, $author$project$Main$encodeMorpheme, morphology.D)),
+				A2($elm$json$Json$Encode$list, $author$project$Main$encodeMorpheme, morphology.q)),
 				_Utils_Tuple2(
 				'paradigms',
-				A2($elm$json$Json$Encode$list, $author$project$Main$encodeParadigm, morphology.x)),
+				A2($elm$json$Json$Encode$list, $author$project$Main$encodeParadigm, morphology.y)),
 				_Utils_Tuple2(
 				'morphophonemicRules',
-				A2($elm$json$Json$Encode$list, $author$project$Main$encodeMorphophonemicRule, morphology.Y))
+				A2($elm$json$Json$Encode$list, $author$project$Main$encodeMorphophonemicRule, morphology.P))
 			]));
 };
 var $author$project$Main$encodeConstraintType = function (constraintType) {
@@ -7378,10 +7472,10 @@ var $author$project$Main$encodeConstraint = function (constraint) {
 			[
 				_Utils_Tuple2(
 				'constraintType',
-				$author$project$Main$encodeConstraintType(constraint.w)),
+				$author$project$Main$encodeConstraintType(constraint.x)),
 				_Utils_Tuple2(
 				'sequence',
-				$elm$json$Json$Encode$string(constraint.y)),
+				$elm$json$Json$Encode$string(constraint.z)),
 				_Utils_Tuple2(
 				'description',
 				$elm$json$Json$Encode$string(constraint.d))
@@ -7418,15 +7512,11 @@ var $author$project$Main$encodeOrthography = function (orthography) {
 			[
 				_Utils_Tuple2(
 				'graphemeMappings',
-				A2($elm$json$Json$Encode$list, $author$project$Main$encodeGraphemeMapping, orthography.R)),
+				A2($elm$json$Json$Encode$list, $author$project$Main$encodeGraphemeMapping, orthography.S)),
 				_Utils_Tuple2(
 				'displayMode',
 				$author$project$Main$encodeOrthographyDisplayMode(orthography.aC))
 			]));
-};
-var $elm$core$String$cons = _String_cons;
-var $elm$core$String$fromChar = function (_char) {
-	return A2($elm$core$String$cons, _char, '');
 };
 var $author$project$Main$encodeSoundCategory = function (category) {
 	return $elm$json$Json$Encode$object(
@@ -7438,10 +7528,10 @@ var $author$project$Main$encodeSoundCategory = function (category) {
 				_Utils_Tuple2(
 				'label',
 				$elm$json$Json$Encode$string(
-					$elm$core$String$fromChar(category.H))),
+					$elm$core$String$fromChar(category.J))),
 				_Utils_Tuple2(
 				'sounds',
-				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, category.t))
+				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, category.u))
 			]));
 };
 var $author$project$Main$encodeSyllablePattern = function (pattern) {
@@ -7453,7 +7543,7 @@ var $author$project$Main$encodeSyllablePattern = function (pattern) {
 				$elm$json$Json$Encode$string(pattern.b)),
 				_Utils_Tuple2(
 				'pattern',
-				$elm$json$Json$Encode$string(pattern.v))
+				$elm$json$Json$Encode$string(pattern.w))
 			]));
 };
 var $author$project$Main$encodePhonology = function (phonology) {
@@ -7468,10 +7558,10 @@ var $author$project$Main$encodePhonology = function (phonology) {
 				A2($elm$json$Json$Encode$list, $author$project$Main$encodeSyllablePattern, phonology.aa)),
 				_Utils_Tuple2(
 				'constraints',
-				A2($elm$json$Json$Encode$list, $author$project$Main$encodeConstraint, phonology.T)),
+				A2($elm$json$Json$Encode$list, $author$project$Main$encodeConstraint, phonology.U)),
 				_Utils_Tuple2(
 				'orthography',
-				$author$project$Main$encodeOrthography(phonology.q))
+				$author$project$Main$encodeOrthography(phonology.r))
 			]));
 };
 var $author$project$Main$encodeLanguage = function (language) {
@@ -7489,10 +7579,10 @@ var $author$project$Main$encodeLanguage = function (language) {
 				$author$project$Main$encodeMorphology(language.j)),
 				_Utils_Tuple2(
 				'lexicon',
-				A2($elm$json$Json$Encode$list, $author$project$Main$encodeLexeme, language.g)),
+				A2($elm$json$Json$Encode$list, $author$project$Main$encodeLexeme, language.e)),
 				_Utils_Tuple2(
 				'generatedWords',
-				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, language.A))
+				A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, language.B))
 			]));
 };
 var $author$project$Main$encodeProject = function (project) {
@@ -7666,7 +7756,7 @@ var $author$project$Main$generateFeatureCombinations = function (features) {
 			function (v) {
 				return _Utils_Tuple2(first.b, v);
 			},
-			first.Q);
+			first.R);
 		return A2(
 			$elm$core$List$concatMap,
 			function (restCombo) {
@@ -7680,105 +7770,6 @@ var $author$project$Main$generateFeatureCombinations = function (features) {
 			restCombinations);
 	}
 };
-var $elm$core$Basics$neq = _Utils_notEqual;
-var $author$project$Main$applyMorpheme = F2(
-	function (morpheme, base) {
-		if ($elm$core$String$isEmpty(base)) {
-			return base;
-		} else {
-			var _v0 = morpheme.I;
-			switch (_v0) {
-				case 0:
-					return _Utils_ap(morpheme.e, base);
-				case 1:
-					return _Utils_ap(base, morpheme.e);
-				case 2:
-					var vowels = _List_fromArray(
-						['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']);
-					var insertAt = F3(
-						function (position, infix, string) {
-							var before = A2($elm$core$String$left, position, string);
-							var after = A2($elm$core$String$dropLeft, position, string);
-							return _Utils_ap(
-								before,
-								_Utils_ap(infix, after));
-						});
-					var findFirstVowelPosition = F2(
-						function (idx, str) {
-							findFirstVowelPosition:
-							while (true) {
-								var _v1 = $elm$core$String$uncons(str);
-								if (_v1.$ === 1) {
-									return $elm$core$Maybe$Nothing;
-								} else {
-									var _v2 = _v1.a;
-									var _char = _v2.a;
-									var rest = _v2.b;
-									if (A2(
-										$elm$core$List$member,
-										$elm$core$String$fromChar(_char),
-										vowels)) {
-										return $elm$core$Maybe$Just(idx);
-									} else {
-										var $temp$idx = idx + 1,
-											$temp$str = rest;
-										idx = $temp$idx;
-										str = $temp$str;
-										continue findFirstVowelPosition;
-									}
-								}
-							}
-						});
-					var _v3 = A2(findFirstVowelPosition, 0, base);
-					if (!_v3.$) {
-						var pos = _v3.a;
-						return A3(insertAt, pos + 1, morpheme.e, base);
-					} else {
-						var _v4 = $elm$core$String$uncons(base);
-						if (!_v4.$) {
-							var _v5 = _v4.a;
-							var firstChar = _v5.a;
-							var rest = _v5.b;
-							return _Utils_ap(
-								$elm$core$String$fromChar(firstChar),
-								_Utils_ap(morpheme.e, rest));
-						} else {
-							return base;
-						}
-					}
-				default:
-					var parts = A2($elm$core$String$contains, '-', morpheme.e) ? A2(
-						$elm$core$List$filter,
-						function (s) {
-							return (s !== '...') && (s !== '');
-						},
-						A2($elm$core$String$split, '-', morpheme.e)) : (A2($elm$core$String$contains, '...', morpheme.e) ? A2($elm$core$String$split, '...', morpheme.e) : _List_Nil);
-					_v6$2:
-					while (true) {
-						if (parts.b) {
-							if (parts.b.b) {
-								if (!parts.b.b.b) {
-									var prefix = parts.a;
-									var _v7 = parts.b;
-									var suffix = _v7.a;
-									return _Utils_ap(
-										prefix,
-										_Utils_ap(base, suffix));
-								} else {
-									break _v6$2;
-								}
-							} else {
-								var prefix = parts.a;
-								return _Utils_ap(prefix, base);
-							}
-						} else {
-							break _v6$2;
-						}
-					}
-					return _Utils_ap(base, morpheme.e);
-			}
-		}
-	});
 var $elm$core$String$trim = _String_trim;
 var $author$project$Main$generateInflectedForm = F4(
 	function (baseForm, features, morphemes, rules) {
@@ -7789,7 +7780,7 @@ var $author$project$Main$generateInflectedForm = F4(
 			var matchingMorphemes = A2(
 				$elm$core$List$sortBy,
 				function (m) {
-					var _v1 = m.I;
+					var _v1 = m.K;
 					switch (_v1) {
 						case 0:
 							return 1;
@@ -7809,7 +7800,7 @@ var $author$project$Main$generateInflectedForm = F4(
 							function (_v0) {
 								var featureName = _v0.a;
 								var featureValue = _v0.b;
-								return _Utils_eq(morpheme.G, featureName) && _Utils_eq(morpheme.P, featureValue);
+								return _Utils_eq(morpheme.C, featureName) && _Utils_eq(morpheme.G, featureValue);
 							},
 							features);
 					},
@@ -8465,12 +8456,12 @@ var $author$project$Main$charToGenerator = F2(
 			A2(
 				$elm$core$List$filter,
 				function (cat) {
-					return _Utils_eq(cat.H, _char);
+					return _Utils_eq(cat.J, _char);
 				},
 				phonology.k));
 		if (!maybeCategory.$) {
 			var category = maybeCategory.a;
-			return $author$project$Main$randomFromList(category.t);
+			return $author$project$Main$randomFromList(category.u);
 		} else {
 			return $elm$random$Random$constant('');
 		}
@@ -8741,7 +8732,7 @@ var $elm$random$Random$list = F2(
 	});
 var $elm$core$String$toUpper = _String_toUpper;
 var $author$project$Main$generateMultiSyllableWord = function (model) {
-	var syllableCountGenerator = A2($elm$random$Random$int, model.aT, model.bA);
+	var syllableCountGenerator = A2($elm$random$Random$int, model.aT, model.bC);
 	var phonology = model.a.c.n;
 	var patternsToUse = $elm$core$List$isEmpty(model.ax) ? _List_fromArray(
 		['CV']) : A2($elm$core$List$map, $elm$core$String$toUpper, model.ax);
@@ -8798,12 +8789,12 @@ var $author$project$Main$checkConstraint = F3(
 		var vowels = A2(
 			$elm$core$List$concatMap,
 			function ($) {
-				return $.t;
+				return $.u;
 			},
 			A2(
 				$elm$core$List$filter,
 				function (cat) {
-					return (cat.H === 'V') || ($elm$core$String$toLower(cat.b) === 'vowels');
+					return (cat.J === 'V') || ($elm$core$String$toLower(cat.b) === 'vowels');
 				},
 				phonology.k));
 		var isVowel = function (s) {
@@ -8813,12 +8804,12 @@ var $author$project$Main$checkConstraint = F3(
 			$elm$core$List$map,
 			$elm$core$String$fromChar,
 			$elm$core$String$toList(word));
-		var _v0 = constraint.w;
+		var _v0 = constraint.x;
 		switch (_v0) {
 			case 0:
-				return !A2($elm$core$String$contains, constraint.y, word);
+				return !A2($elm$core$String$contains, constraint.z, word);
 			case 1:
-				var startsWithSequence = A2($elm$core$String$startsWith, constraint.y, word);
+				var startsWithSequence = A2($elm$core$String$startsWith, constraint.z, word);
 				var appearsAfterVowel = A2(
 					$elm$core$List$any,
 					function (index) {
@@ -8829,14 +8820,14 @@ var $author$project$Main$checkConstraint = F3(
 							return false;
 						}
 					},
-					A2($elm$core$String$indices, constraint.y, word));
+					A2($elm$core$String$indices, constraint.z, word));
 				return !(startsWithSequence || appearsAfterVowel);
 			case 2:
-				var endsWithSequence = A2($elm$core$String$endsWith, constraint.y, word);
+				var endsWithSequence = A2($elm$core$String$endsWith, constraint.z, word);
 				var appearsBeforeVowel = A2(
 					$elm$core$List$any,
 					function (index) {
-						var afterIndex = index + $elm$core$String$length(constraint.y);
+						var afterIndex = index + $elm$core$String$length(constraint.z);
 						if (_Utils_cmp(
 							afterIndex,
 							$elm$core$String$length(word)) < 0) {
@@ -8846,12 +8837,12 @@ var $author$project$Main$checkConstraint = F3(
 							return false;
 						}
 					},
-					A2($elm$core$String$indices, constraint.y, word));
+					A2($elm$core$String$indices, constraint.z, word));
 				return !(endsWithSequence || appearsBeforeVowel);
 			case 3:
-				return !A2($elm$core$String$startsWith, constraint.y, word);
+				return !A2($elm$core$String$startsWith, constraint.z, word);
 			default:
-				return !A2($elm$core$String$endsWith, constraint.y, word);
+				return !A2($elm$core$String$endsWith, constraint.z, word);
 		}
 	});
 var $author$project$Main$isValidWord = F3(
@@ -8907,7 +8898,7 @@ var $author$project$Main$syllabifyIPA = function (word) {
 };
 var $author$project$Main$generateWordsTemplate = function (model) {
 	var phonology = model.a.c.n;
-	var candidateCount = $elm$core$List$isEmpty(phonology.T) ? model.al : (model.al * 5);
+	var candidateCount = $elm$core$List$isEmpty(phonology.U) ? model.al : (model.al * 5);
 	return A2(
 		$elm$random$Random$map,
 		$elm$core$List$map($author$project$Main$syllabifyIPA),
@@ -8917,7 +8908,7 @@ var $author$project$Main$generateWordsTemplate = function (model) {
 			A2(
 				$elm$random$Random$map,
 				$elm$core$List$filter(
-					A2($author$project$Main$isValidWord, phonology, phonology.T)),
+					A2($author$project$Main$isValidWord, phonology, phonology.U)),
 				A2(
 					$elm$random$Random$list,
 					candidateCount,
@@ -8955,11 +8946,11 @@ var $author$project$Main$generateWordsMarkov = function (model) {
 		A2(
 			$elm$core$List$map,
 			function ($) {
-				return $.e;
+				return $.g;
 			},
-			model.a.c.g));
+			model.a.c.e));
 	var ngramModel = A2($author$project$Main$buildNgramModel, model.a$, lexicon);
-	var candidateCount = $elm$core$List$isEmpty(phonology.T) ? model.al : (model.al * 5);
+	var candidateCount = $elm$core$List$isEmpty(phonology.U) ? model.al : (model.al * 5);
 	return $elm$core$Dict$isEmpty(ngramModel) ? $author$project$Main$generateWordsTemplate(model) : A2(
 		$elm$random$Random$map,
 		$elm$core$List$map($author$project$Main$syllabifyIPA),
@@ -8969,11 +8960,11 @@ var $author$project$Main$generateWordsMarkov = function (model) {
 			A2(
 				$elm$random$Random$map,
 				$elm$core$List$filter(
-					A2($author$project$Main$isValidWordLength, model.a_, model.bL)),
+					A2($author$project$Main$isValidWordLength, model.a_, model.bM)),
 				A2(
 					$elm$random$Random$map,
 					$elm$core$List$filter(
-						A2($author$project$Main$isValidWord, phonology, phonology.T)),
+						A2($author$project$Main$isValidWord, phonology, phonology.U)),
 					A2(
 						$elm$random$Random$list,
 						candidateCount,
@@ -9013,10 +9004,10 @@ var $author$project$Main$lexiconToCSV = function (lexicon) {
 			',',
 			_List_fromArray(
 				[
-					escapeCSVField(lexeme.e),
-					escapeCSVField(lexeme.N),
-					escapeCSVField(lexeme.z),
-					escapeCSVField(lexeme.U),
+					escapeCSVField(lexeme.g),
+					escapeCSVField(lexeme.I),
+					escapeCSVField(lexeme.A),
+					escapeCSVField(lexeme.V),
 					escapeCSVField(
 					A2($elm$core$String$join, ';', lexeme.k))
 				]));
@@ -9128,13 +9119,14 @@ var $author$project$Main$parseCSVToLexicon = function (csvData) {
 									$elm$core$List$map,
 									$elm$core$String$trim,
 									A2($elm$core$String$split, ';', categories))),
-							N: $elm$core$String$trim(definition),
-							U: $elm$core$String$trim(etymology),
-							e: $elm$core$String$trim(word),
-							q: $author$project$Main$removeSyllableSeparators(
+							I: $elm$core$String$trim(definition),
+							V: $elm$core$String$trim(etymology),
+							g: $elm$core$String$trim(word),
+							q: _List_Nil,
+							r: $author$project$Main$removeSyllableSeparators(
 								$elm$core$String$trim(word)),
-							z: $elm$core$String$trim(pos),
-							u: {F: _List_Nil, K: _List_Nil, M: _List_Nil}
+							A: $elm$core$String$trim(pos),
+							v: {H: _List_Nil, M: _List_Nil, O: _List_Nil}
 						});
 				} else {
 					var word = _v1.a;
@@ -9147,13 +9139,14 @@ var $author$project$Main$parseCSVToLexicon = function (csvData) {
 					return $elm$core$Maybe$Just(
 						{
 							k: _List_Nil,
-							N: $elm$core$String$trim(definition),
-							U: $elm$core$String$trim(etymology),
-							e: $elm$core$String$trim(word),
-							q: $author$project$Main$removeSyllableSeparators(
+							I: $elm$core$String$trim(definition),
+							V: $elm$core$String$trim(etymology),
+							g: $elm$core$String$trim(word),
+							q: _List_Nil,
+							r: $author$project$Main$removeSyllableSeparators(
 								$elm$core$String$trim(word)),
-							z: $elm$core$String$trim(pos),
-							u: {F: _List_Nil, K: _List_Nil, M: _List_Nil}
+							A: $elm$core$String$trim(pos),
+							v: {H: _List_Nil, M: _List_Nil, O: _List_Nil}
 						});
 				}
 			} else {
@@ -9165,13 +9158,14 @@ var $author$project$Main$parseCSVToLexicon = function (csvData) {
 				return $elm$core$Maybe$Just(
 					{
 						k: _List_Nil,
-						N: $elm$core$String$trim(definition),
-						U: '',
-						e: $elm$core$String$trim(word),
-						q: $author$project$Main$removeSyllableSeparators(
+						I: $elm$core$String$trim(definition),
+						V: '',
+						g: $elm$core$String$trim(word),
+						q: _List_Nil,
+						r: $author$project$Main$removeSyllableSeparators(
 							$elm$core$String$trim(word)),
-						z: $elm$core$String$trim(pos),
-						u: {F: _List_Nil, K: _List_Nil, M: _List_Nil}
+						A: $elm$core$String$trim(pos),
+						v: {H: _List_Nil, M: _List_Nil, O: _List_Nil}
 					});
 			}
 		} else {
@@ -9201,10 +9195,10 @@ var $author$project$Main$renameProjectById = _Platform_outgoingPort(
 				[
 					_Utils_Tuple2(
 					'newName',
-					$elm$json$Json$Encode$string($.b9)),
+					$elm$json$Json$Encode$string($.cb)),
 					_Utils_Tuple2(
 					'projectId',
-					$elm$json$Json$Encode$int($.cg))
+					$elm$json$Json$Encode$int($.ci))
 				]));
 	});
 var $author$project$Main$savePreference = _Platform_outgoingPort('savePreference', $elm$core$Basics$identity);
@@ -9241,33 +9235,33 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bk: input}),
+						{bl: input}),
 					$elm$core$Platform$Cmd$none);
 			case 1:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bF: input}),
+						{bH: input}),
 					$elm$core$Platform$Cmd$none);
 			case 2:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bj: input}),
+						{bk: input}),
 					$elm$core$Platform$Cmd$none);
 			case 3:
 				var label = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bt: label}),
+						{bu: label}),
 					$elm$core$Platform$Cmd$none);
 			case 4:
 				var language = model.a.c;
 				var phonology = language.n;
-				var categoryName = $elm$core$String$trim(model.bF);
+				var categoryName = $elm$core$String$trim(model.bH);
 				var label = A2(
 					$elm$core$Maybe$withDefault,
 					'X',
@@ -9280,7 +9274,7 @@ var $author$project$Main$update = F2(
 				var labelExists = A2(
 					$elm$core$List$any,
 					function (cat) {
-						return _Utils_eq(cat.H, label);
+						return _Utils_eq(cat.J, label);
 					},
 					phonology.k);
 				var updatedPhonology = ($elm$core$String$isEmpty(categoryName) || labelExists) ? phonology : _Utils_update(
@@ -9290,7 +9284,7 @@ var $author$project$Main$update = F2(
 							phonology.k,
 							_List_fromArray(
 								[
-									{H: label, b: categoryName, t: _List_Nil}
+									{J: label, b: categoryName, u: _List_Nil}
 								]))
 					});
 				var updatedLanguage = _Utils_update(
@@ -9301,9 +9295,9 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							bF: '',
+							bH: '',
 							a: updatedProject,
-							bt: $elm$core$String$fromChar(label)
+							bu: $elm$core$String$fromChar(label)
 						}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
@@ -9324,7 +9318,7 @@ var $author$project$Main$update = F2(
 						k: A2(
 							$elm$core$List$filter,
 							function (cat) {
-								return !_Utils_eq(cat.H, categoryLabel);
+								return !_Utils_eq(cat.J, categoryLabel);
 							},
 							phonology.k)
 					});
@@ -9339,7 +9333,7 @@ var $author$project$Main$update = F2(
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
 			case 6:
-				var newPhoneme = $elm$core$String$trim(model.bk);
+				var newPhoneme = $elm$core$String$trim(model.bl);
 				var language = model.a.c;
 				var phonology = language.n;
 				var categoryLabel = A2(
@@ -9348,15 +9342,15 @@ var $author$project$Main$update = F2(
 					A2(
 						$elm$core$Maybe$map,
 						$elm$core$Tuple$first,
-						$elm$core$String$uncons(model.bt)));
+						$elm$core$String$uncons(model.bu)));
 				var updatedCategories = A2(
 					$elm$core$List$map,
 					function (cat) {
-						return _Utils_eq(cat.H, categoryLabel) ? (($elm$core$String$isEmpty(newPhoneme) || A2($elm$core$List$member, newPhoneme, cat.t)) ? cat : _Utils_update(
+						return _Utils_eq(cat.J, categoryLabel) ? (($elm$core$String$isEmpty(newPhoneme) || A2($elm$core$List$member, newPhoneme, cat.u)) ? cat : _Utils_update(
 							cat,
 							{
-								t: _Utils_ap(
-									cat.t,
+								u: _Utils_ap(
+									cat.u,
 									_List_fromArray(
 										[newPhoneme]))
 							})) : cat;
@@ -9372,7 +9366,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bk: '', a: updatedProject}),
+						{bl: '', a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
 			case 7:
@@ -9390,15 +9384,15 @@ var $author$project$Main$update = F2(
 				var updatedCategories = A2(
 					$elm$core$List$map,
 					function (cat) {
-						return _Utils_eq(cat.H, label) ? _Utils_update(
+						return _Utils_eq(cat.J, label) ? _Utils_update(
 							cat,
 							{
-								t: A2(
+								u: A2(
 									$elm$core$List$filter,
 									function (p) {
 										return !_Utils_eq(p, phoneme);
 									},
-									cat.t)
+									cat.u)
 							}) : cat;
 					},
 					phonology.k);
@@ -9416,13 +9410,13 @@ var $author$project$Main$update = F2(
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
 			case 8:
-				var patternStr = $elm$core$String$trim(model.bj);
+				var patternStr = $elm$core$String$trim(model.bk);
 				var language = model.a.c;
 				var phonology = language.n;
 				var patternExists = A2(
 					$elm$core$List$any,
 					function (p) {
-						return _Utils_eq(p.v, patternStr);
+						return _Utils_eq(p.w, patternStr);
 					},
 					phonology.aa);
 				var updatedPhonology = ($elm$core$String$isEmpty(patternStr) || patternExists) ? phonology : _Utils_update(
@@ -9432,7 +9426,7 @@ var $author$project$Main$update = F2(
 							phonology.aa,
 							_List_fromArray(
 								[
-									{b: patternStr, v: patternStr}
+									{b: patternStr, w: patternStr}
 								]))
 					});
 				var updatedLanguage = _Utils_update(
@@ -9442,7 +9436,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bj: '', a: updatedProject}),
+						{bk: '', a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
 			case 9:
@@ -9455,7 +9449,7 @@ var $author$project$Main$update = F2(
 						aa: A2(
 							$elm$core$List$filter,
 							function (p) {
-								return !_Utils_eq(p.v, pattern);
+								return !_Utils_eq(p.w, pattern);
 							},
 							phonology.aa)
 					});
@@ -9474,7 +9468,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bP: pattern}),
+						{bQ: pattern}),
 					$elm$core$Platform$Cmd$none);
 			case 11:
 				var pattern = msg.a;
@@ -9524,36 +9518,37 @@ var $author$project$Main$update = F2(
 						model,
 						{ak: etymology}),
 					$elm$core$Platform$Cmd$none);
-			case 28:
+			case 29:
 				var query = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bs: query}),
+						{bt: query}),
 					$elm$core$Platform$Cmd$none);
-			case 29:
+			case 30:
 				var pos = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bI: pos}),
+						{bJ: pos}),
 					$elm$core$Platform$Cmd$none);
 			case 17:
 				var newWord = {
 					k: _List_Nil,
-					N: $elm$core$String$trim(model.ad),
-					U: $elm$core$String$trim(model.ak),
-					e: $elm$core$String$trim(model.ae),
-					q: $elm$core$String$trim(model.am),
-					z: model.an,
-					u: {F: _List_Nil, K: _List_Nil, M: _List_Nil}
+					I: $elm$core$String$trim(model.ad),
+					V: $elm$core$String$trim(model.ak),
+					g: $elm$core$String$trim(model.ae),
+					q: _List_Nil,
+					r: $elm$core$String$trim(model.am),
+					A: model.an,
+					v: {H: _List_Nil, M: _List_Nil, O: _List_Nil}
 				};
 				var language = model.a.c;
-				var updatedLanguage = ($elm$core$String$isEmpty(newWord.e) || $elm$core$String$isEmpty(newWord.N)) ? language : _Utils_update(
+				var updatedLanguage = ($elm$core$String$isEmpty(newWord.g) || $elm$core$String$isEmpty(newWord.I)) ? language : _Utils_update(
 					language,
 					{
-						g: _Utils_ap(
-							language.g,
+						e: _Utils_ap(
+							language.e,
 							_List_fromArray(
 								[newWord]))
 					});
@@ -9561,50 +9556,50 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{a: updatedProject, bu: false, ad: '', ak: '', ae: '', am: '', an: 'noun'}),
+						{a: updatedProject, bv: false, ad: '', ak: '', ae: '', am: '', an: 'noun'}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
 			case 18:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bu: true}),
+						{bv: true}),
 					$elm$core$Platform$Cmd$none);
 			case 19:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bu: false, ad: '', ak: '', ae: '', am: '', an: 'noun'}),
+						{bv: false, ad: '', ak: '', ae: '', am: '', an: 'noun'}),
 					$elm$core$Platform$Cmd$none);
 			case 20:
 				var index = msg.a;
-				var maybeWord = A2($author$project$Main$getAt, index, model.a.c.g);
+				var maybeWord = A2($author$project$Main$getAt, index, model.a.c.e);
 				if (!maybeWord.$) {
 					var word = maybeWord.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								W: $elm$core$Maybe$Just(index),
+								X: $elm$core$Maybe$Just(index),
 								a4: true,
-								ad: word.N,
-								ak: word.U,
-								ae: word.e,
-								am: word.q,
-								an: word.z
+								ad: word.I,
+								ak: word.V,
+								ae: word.g,
+								am: word.r,
+								an: word.A
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 21:
-				var _v2 = model.W;
+				var _v2 = model.X;
 				if (!_v2.$) {
 					var index = _v2.a;
 					var language = model.a.c;
 					var updatedWord = {
 						k: function () {
-							var _v3 = A2($author$project$Main$getAt, index, language.g);
+							var _v3 = A2($author$project$Main$getAt, index, language.e);
 							if (!_v3.$) {
 								var existingWord = _v3.a;
 								return existingWord.k;
@@ -9612,18 +9607,27 @@ var $author$project$Main$update = F2(
 								return _List_Nil;
 							}
 						}(),
-						N: $elm$core$String$trim(model.ad),
-						U: $elm$core$String$trim(model.ak),
-						e: $elm$core$String$trim(model.ae),
-						q: $elm$core$String$trim(model.am),
-						z: model.an,
-						u: function () {
-							var _v4 = A2($author$project$Main$getAt, index, language.g);
+						I: $elm$core$String$trim(model.ad),
+						V: $elm$core$String$trim(model.ak),
+						g: $elm$core$String$trim(model.ae),
+						q: function () {
+							var _v4 = A2($author$project$Main$getAt, index, language.e);
 							if (!_v4.$) {
 								var existingWord = _v4.a;
-								return existingWord.u;
+								return existingWord.q;
 							} else {
-								return {F: _List_Nil, K: _List_Nil, M: _List_Nil};
+								return _List_Nil;
+							}
+						}(),
+						r: $elm$core$String$trim(model.am),
+						A: model.an,
+						v: function () {
+							var _v5 = A2($author$project$Main$getAt, index, language.e);
+							if (!_v5.$) {
+								var existingWord = _v5.a;
+								return existingWord.v;
+							} else {
+								return {H: _List_Nil, M: _List_Nil, O: _List_Nil};
 							}
 						}()
 					};
@@ -9633,23 +9637,23 @@ var $author$project$Main$update = F2(
 							function (i, word) {
 								return _Utils_eq(i, index) ? updatedWord : word;
 							}),
-						language.g);
+						language.e);
 					var updatedLanguage = _Utils_update(
 						language,
-						{g: updatedLexicon});
+						{e: updatedLexicon});
 					var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
 								aH: '',
-								W: $elm$core$Maybe$Nothing,
+								X: $elm$core$Maybe$Nothing,
 								a: updatedProject,
 								Z: _List_Nil,
 								aM: '',
 								a4: false,
 								aS: '',
-								B: A2($elm$core$List$cons, model.a, model.B),
+								E: A2($elm$core$List$cons, model.a, model.E),
 								ad: '',
 								ak: '',
 								ae: '',
@@ -9665,11 +9669,11 @@ var $author$project$Main$update = F2(
 				var index = msg.a;
 				var language = model.a.c;
 				var updatedLexicon = _Utils_ap(
-					A2($elm$core$List$take, index, language.g),
-					A2($elm$core$List$drop, index + 1, language.g));
+					A2($elm$core$List$take, index, language.e),
+					A2($elm$core$List$drop, index + 1, language.e));
 				var updatedLanguage = _Utils_update(
 					language,
-					{g: updatedLexicon});
+					{e: updatedLexicon});
 				var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -9677,7 +9681,7 @@ var $author$project$Main$update = F2(
 						{
 							a: updatedProject,
 							Z: _List_Nil,
-							B: A2($elm$core$List$cons, model.a, model.B)
+							E: A2($elm$core$List$cons, model.a, model.E)
 						}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
@@ -9685,7 +9689,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{aH: '', W: $elm$core$Maybe$Nothing, aM: '', a4: false, aS: '', ad: '', ak: '', ae: '', am: '', an: 'noun'}),
+						{aH: '', X: $elm$core$Maybe$Nothing, aM: '', a4: false, aS: '', ad: '', ak: '', ae: '', am: '', an: 'noun'}),
 					$elm$core$Platform$Cmd$none);
 			case 24:
 				return _Utils_Tuple2(
@@ -9699,71 +9703,91 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							bG: _Utils_eq(
-								model.bG,
-								$elm$core$Maybe$Just(wordIndex)) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(wordIndex)
+							bh: $elm$core$Maybe$Just(wordIndex),
+							bx: true
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 26:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{bh: $elm$core$Maybe$Nothing, bx: false}),
+					$elm$core$Platform$Cmd$none);
+			case 27:
 				var wordIndex = msg.a;
 				var morphemeIndex = msg.b;
 				var language = model.a.c;
-				var lexeme = A2($author$project$Main$getAt, wordIndex, language.g);
+				var lexeme = A2($author$project$Main$getAt, wordIndex, language.e);
 				var morphology = language.j;
-				var morpheme = A2($author$project$Main$getAt, morphemeIndex, morphology.D);
-				var _v5 = _Utils_Tuple2(lexeme, morpheme);
-				if ((!_v5.a.$) && (!_v5.b.$)) {
-					var lex = _v5.a.a;
-					var morph = _v5.b.a;
-					var inflectedForm = A2($author$project$Main$applyMorphemeToForm, lex.q, morph);
-					var newLexeme = {k: lex.k, N: lex.N + (' + ' + morph.C), U: 'Derived from \'' + (lex.q + ('\' + ' + morph.e)), e: lex.e, q: inflectedForm, z: lex.z, u: lex.u};
+				var morpheme = A2($author$project$Main$getAt, morphemeIndex, morphology.q);
+				var _v6 = _Utils_Tuple2(lexeme, morpheme);
+				if ((!_v6.a.$) && (!_v6.b.$)) {
+					var lex = _v6.a.a;
+					var morph = _v6.b.a;
+					var ipaWithMorpheme = A2($author$project$Main$applyMorpheme, morph, lex.g);
+					var inflectedIPA = A2($author$project$Main$applyMorphophonemicRules, morphology.P, ipaWithMorpheme);
+					var formWithMorpheme = A2($author$project$Main$applyMorpheme, morph, lex.r);
+					var inflectedForm = A2($author$project$Main$applyMorphophonemicRules, morphology.P, formWithMorpheme);
+					var newLexeme = {
+						k: lex.k,
+						I: lex.I + (' + ' + morph.D),
+						V: 'Derived from \'' + (lex.r + ('\' + ' + morph.g)),
+						g: inflectedIPA,
+						q: _Utils_ap(
+							lex.q,
+							_List_fromArray(
+								[morph.D])),
+						r: inflectedForm,
+						A: lex.A,
+						v: lex.v
+					};
 					var updatedLexicon = _Utils_ap(
-						language.g,
+						language.e,
 						_List_fromArray(
 							[newLexeme]));
 					var updatedLanguage = _Utils_update(
 						language,
-						{g: updatedLexicon});
+						{e: updatedLexicon});
 					var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{a: updatedProject}),
+							{bh: $elm$core$Maybe$Nothing, a: updatedProject, bx: false}),
 						$author$project$Main$saveToStorage(
 							$author$project$Main$encodeProject(updatedProject)));
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 27:
+			case 28:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-			case 30:
+			case 31:
 				var pattern = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bP: pattern}),
+						{bQ: pattern}),
 					$elm$core$Platform$Cmd$none);
-			case 31:
+			case 32:
 				return _Utils_Tuple2(
 					model,
 					A2(
 						$elm$random$Random$generate,
 						$author$project$Main$WordsGenerated,
 						$author$project$Main$generateWordsCmd(model)));
-			case 32:
+			case 33:
 				var words = msg.a;
 				var language = model.a.c;
 				var updatedLanguage = _Utils_update(
 					language,
-					{A: words});
+					{B: words});
 				var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{A: words, a: updatedProject}),
+						{B: words, a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 33:
+			case 34:
 				var updatedProject = {_: model.a._, o: model.a.o, c: model.a.c, ah: model.i, b: model.a.b};
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -9771,21 +9795,21 @@ var $author$project$Main$update = F2(
 						{a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 34:
+			case 35:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bJ: true}),
+						{bK: true}),
 					$author$project$Main$getCurrentTime(0));
-			case 35:
+			case 36:
 				return _Utils_Tuple2(
 					model,
 					$author$project$Main$triggerImport(0));
-			case 36:
+			case 37:
 				var jsonStr = msg.a;
-				var _v6 = A2($elm$json$Json$Decode$decodeString, $author$project$Main$projectDecoder, jsonStr);
-				if (!_v6.$) {
-					var project = _v6.a;
+				var _v7 = A2($elm$json$Json$Decode$decodeString, $author$project$Main$projectDecoder, jsonStr);
+				if (!_v7.$) {
+					var project = _v7.a;
 					var updatedProject = _Utils_update(
 						project,
 						{_: model.i, o: 0, ah: model.i});
@@ -9797,7 +9821,7 @@ var $author$project$Main$update = F2(
 						$author$project$Main$saveToStorage(
 							$author$project$Main$encodeProject(updatedProject)));
 				} else {
-					var error = _v6.a;
+					var error = _v7.a;
 					var userFriendlyError = 'Failed to import project. The file may be corrupted or not a valid clctk export. ' + ('Technical details: ' + $elm$json$Json$Decode$errorToString(error));
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -9807,68 +9831,68 @@ var $author$project$Main$update = F2(
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
-			case 37:
+			case 38:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{be: $elm$core$Maybe$Nothing}),
 					$elm$core$Platform$Cmd$none);
-			case 39:
+			case 40:
 				var timestamp = msg.a;
-				return model.bJ ? _Utils_Tuple2(
+				return model.bK ? _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{i: timestamp, bJ: false}),
+						{i: timestamp, bK: false}),
 					$author$project$Main$exportProject(
 						A2($author$project$Main$encodeExport, timestamp, model.a))) : _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{i: timestamp}),
 					$elm$core$Platform$Cmd$none);
-			case 38:
+			case 39:
 				var value = msg.a;
-				var _v7 = A2($elm$json$Json$Decode$decodeValue, $author$project$Main$projectDecoder, value);
-				if (!_v7.$) {
-					var project = _v7.a;
+				var _v8 = A2($elm$json$Json$Decode$decodeValue, $author$project$Main$projectDecoder, value);
+				if (!_v8.$) {
+					var project = _v8.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{aB: project.o, A: project.c.A, a: project}),
+							{aB: project.o, B: project.c.B, a: project}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 40:
+			case 41:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{a8: input}),
 					$elm$core$Platform$Cmd$none);
-			case 41:
+			case 42:
 				var constraintType = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{w: constraintType}),
+						{x: constraintType}),
 					$elm$core$Platform$Cmd$none);
-			case 42:
+			case 43:
 				var sequence = $elm$core$String$trim(model.a8);
 				var language = model.a.c;
 				var phonology = language.n;
-				var description = A2($author$project$Main$constraintTypeToDescription, model.w, sequence);
-				var newConstraint = {w: model.w, d: description, y: sequence};
+				var description = A2($author$project$Main$constraintTypeToDescription, model.x, sequence);
+				var newConstraint = {x: model.x, d: description, z: sequence};
 				var constraintExists = A2(
 					$elm$core$List$any,
 					function (c) {
-						return _Utils_eq(c.y, sequence) && _Utils_eq(c.w, model.w);
+						return _Utils_eq(c.z, sequence) && _Utils_eq(c.x, model.x);
 					},
-					phonology.T);
+					phonology.U);
 				var updatedPhonology = ($elm$core$String$isEmpty(sequence) || constraintExists) ? phonology : _Utils_update(
 					phonology,
 					{
-						T: _Utils_ap(
-							phonology.T,
+						U: _Utils_ap(
+							phonology.U,
 							_List_fromArray(
 								[newConstraint]))
 					});
@@ -9882,19 +9906,19 @@ var $author$project$Main$update = F2(
 						{a8: '', a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 43:
+			case 44:
 				var constraint = msg.a;
 				var language = model.a.c;
 				var phonology = language.n;
 				var updatedPhonology = _Utils_update(
 					phonology,
 					{
-						T: A2(
+						U: A2(
 							$elm$core$List$filter,
 							function (c) {
-								return !(_Utils_eq(c.y, constraint.y) && _Utils_eq(c.w, constraint.w));
+								return !(_Utils_eq(c.z, constraint.z) && _Utils_eq(c.x, constraint.x));
 							},
-							phonology.T)
+							phonology.U)
 					});
 				var updatedLanguage = _Utils_update(
 					language,
@@ -9906,28 +9930,28 @@ var $author$project$Main$update = F2(
 						{a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 44:
+			case 45:
 				var tab = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aV: tab}),
 					$elm$core$Platform$Cmd$none);
-			case 45:
+			case 46:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{ba: input}),
 					$elm$core$Platform$Cmd$none);
-			case 46:
+			case 47:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{bb: input}),
 					$elm$core$Platform$Cmd$none);
-			case 47:
+			case 48:
 				var language = model.a.c;
 				var morphology = language.j;
 				var featureName = $elm$core$String$trim(model.ba);
@@ -9944,7 +9968,7 @@ var $author$project$Main$update = F2(
 							morphology.p,
 							_List_fromArray(
 								[
-									{b: featureName, Q: _List_Nil}
+									{b: featureName, R: _List_Nil}
 								]))
 					});
 				var updatedLanguage = _Utils_update(
@@ -9957,7 +9981,7 @@ var $author$project$Main$update = F2(
 						{ba: '', a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 48:
+			case 49:
 				var featureName = msg.a;
 				var value = $elm$core$String$trim(model.bb);
 				var language = model.a.c;
@@ -9965,11 +9989,11 @@ var $author$project$Main$update = F2(
 				var updatedFeatures = A2(
 					$elm$core$List$map,
 					function (feature) {
-						return (_Utils_eq(feature.b, featureName) && ((!$elm$core$String$isEmpty(value)) && (!A2($elm$core$List$member, value, feature.Q)))) ? _Utils_update(
+						return (_Utils_eq(feature.b, featureName) && ((!$elm$core$String$isEmpty(value)) && (!A2($elm$core$List$member, value, feature.R)))) ? _Utils_update(
 							feature,
 							{
-								Q: _Utils_ap(
-									feature.Q,
+								R: _Utils_ap(
+									feature.R,
 									_List_fromArray(
 										[value]))
 							}) : feature;
@@ -9988,7 +10012,7 @@ var $author$project$Main$update = F2(
 						{bb: '', a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 49:
+			case 50:
 				var featureName = msg.a;
 				var language = model.a.c;
 				var morphology = language.j;
@@ -10012,7 +10036,7 @@ var $author$project$Main$update = F2(
 						{a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 50:
+			case 51:
 				var featureName = msg.a;
 				var value = msg.b;
 				var language = model.a.c;
@@ -10023,12 +10047,12 @@ var $author$project$Main$update = F2(
 						return _Utils_eq(feature.b, featureName) ? _Utils_update(
 							feature,
 							{
-								Q: A2(
+								R: A2(
 									$elm$core$List$filter,
 									function (v) {
 										return !_Utils_eq(v, value);
 									},
-									feature.Q)
+									feature.R)
 							}) : feature;
 					},
 					morphology.p);
@@ -10045,54 +10069,54 @@ var $author$project$Main$update = F2(
 						{a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 51:
+			case 52:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{as: input}),
 					$elm$core$Platform$Cmd$none);
-			case 52:
+			case 53:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{at: input}),
 					$elm$core$Platform$Cmd$none);
-			case 53:
+			case 54:
 				var morphemeType = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aE: morphemeType}),
 					$elm$core$Platform$Cmd$none);
-			case 54:
+			case 55:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{ai: input}),
 					$elm$core$Platform$Cmd$none);
-			case 55:
+			case 56:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{au: input}),
 					$elm$core$Platform$Cmd$none);
-			case 56:
+			case 57:
 				var value = $elm$core$String$trim(model.au);
 				var language = model.a.c;
 				var morphology = language.j;
 				var gloss = $elm$core$String$trim(model.at);
 				var form = $elm$core$String$trim(model.as);
 				var feature = $elm$core$String$trim(model.ai);
-				var newMorpheme = {G: feature, e: form, C: gloss, I: model.aE, P: value};
+				var newMorpheme = {C: feature, g: form, D: gloss, K: model.aE, G: value};
 				var updatedMorphology = ($elm$core$String$isEmpty(form) || $elm$core$String$isEmpty(gloss)) ? morphology : _Utils_update(
 					morphology,
 					{
-						D: _Utils_ap(
-							morphology.D,
+						q: _Utils_ap(
+							morphology.q,
 							_List_fromArray(
 								[newMorpheme]))
 					});
@@ -10106,19 +10130,19 @@ var $author$project$Main$update = F2(
 						{ai: '', as: '', at: '', au: '', a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 57:
+			case 58:
 				var morpheme = msg.a;
 				var language = model.a.c;
 				var morphology = language.j;
 				var updatedMorphology = _Utils_update(
 					morphology,
 					{
-						D: A2(
+						q: A2(
 							$elm$core$List$filter,
 							function (m) {
-								return !(_Utils_eq(m.e, morpheme.e) && _Utils_eq(m.C, morpheme.C));
+								return !(_Utils_eq(m.g, morpheme.g) && _Utils_eq(m.D, morpheme.D));
 							},
-							morphology.D)
+							morphology.q)
 					});
 				var updatedLanguage = _Utils_update(
 					language,
@@ -10130,9 +10154,9 @@ var $author$project$Main$update = F2(
 						{a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 58:
+			case 59:
 				var index = msg.a;
-				var morpheme = A2($author$project$Main$getAt, index, model.a.c.j.D);
+				var morpheme = A2($author$project$Main$getAt, index, model.a.c.j.q);
 				if (!morpheme.$) {
 					var m = morpheme.a;
 					return _Utils_Tuple2(
@@ -10140,37 +10164,37 @@ var $author$project$Main$update = F2(
 							model,
 							{
 								aW: $elm$core$Maybe$Just(index),
-								ai: m.G,
-								as: m.e,
-								at: m.C,
-								aE: m.I,
-								au: m.P
+								ai: m.C,
+								as: m.g,
+								at: m.D,
+								aE: m.K,
+								au: m.G
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 59:
-				var _v9 = model.aW;
-				if (!_v9.$) {
-					var index = _v9.a;
+			case 60:
+				var _v10 = model.aW;
+				if (!_v10.$) {
+					var index = _v10.a;
 					var value = $elm$core$String$trim(model.au);
 					var language = model.a.c;
 					var morphology = language.j;
 					var gloss = $elm$core$String$trim(model.at);
 					var form = $elm$core$String$trim(model.as);
 					var feature = $elm$core$String$trim(model.ai);
-					var updatedMorpheme = {G: feature, e: form, C: gloss, I: model.aE, P: value};
+					var updatedMorpheme = {C: feature, g: form, D: gloss, K: model.aE, G: value};
 					var updatedMorphemes = A2(
 						$elm$core$List$indexedMap,
 						F2(
 							function (i, m) {
 								return _Utils_eq(i, index) ? updatedMorpheme : m;
 							}),
-						morphology.D);
+						morphology.q);
 					var updatedMorphology = ($elm$core$String$isEmpty(form) || $elm$core$String$isEmpty(gloss)) ? morphology : _Utils_update(
 						morphology,
-						{D: updatedMorphemes});
+						{q: updatedMorphemes});
 					var updatedLanguage = _Utils_update(
 						language,
 						{j: updatedMorphology});
@@ -10184,18 +10208,11 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 60:
+			case 61:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aW: $elm$core$Maybe$Nothing, ai: '', as: '', at: '', aE: 1, au: ''}),
-					$elm$core$Platform$Cmd$none);
-			case 61:
-				var input = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{bh: input}),
 					$elm$core$Platform$Cmd$none);
 			case 62:
 				var input = msg.a;
@@ -10205,6 +10222,13 @@ var $author$project$Main$update = F2(
 						{bi: input}),
 					$elm$core$Platform$Cmd$none);
 			case 63:
+				var input = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{bj: input}),
+					$elm$core$Platform$Cmd$none);
+			case 64:
 				var featureName = msg.a;
 				var newSelected = A2($elm$core$List$member, featureName, model.ap) ? A2(
 					$elm$core$List$filter,
@@ -10220,16 +10244,16 @@ var $author$project$Main$update = F2(
 						model,
 						{ap: newSelected}),
 					$elm$core$Platform$Cmd$none);
-			case 64:
+			case 65:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{bf: input}),
 					$elm$core$Platform$Cmd$none);
-			case 65:
-				var pos = $elm$core$String$trim(model.bi);
-				var paradigmName = $elm$core$String$trim(model.bh);
+			case 66:
+				var pos = $elm$core$String$trim(model.bj);
+				var paradigmName = $elm$core$String$trim(model.bi);
 				var language = model.a.c;
 				var morphology = language.j;
 				var selectedFeatureObjects = A2(
@@ -10248,20 +10272,20 @@ var $author$project$Main$update = F2(
 				var base = $elm$core$String$trim(model.bf);
 				var newParadigm = {
 					aA: base,
-					V: A2(
+					W: A2(
 						$elm$core$List$map,
 						function (combo) {
-							return {p: combo, e: ''};
+							return {p: combo, g: ''};
 						},
 						combinations),
 					b: paradigmName,
-					z: pos
+					A: pos
 				};
 				var updatedMorphology = ($elm$core$String$isEmpty(paradigmName) || ($elm$core$String$isEmpty(pos) || $elm$core$List$isEmpty(combinations))) ? morphology : _Utils_update(
 					morphology,
 					{
-						x: _Utils_ap(
-							morphology.x,
+						y: _Utils_ap(
+							morphology.y,
 							_List_fromArray(
 								[newParadigm]))
 					});
@@ -10272,59 +10296,23 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bf: '', bh: '', bi: '', a: updatedProject, ap: _List_Nil}),
+						{bf: '', bi: '', bj: '', a: updatedProject, ap: _List_Nil}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 66:
+			case 67:
 				var paradigmName = msg.a;
 				var language = model.a.c;
 				var morphology = language.j;
 				var updatedMorphology = _Utils_update(
 					morphology,
 					{
-						x: A2(
+						y: A2(
 							$elm$core$List$filter,
 							function (p) {
 								return !_Utils_eq(p.b, paradigmName);
 							},
-							morphology.x)
+							morphology.y)
 					});
-				var updatedLanguage = _Utils_update(
-					language,
-					{j: updatedMorphology});
-				var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{a: updatedProject}),
-					$author$project$Main$saveToStorage(
-						$author$project$Main$encodeProject(updatedProject)));
-			case 67:
-				var paradigmName = msg.a;
-				var newForm = msg.b;
-				var featureCombination = msg.c;
-				var language = model.a.c;
-				var morphology = language.j;
-				var updatedParadigms = A2(
-					$elm$core$List$map,
-					function (paradigm) {
-						return _Utils_eq(paradigm.b, paradigmName) ? _Utils_update(
-							paradigm,
-							{
-								V: A2(
-									$elm$core$List$map,
-									function (combo) {
-										return _Utils_eq(combo.p, featureCombination) ? _Utils_update(
-											combo,
-											{e: newForm}) : combo;
-									},
-									paradigm.V)
-							}) : paradigm;
-					},
-					morphology.x);
-				var updatedMorphology = _Utils_update(
-					morphology,
-					{x: updatedParadigms});
 				var updatedLanguage = _Utils_update(
 					language,
 					{j: updatedMorphology});
@@ -10337,7 +10325,8 @@ var $author$project$Main$update = F2(
 						$author$project$Main$encodeProject(updatedProject)));
 			case 68:
 				var paradigmName = msg.a;
-				var newBaseForm = msg.b;
+				var newForm = msg.b;
+				var featureCombination = msg.c;
 				var language = model.a.c;
 				var morphology = language.j;
 				var updatedParadigms = A2(
@@ -10345,12 +10334,21 @@ var $author$project$Main$update = F2(
 					function (paradigm) {
 						return _Utils_eq(paradigm.b, paradigmName) ? _Utils_update(
 							paradigm,
-							{aA: newBaseForm}) : paradigm;
+							{
+								W: A2(
+									$elm$core$List$map,
+									function (combo) {
+										return _Utils_eq(combo.p, featureCombination) ? _Utils_update(
+											combo,
+											{g: newForm}) : combo;
+									},
+									paradigm.W)
+							}) : paradigm;
 					},
-					morphology.x);
+					morphology.y);
 				var updatedMorphology = _Utils_update(
 					morphology,
-					{x: updatedParadigms});
+					{y: updatedParadigms});
 				var updatedLanguage = _Utils_update(
 					language,
 					{j: updatedMorphology});
@@ -10363,6 +10361,7 @@ var $author$project$Main$update = F2(
 						$author$project$Main$encodeProject(updatedProject)));
 			case 69:
 				var paradigmName = msg.a;
+				var newBaseForm = msg.b;
 				var language = model.a.c;
 				var morphology = language.j;
 				var updatedParadigms = A2(
@@ -10370,23 +10369,12 @@ var $author$project$Main$update = F2(
 					function (paradigm) {
 						return _Utils_eq(paradigm.b, paradigmName) ? _Utils_update(
 							paradigm,
-							{
-								V: A2(
-									$elm$core$List$map,
-									function (combo) {
-										return _Utils_update(
-											combo,
-											{
-												e: A4($author$project$Main$generateInflectedForm, paradigm.aA, combo.p, morphology.D, morphology.Y)
-											});
-									},
-									paradigm.V)
-							}) : paradigm;
+							{aA: newBaseForm}) : paradigm;
 					},
-					morphology.x);
+					morphology.y);
 				var updatedMorphology = _Utils_update(
 					morphology,
-					{x: updatedParadigms});
+					{y: updatedParadigms});
 				var updatedLanguage = _Utils_update(
 					language,
 					{j: updatedMorphology});
@@ -10401,6 +10389,42 @@ var $author$project$Main$update = F2(
 				var paradigmName = msg.a;
 				var language = model.a.c;
 				var morphology = language.j;
+				var updatedParadigms = A2(
+					$elm$core$List$map,
+					function (paradigm) {
+						return _Utils_eq(paradigm.b, paradigmName) ? _Utils_update(
+							paradigm,
+							{
+								W: A2(
+									$elm$core$List$map,
+									function (combo) {
+										return _Utils_update(
+											combo,
+											{
+												g: A4($author$project$Main$generateInflectedForm, paradigm.aA, combo.p, morphology.q, morphology.P)
+											});
+									},
+									paradigm.W)
+							}) : paradigm;
+					},
+					morphology.y);
+				var updatedMorphology = _Utils_update(
+					morphology,
+					{y: updatedParadigms});
+				var updatedLanguage = _Utils_update(
+					language,
+					{j: updatedMorphology});
+				var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{a: updatedProject}),
+					$author$project$Main$saveToStorage(
+						$author$project$Main$encodeProject(updatedProject)));
+			case 71:
+				var paradigmName = msg.a;
+				var language = model.a.c;
+				var morphology = language.j;
 				var maybeDuplicate = A2(
 					$elm$core$Maybe$map,
 					function (original) {
@@ -10411,19 +10435,19 @@ var $author$project$Main$update = F2(
 								function (p) {
 									return A2($elm$core$String$startsWith, baseName, p.b);
 								},
-								morphology.x));
+								morphology.y));
 						var newName = (existingCopies === 1) ? (baseName + ' (Copy)') : (baseName + (' (Copy ' + ($elm$core$String$fromInt(existingCopies) + ')')));
 						return _Utils_update(
 							original,
 							{
-								V: A2(
+								W: A2(
 									$elm$core$List$map,
 									function (fc) {
 										return _Utils_update(
 											fc,
-											{e: ''});
+											{g: ''});
 									},
-									original.V),
+									original.W),
 								b: newName
 							});
 					},
@@ -10433,15 +10457,15 @@ var $author$project$Main$update = F2(
 							function (p) {
 								return _Utils_eq(p.b, paradigmName);
 							},
-							morphology.x)));
+							morphology.y)));
 				var updatedMorphology = function () {
 					if (!maybeDuplicate.$) {
 						var duplicate = maybeDuplicate.a;
 						return _Utils_update(
 							morphology,
 							{
-								x: _Utils_ap(
-									morphology.x,
+								y: _Utils_ap(
+									morphology.y,
 									_List_fromArray(
 										[duplicate]))
 							});
@@ -10459,62 +10483,62 @@ var $author$project$Main$update = F2(
 						{a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 71:
-				var input = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{bp: input}),
-					$elm$core$Platform$Cmd$none);
 			case 72:
-				var input = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{bn: input}),
-					$elm$core$Platform$Cmd$none);
-			case 73:
-				var input = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{br: input}),
-					$elm$core$Platform$Cmd$none);
-			case 74:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{bq: input}),
 					$elm$core$Platform$Cmd$none);
-			case 75:
+			case 73:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{bo: input}),
 					$elm$core$Platform$Cmd$none);
+			case 74:
+				var input = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{bs: input}),
+					$elm$core$Platform$Cmd$none);
+			case 75:
+				var input = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{br: input}),
+					$elm$core$Platform$Cmd$none);
 			case 76:
+				var input = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{bp: input}),
+					$elm$core$Platform$Cmd$none);
+			case 77:
 				var ruleType = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aO: ruleType}),
 					$elm$core$Platform$Cmd$none);
-			case 77:
-				var target = $elm$core$String$trim(model.br);
-				var replacement = $elm$core$String$trim(model.bq);
-				var name = $elm$core$String$trim(model.bp);
+			case 78:
+				var target = $elm$core$String$trim(model.bs);
+				var replacement = $elm$core$String$trim(model.br);
+				var name = $elm$core$String$trim(model.bq);
 				var language = model.a.c;
 				var morphology = language.j;
-				var description = $elm$core$String$trim(model.bo);
-				var context = $elm$core$String$trim(model.bn);
+				var description = $elm$core$String$trim(model.bp);
+				var context = $elm$core$String$trim(model.bo);
 				var newRule = {ar: context, d: description, b: name, aj: replacement, a2: model.aO, ab: target};
 				var updatedMorphology = ($elm$core$String$isEmpty(name) || ($elm$core$String$isEmpty(target) || $elm$core$String$isEmpty(replacement))) ? morphology : _Utils_update(
 					morphology,
 					{
-						Y: _Utils_ap(
-							morphology.Y,
+						P: _Utils_ap(
+							morphology.P,
 							_List_fromArray(
 								[newRule]))
 					});
@@ -10525,60 +10549,23 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{a: updatedProject, bn: '', bo: '', bp: '', bq: '', br: ''}),
+						{a: updatedProject, bo: '', bp: '', bq: '', br: '', bs: ''}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 78:
+			case 79:
 				var rule = msg.a;
 				var language = model.a.c;
 				var morphology = language.j;
 				var updatedMorphology = _Utils_update(
 					morphology,
 					{
-						Y: A2(
+						P: A2(
 							$elm$core$List$filter,
 							function (r) {
 								return !(_Utils_eq(r.b, rule.b) && _Utils_eq(r.ab, rule.ab));
 							},
-							morphology.Y)
+							morphology.P)
 					});
-				var updatedLanguage = _Utils_update(
-					language,
-					{j: updatedMorphology});
-				var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{a: updatedProject}),
-					$author$project$Main$saveToStorage(
-						$author$project$Main$encodeProject(updatedProject)));
-			case 79:
-				var paradigmName = msg.a;
-				var language = model.a.c;
-				var morphology = language.j;
-				var rules = morphology.Y;
-				var updatedParadigms = A2(
-					$elm$core$List$map,
-					function (paradigm) {
-						return _Utils_eq(paradigm.b, paradigmName) ? _Utils_update(
-							paradigm,
-							{
-								V: A2(
-									$elm$core$List$map,
-									function (combo) {
-										return _Utils_update(
-											combo,
-											{
-												e: A2($author$project$Main$applyMorphophonemicRules, rules, combo.e)
-											});
-									},
-									paradigm.V)
-							}) : paradigm;
-					},
-					morphology.x);
-				var updatedMorphology = _Utils_update(
-					morphology,
-					{x: updatedParadigms});
 				var updatedLanguage = _Utils_update(
 					language,
 					{j: updatedMorphology});
@@ -10590,30 +10577,67 @@ var $author$project$Main$update = F2(
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
 			case 80:
+				var paradigmName = msg.a;
+				var language = model.a.c;
+				var morphology = language.j;
+				var rules = morphology.P;
+				var updatedParadigms = A2(
+					$elm$core$List$map,
+					function (paradigm) {
+						return _Utils_eq(paradigm.b, paradigmName) ? _Utils_update(
+							paradigm,
+							{
+								W: A2(
+									$elm$core$List$map,
+									function (combo) {
+										return _Utils_update(
+											combo,
+											{
+												g: A2($author$project$Main$applyMorphophonemicRules, rules, combo.g)
+											});
+									},
+									paradigm.W)
+							}) : paradigm;
+					},
+					morphology.y);
+				var updatedMorphology = _Utils_update(
+					morphology,
+					{y: updatedParadigms});
+				var updatedLanguage = _Utils_update(
+					language,
+					{j: updatedMorphology});
+				var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{a: updatedProject}),
+					$author$project$Main$saveToStorage(
+						$author$project$Main$encodeProject(updatedProject)));
+			case 81:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aS: input}),
 					$elm$core$Platform$Cmd$none);
-			case 81:
+			case 82:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aH: input}),
 					$elm$core$Platform$Cmd$none);
-			case 82:
+			case 83:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aM: input}),
 					$elm$core$Platform$Cmd$none);
-			case 83:
-				var _v11 = model.W;
-				if (!_v11.$) {
-					var index = _v11.a;
+			case 84:
+				var _v12 = model.X;
+				if (!_v12.$) {
+					var index = _v12.a;
 					var synonym = $elm$core$String$trim(model.aS);
 					var language = model.a.c;
 					var updatedLexicon = A2(
@@ -10621,26 +10645,26 @@ var $author$project$Main$update = F2(
 						F2(
 							function (i, word) {
 								if (_Utils_eq(i, index) && (!$elm$core$String$isEmpty(synonym))) {
-									var links = word.u;
+									var links = word.v;
 									var updatedLinks = _Utils_update(
 										links,
 										{
-											M: _Utils_ap(
-												links.M,
+											O: _Utils_ap(
+												links.O,
 												_List_fromArray(
 													[synonym]))
 										});
 									return _Utils_update(
 										word,
-										{u: updatedLinks});
+										{v: updatedLinks});
 								} else {
 									return word;
 								}
 							}),
-						language.g);
+						language.e);
 					var updatedLanguage = _Utils_update(
 						language,
-						{g: updatedLexicon});
+						{e: updatedLexicon});
 					var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -10651,10 +10675,10 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 84:
-				var _v12 = model.W;
-				if (!_v12.$) {
-					var index = _v12.a;
+			case 85:
+				var _v13 = model.X;
+				if (!_v13.$) {
+					var index = _v13.a;
 					var language = model.a.c;
 					var antonym = $elm$core$String$trim(model.aH);
 					var updatedLexicon = A2(
@@ -10662,26 +10686,26 @@ var $author$project$Main$update = F2(
 						F2(
 							function (i, word) {
 								if (_Utils_eq(i, index) && (!$elm$core$String$isEmpty(antonym))) {
-									var links = word.u;
+									var links = word.v;
 									var updatedLinks = _Utils_update(
 										links,
 										{
-											F: _Utils_ap(
-												links.F,
+											H: _Utils_ap(
+												links.H,
 												_List_fromArray(
 													[antonym]))
 										});
 									return _Utils_update(
 										word,
-										{u: updatedLinks});
+										{v: updatedLinks});
 								} else {
 									return word;
 								}
 							}),
-						language.g);
+						language.e);
 					var updatedLanguage = _Utils_update(
 						language,
-						{g: updatedLexicon});
+						{e: updatedLexicon});
 					var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -10692,10 +10716,10 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 85:
-				var _v13 = model.W;
-				if (!_v13.$) {
-					var index = _v13.a;
+			case 86:
+				var _v14 = model.X;
+				if (!_v14.$) {
+					var index = _v14.a;
 					var related = $elm$core$String$trim(model.aM);
 					var language = model.a.c;
 					var updatedLexicon = A2(
@@ -10703,26 +10727,26 @@ var $author$project$Main$update = F2(
 						F2(
 							function (i, word) {
 								if (_Utils_eq(i, index) && (!$elm$core$String$isEmpty(related))) {
-									var links = word.u;
+									var links = word.v;
 									var updatedLinks = _Utils_update(
 										links,
 										{
-											K: _Utils_ap(
-												links.K,
+											M: _Utils_ap(
+												links.M,
 												_List_fromArray(
 													[related]))
 										});
 									return _Utils_update(
 										word,
-										{u: updatedLinks});
+										{v: updatedLinks});
 								} else {
 									return word;
 								}
 							}),
-						language.g);
+						language.e);
 					var updatedLanguage = _Utils_update(
 						language,
-						{g: updatedLexicon});
+						{e: updatedLexicon});
 					var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -10733,52 +10757,9 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 86:
-				var synonym = msg.a;
-				var _v14 = model.W;
-				if (!_v14.$) {
-					var index = _v14.a;
-					var language = model.a.c;
-					var updatedLexicon = A2(
-						$elm$core$List$indexedMap,
-						F2(
-							function (i, word) {
-								if (_Utils_eq(i, index)) {
-									var links = word.u;
-									var updatedLinks = _Utils_update(
-										links,
-										{
-											M: A2(
-												$elm$core$List$filter,
-												function (s) {
-													return !_Utils_eq(s, synonym);
-												},
-												links.M)
-										});
-									return _Utils_update(
-										word,
-										{u: updatedLinks});
-								} else {
-									return word;
-								}
-							}),
-						language.g);
-					var updatedLanguage = _Utils_update(
-						language,
-						{g: updatedLexicon});
-					var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{a: updatedProject}),
-						$author$project$Main$saveToStorage(
-							$author$project$Main$encodeProject(updatedProject)));
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
 			case 87:
-				var antonym = msg.a;
-				var _v15 = model.W;
+				var synonym = msg.a;
+				var _v15 = model.X;
 				if (!_v15.$) {
 					var index = _v15.a;
 					var language = model.a.c;
@@ -10787,28 +10768,28 @@ var $author$project$Main$update = F2(
 						F2(
 							function (i, word) {
 								if (_Utils_eq(i, index)) {
-									var links = word.u;
+									var links = word.v;
 									var updatedLinks = _Utils_update(
 										links,
 										{
-											F: A2(
+											O: A2(
 												$elm$core$List$filter,
-												function (a) {
-													return !_Utils_eq(a, antonym);
+												function (s) {
+													return !_Utils_eq(s, synonym);
 												},
-												links.F)
+												links.O)
 										});
 									return _Utils_update(
 										word,
-										{u: updatedLinks});
+										{v: updatedLinks});
 								} else {
 									return word;
 								}
 							}),
-						language.g);
+						language.e);
 					var updatedLanguage = _Utils_update(
 						language,
-						{g: updatedLexicon});
+						{e: updatedLexicon});
 					var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -10820,8 +10801,8 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 88:
-				var related = msg.a;
-				var _v16 = model.W;
+				var antonym = msg.a;
+				var _v16 = model.X;
 				if (!_v16.$) {
 					var index = _v16.a;
 					var language = model.a.c;
@@ -10830,28 +10811,28 @@ var $author$project$Main$update = F2(
 						F2(
 							function (i, word) {
 								if (_Utils_eq(i, index)) {
-									var links = word.u;
+									var links = word.v;
 									var updatedLinks = _Utils_update(
 										links,
 										{
-											K: A2(
+											H: A2(
 												$elm$core$List$filter,
-												function (r) {
-													return !_Utils_eq(r, related);
+												function (a) {
+													return !_Utils_eq(a, antonym);
 												},
-												links.K)
+												links.H)
 										});
 									return _Utils_update(
 										word,
-										{u: updatedLinks});
+										{v: updatedLinks});
 								} else {
 									return word;
 								}
 							}),
-						language.g);
+						language.e);
 					var updatedLanguage = _Utils_update(
 						language,
-						{g: updatedLexicon});
+						{e: updatedLexicon});
 					var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -10863,16 +10844,59 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 89:
+				var related = msg.a;
+				var _v17 = model.X;
+				if (!_v17.$) {
+					var index = _v17.a;
+					var language = model.a.c;
+					var updatedLexicon = A2(
+						$elm$core$List$indexedMap,
+						F2(
+							function (i, word) {
+								if (_Utils_eq(i, index)) {
+									var links = word.v;
+									var updatedLinks = _Utils_update(
+										links,
+										{
+											M: A2(
+												$elm$core$List$filter,
+												function (r) {
+													return !_Utils_eq(r, related);
+												},
+												links.M)
+										});
+									return _Utils_update(
+										word,
+										{v: updatedLinks});
+								} else {
+									return word;
+								}
+							}),
+						language.e);
+					var updatedLanguage = _Utils_update(
+						language,
+						{e: updatedLexicon});
+					var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{a: updatedProject}),
+						$author$project$Main$saveToStorage(
+							$author$project$Main$encodeProject(updatedProject)));
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 90:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{bg: input}),
 					$elm$core$Platform$Cmd$none);
-			case 90:
-				var _v17 = model.W;
-				if (!_v17.$) {
-					var index = _v17.a;
+			case 91:
+				var _v18 = model.X;
+				if (!_v18.$) {
+					var index = _v18.a;
 					var trimmedCategory = $elm$core$String$trim(model.bg);
 					if ($elm$core$String$isEmpty(trimmedCategory)) {
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -10891,10 +10915,10 @@ var $author$project$Main$update = F2(
 													[trimmedCategory]))
 										})) : word;
 								}),
-							language.g);
+							language.e);
 						var updatedLanguage = _Utils_update(
 							language,
-							{g: updatedLexicon});
+							{e: updatedLexicon});
 						var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 						return _Utils_Tuple2(
 							_Utils_update(
@@ -10906,11 +10930,11 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 91:
+			case 92:
 				var category = msg.a;
-				var _v18 = model.W;
-				if (!_v18.$) {
-					var index = _v18.a;
+				var _v19 = model.X;
+				if (!_v19.$) {
+					var index = _v19.a;
 					var language = model.a.c;
 					var updatedLexicon = A2(
 						$elm$core$List$indexedMap,
@@ -10927,10 +10951,10 @@ var $author$project$Main$update = F2(
 											word.k)
 									}) : word;
 							}),
-						language.g);
+						language.e);
 					var updatedLanguage = _Utils_update(
 						language,
-						{g: updatedLexicon});
+						{e: updatedLexicon});
 					var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -10941,58 +10965,58 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 92:
+			case 93:
 				var category = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bH: category}),
+						{bI: category}),
 					$elm$core$Platform$Cmd$none);
-			case 93:
+			case 94:
 				var index = msg.a;
-				var updatedSelection = A2($elm$core$List$member, index, model.E) ? A2(
+				var updatedSelection = A2($elm$core$List$member, index, model.F) ? A2(
 					$elm$core$List$filter,
 					function (i) {
 						return !_Utils_eq(i, index);
 					},
-					model.E) : _Utils_ap(
-					model.E,
+					model.F) : _Utils_ap(
+					model.F,
 					_List_fromArray(
 						[index]));
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{E: updatedSelection}),
+						{F: updatedSelection}),
 					$elm$core$Platform$Cmd$none);
-			case 94:
+			case 95:
 				var allIndices = A2(
 					$elm$core$List$range,
 					0,
-					$elm$core$List$length(model.a.c.g) - 1);
+					$elm$core$List$length(model.a.c.e) - 1);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{E: allIndices}),
-					$elm$core$Platform$Cmd$none);
-			case 95:
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{E: _List_Nil}),
+						{F: allIndices}),
 					$elm$core$Platform$Cmd$none);
 			case 96:
-				return $elm$core$List$isEmpty(model.E) ? _Utils_Tuple2(model, $elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bv: true}),
+						{F: _List_Nil}),
 					$elm$core$Platform$Cmd$none);
-			case 155:
+			case 97:
+				return $elm$core$List$isEmpty(model.F) ? _Utils_Tuple2(model, $elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{bw: true}),
+					$elm$core$Platform$Cmd$none);
+			case 156:
 				var sortedIndices = A2(
 					$elm$core$List$sortBy,
 					function (i) {
 						return -i;
 					},
-					model.E);
+					model.F);
 				var language = model.a.c;
 				var updatedLexicon = A3(
 					$elm$core$List$foldl,
@@ -11002,11 +11026,11 @@ var $author$project$Main$update = F2(
 								A2($elm$core$List$take, indexToRemove, lex),
 								A2($elm$core$List$drop, indexToRemove + 1, lex));
 						}),
-					language.g,
+					language.e,
 					sortedIndices);
 				var updatedLanguage = _Utils_update(
 					language,
-					{g: updatedLexicon});
+					{e: updatedLexicon});
 				var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -11014,39 +11038,39 @@ var $author$project$Main$update = F2(
 						{
 							a: updatedProject,
 							Z: _List_Nil,
-							E: _List_Nil,
-							bv: false,
-							B: A2($elm$core$List$cons, model.a, model.B)
+							F: _List_Nil,
+							bw: false,
+							E: A2($elm$core$List$cons, model.a, model.E)
 						}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 156:
+			case 157:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bv: false}),
+						{bw: false}),
 					$elm$core$Platform$Cmd$none);
-			case 97:
+			case 98:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bE: input}),
+						{bG: input}),
 					$elm$core$Platform$Cmd$none);
-			case 98:
+			case 99:
 				var language = model.a.c;
 				var updatedLexicon = A2(
 					$elm$core$List$indexedMap,
 					F2(
 						function (i, word) {
-							return A2($elm$core$List$member, i, model.E) ? _Utils_update(
+							return A2($elm$core$List$member, i, model.F) ? _Utils_update(
 								word,
-								{z: model.bE}) : word;
+								{A: model.bG}) : word;
 						}),
-					language.g);
+					language.e);
 				var updatedLanguage = _Utils_update(
 					language,
-					{g: updatedLexicon});
+					{e: updatedLexicon});
 				var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -11054,19 +11078,19 @@ var $author$project$Main$update = F2(
 						{
 							a: updatedProject,
 							Z: _List_Nil,
-							E: _List_Nil,
-							B: A2($elm$core$List$cons, model.a, model.B)
+							F: _List_Nil,
+							E: A2($elm$core$List$cons, model.a, model.E)
 						}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 99:
+			case 100:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{a6: input}),
 					$elm$core$Platform$Cmd$none);
-			case 100:
+			case 101:
 				var trimmedCategory = $elm$core$String$trim(model.a6);
 				if ($elm$core$String$isEmpty(trimmedCategory)) {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -11076,7 +11100,7 @@ var $author$project$Main$update = F2(
 						$elm$core$List$indexedMap,
 						F2(
 							function (i, word) {
-								return A2($elm$core$List$member, i, model.E) ? (A2($elm$core$List$member, trimmedCategory, word.k) ? word : _Utils_update(
+								return A2($elm$core$List$member, i, model.F) ? (A2($elm$core$List$member, trimmedCategory, word.k) ? word : _Utils_update(
 									word,
 									{
 										k: _Utils_ap(
@@ -11085,10 +11109,10 @@ var $author$project$Main$update = F2(
 												[trimmedCategory]))
 									})) : word;
 							}),
-						language.g);
+						language.e);
 					var updatedLanguage = _Utils_update(
 						language,
-						{g: updatedLexicon});
+						{e: updatedLexicon});
 					var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -11097,20 +11121,20 @@ var $author$project$Main$update = F2(
 								a6: '',
 								a: updatedProject,
 								Z: _List_Nil,
-								E: _List_Nil,
-								B: A2($elm$core$List$cons, model.a, model.B)
+								F: _List_Nil,
+								E: A2($elm$core$List$cons, model.a, model.E)
 							}),
 						$author$project$Main$saveToStorage(
 							$author$project$Main$encodeProject(updatedProject)));
 				}
-			case 101:
+			case 102:
 				var language = model.a.c;
 				var selectedLexemes = A2(
 					$elm$core$List$filterMap,
 					function (i) {
-						return A2($author$project$Main$getAt, i, language.g);
+						return A2($author$project$Main$getAt, i, language.e);
 					},
-					model.E);
+					model.F);
 				var exportData = $elm$json$Json$Encode$object(
 					_List_fromArray(
 						[
@@ -11133,32 +11157,32 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$Main$exportProject(exportData));
-			case 102:
+			case 103:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aq: !model.aq}),
 					(!model.aq) ? $author$project$Main$loadAllProjects(0) : $elm$core$Platform$Cmd$none);
-			case 105:
+			case 106:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aF: input}),
 					$elm$core$Platform$Cmd$none);
-			case 103:
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{aF: '', bw: true}),
-					$elm$core$Platform$Cmd$none);
 			case 104:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{aF: '', bw: false}),
+						{aF: '', by: true}),
 					$elm$core$Platform$Cmd$none);
-			case 106:
+			case 105:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{aF: '', by: false}),
+					$elm$core$Platform$Cmd$none);
+			case 107:
 				if ($elm$core$String$isEmpty(
 					$elm$core$String$trim(model.aF))) {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -11167,32 +11191,32 @@ var $author$project$Main$update = F2(
 						_: model.i,
 						o: 0,
 						c: {
-							A: _List_Nil,
-							g: _List_Nil,
-							j: {p: _List_Nil, D: _List_Nil, Y: _List_Nil, x: _List_Nil},
+							B: _List_Nil,
+							e: _List_Nil,
+							j: {p: _List_Nil, q: _List_Nil, P: _List_Nil, y: _List_Nil},
 							b: 'Proto-Language',
 							n: {
 								k: _List_fromArray(
 									[
 										{
-										H: 'C',
+										J: 'C',
 										b: 'Consonants',
-										t: _List_fromArray(
+										u: _List_fromArray(
 											['p', 't', 'k', 'm', 'n', 's', 'l', 'r'])
 									},
 										{
-										H: 'V',
+										J: 'V',
 										b: 'Vowels',
-										t: _List_fromArray(
+										u: _List_fromArray(
 											['a', 'e', 'i', 'o', 'u'])
 									}
 									]),
-								T: _List_Nil,
-								q: {aC: 0, R: _List_Nil},
+								U: _List_Nil,
+								r: {aC: 0, S: _List_Nil},
 								aa: _List_fromArray(
 									[
-										{b: 'CV', v: 'CV'},
-										{b: 'CVC', v: 'CVC'}
+										{b: 'CV', w: 'CV'},
+										{b: 'CVC', w: 'CVC'}
 									])
 							}
 						},
@@ -11201,15 +11225,15 @@ var $author$project$Main$update = F2(
 					};
 					var updatedModel = _Utils_update(
 						model,
-						{aF: '', a: newProject, bw: false, aq: false});
+						{aF: '', a: newProject, by: false, aq: false});
 					return _Utils_Tuple2(
 						updatedModel,
 						$author$project$Main$saveToStorage(
 							$author$project$Main$encodeProject(newProject)));
 				}
-			case 107:
+			case 108:
 				var templateName = msg.a;
-				var allTemplates = _Utils_ap($author$project$Main$availableTemplates, model.bB);
+				var allTemplates = _Utils_ap($author$project$Main$availableTemplates, model.bD);
 				var maybeTemplate = $elm$core$List$head(
 					A2(
 						$elm$core$List$filter,
@@ -11230,7 +11254,7 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 108:
+			case 109:
 				if ($elm$core$String$isEmpty(
 					$elm$core$String$trim(model.aP))) {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -11239,42 +11263,42 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{a3: '', aP: '', bx: false}),
+							{a3: '', aP: '', bz: false}),
 						$author$project$Main$saveTemplateToStorage(
 							$author$project$Main$encodeTemplate(newTemplate)));
 				}
-			case 109:
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{bx: true}),
-					$elm$core$Platform$Cmd$none);
 			case 110:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{a3: '', aP: '', bx: false}),
+						{bz: true}),
 					$elm$core$Platform$Cmd$none);
 			case 111:
-				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{aP: input}),
+						{a3: '', aP: '', bz: false}),
 					$elm$core$Platform$Cmd$none);
 			case 112:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{a3: input}),
+						{aP: input}),
 					$elm$core$Platform$Cmd$none);
 			case 113:
+				var input = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{a3: input}),
+					$elm$core$Platform$Cmd$none);
+			case 114:
 				var templateId = msg.a;
 				return _Utils_Tuple2(
 					model,
 					$author$project$Main$deleteTemplateById(templateId));
-			case 114:
+			case 115:
 				var newShowDefault = !model.aQ;
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -11292,7 +11316,7 @@ var $author$project$Main$update = F2(
 											$elm$json$Json$Encode$bool(newShowDefault))
 										])))
 							])));
-			case 115:
+			case 116:
 				var newShowTemplates = !model.aG;
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -11310,23 +11334,23 @@ var $author$project$Main$update = F2(
 											$elm$json$Json$Encode$bool(newShowTemplates))
 										])))
 							])));
-			case 116:
+			case 117:
 				var value = msg.a;
-				var _v20 = A2(
+				var _v21 = A2(
 					$elm$json$Json$Decode$decodeValue,
 					$elm$json$Json$Decode$list($author$project$Main$decodeTemplate),
 					value);
-				if (!_v20.$) {
-					var templates = _v20.a;
+				if (!_v21.$) {
+					var templates = _v21.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{bB: templates}),
+							{bD: templates}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 117:
+			case 118:
 				var value = msg.a;
 				var showTemplatesSection = A2(
 					$elm$core$Result$withDefault,
@@ -11347,12 +11371,12 @@ var $author$project$Main$update = F2(
 						model,
 						{aQ: showDefaultTemplates, aG: showTemplatesSection}),
 					$elm$core$Platform$Cmd$none);
-			case 118:
+			case 119:
 				var projectId = msg.a;
 				return _Utils_Tuple2(
 					model,
 					$author$project$Main$loadProjectById(projectId));
-			case 119:
+			case 120:
 				var projectId = msg.a;
 				return _Utils_eq(projectId, model.aB) ? _Utils_Tuple2(model, $elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 					_Utils_update(
@@ -11361,20 +11385,20 @@ var $author$project$Main$update = F2(
 							a7: $elm$core$Maybe$Just(projectId)
 						}),
 					$elm$core$Platform$Cmd$none);
-			case 153:
+			case 154:
 				var projectId = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{a7: $elm$core$Maybe$Nothing}),
 					$author$project$Main$deleteProjectById(projectId));
-			case 154:
+			case 155:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{a7: $elm$core$Maybe$Nothing}),
 					$elm$core$Platform$Cmd$none);
-			case 120:
+			case 121:
 				var projectId = msg.a;
 				var currentName = msg.b;
 				return _Utils_Tuple2(
@@ -11382,32 +11406,32 @@ var $author$project$Main$update = F2(
 						model,
 						{
 							aN: currentName,
-							bm: $elm$core$Maybe$Just(projectId)
+							bn: $elm$core$Maybe$Just(projectId)
 						}),
 					$elm$core$Platform$Cmd$none);
-			case 121:
+			case 122:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aN: input}),
 					$elm$core$Platform$Cmd$none);
-			case 122:
+			case 123:
 				var projectId = msg.a;
 				var trimmedName = $elm$core$String$trim(model.aN);
 				return $elm$core$String$isEmpty(trimmedName) ? _Utils_Tuple2(model, $elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{aN: '', bm: $elm$core$Maybe$Nothing}),
+						{aN: '', bn: $elm$core$Maybe$Nothing}),
 					$author$project$Main$renameProjectById(
-						{b9: trimmedName, cg: projectId}));
-			case 123:
+						{cb: trimmedName, ci: projectId}));
+			case 124:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{aN: '', bm: $elm$core$Maybe$Nothing}),
+						{aN: '', bn: $elm$core$Maybe$Nothing}),
 					$elm$core$Platform$Cmd$none);
-			case 124:
+			case 125:
 				var projectId = msg.a;
 				var newName = msg.b;
 				if ($elm$core$String$isEmpty(
@@ -11426,19 +11450,19 @@ var $author$project$Main$update = F2(
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
 				}
-			case 125:
+			case 126:
 				var projectId = msg.a;
 				return _Utils_Tuple2(
 					model,
 					$author$project$Main$duplicateProjectById(projectId));
-			case 126:
+			case 127:
 				var value = msg.a;
-				var _v21 = A2(
+				var _v22 = A2(
 					$elm$json$Json$Decode$decodeValue,
 					$elm$json$Json$Decode$list($author$project$Main$decodeProjectMetadata),
 					value);
-				if (!_v21.$) {
-					var projectList = _v21.a;
+				if (!_v22.$) {
+					var projectList = _v22.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -11447,47 +11471,47 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 127:
+			case 128:
 				var value = msg.a;
-				var _v22 = A2($elm$json$Json$Decode$decodeValue, $author$project$Main$decodeProject, value);
-				if (!_v22.$) {
-					var project = _v22.a;
-					var _v23 = model.bl;
-					if (!_v23.$) {
-						var refId = _v23.a;
+				var _v23 = A2($elm$json$Json$Decode$decodeValue, $author$project$Main$decodeProject, value);
+				if (!_v23.$) {
+					var project = _v23.a;
+					var _v24 = model.bm;
+					if (!_v24.$) {
+						var refId = _v24.a;
 						return _Utils_eq(project.o, refId) ? _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
-									bM: $elm$core$Maybe$Just(project)
+									bN: $elm$core$Maybe$Just(project)
 								}),
 							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{aB: project.o, A: project.c.A, a: project, Z: _List_Nil, aq: false, B: _List_Nil}),
+								{aB: project.o, B: project.c.B, a: project, Z: _List_Nil, aq: false, E: _List_Nil}),
 							$elm$core$Platform$Cmd$none);
 					} else {
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{aB: project.o, A: project.c.A, a: project, Z: _List_Nil, aq: false, B: _List_Nil}),
+								{aB: project.o, B: project.c.B, a: project, Z: _List_Nil, aq: false, E: _List_Nil}),
 							$elm$core$Platform$Cmd$none);
 					}
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 128:
+			case 129:
 				var method = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aJ: method}),
 					$elm$core$Platform$Cmd$none);
-			case 129:
+			case 130:
 				var orderStr = msg.a;
-				var _v24 = $elm$core$String$toInt(orderStr);
-				if (!_v24.$) {
-					var order = _v24.a;
+				var _v25 = $elm$core$String$toInt(orderStr);
+				if (!_v25.$) {
+					var order = _v25.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -11496,21 +11520,6 @@ var $author$project$Main$update = F2(
 									$elm$core$Basics$max,
 									1,
 									A2($elm$core$Basics$min, 5, order))
-							}),
-						$elm$core$Platform$Cmd$none);
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			case 130:
-				var lengthStr = msg.a;
-				var _v25 = $elm$core$String$toInt(lengthStr);
-				if (!_v25.$) {
-					var length = _v25.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								a_: A2($elm$core$Basics$max, 1, length)
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -11525,7 +11534,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								bL: A2($elm$core$Basics$max, model.a_, length)
+								a_: A2($elm$core$Basics$max, 1, length)
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -11540,10 +11549,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								aT: A2(
-									$elm$core$Basics$max,
-									1,
-									A2($elm$core$Basics$min, 10, length))
+								bM: A2($elm$core$Basics$max, model.a_, length)
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -11558,7 +11564,25 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								bA: A2(
+								aT: A2(
+									$elm$core$Basics$max,
+									1,
+									A2($elm$core$Basics$min, 10, length))
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 134:
+				var lengthStr = msg.a;
+				var _v29 = $elm$core$String$toInt(lengthStr);
+				if (!_v29.$) {
+					var length = _v29.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								bC: A2(
 									$elm$core$Basics$max,
 									model.aT,
 									A2($elm$core$Basics$min, 10, length))
@@ -11567,11 +11591,11 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 134:
+			case 135:
 				var countStr = msg.a;
-				var _v29 = $elm$core$String$toInt(countStr);
-				if (!_v29.$) {
-					var count = _v29.a;
+				var _v30 = $elm$core$String$toInt(countStr);
+				if (!_v30.$) {
+					var count = _v30.a;
 					var validCount = A2(
 						$elm$core$List$member,
 						count,
@@ -11585,40 +11609,41 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 135:
+			case 136:
 				var word = msg.a;
 				var updatedGeneratedWords = A2(
 					$elm$core$List$filter,
 					function (w) {
 						return !_Utils_eq(w, word);
 					},
-					model.A);
+					model.B);
 				var language = model.a.c;
 				var ipaForm = $elm$core$String$trim(word);
 				var orthographyForm = A2(
 					$author$project$Main$applyOrthography,
-					language.n.q.R,
+					language.n.r.S,
 					$author$project$Main$removeSyllableSeparators(ipaForm));
 				var newWord = {
 					k: _List_Nil,
-					N: '',
-					U: 'Generated word',
-					e: ipaForm,
-					q: orthographyForm,
-					z: 'noun',
-					u: {F: _List_Nil, K: _List_Nil, M: _List_Nil}
+					I: '',
+					V: 'Generated word',
+					g: ipaForm,
+					q: _List_Nil,
+					r: orthographyForm,
+					A: 'noun',
+					v: {H: _List_Nil, M: _List_Nil, O: _List_Nil}
 				};
 				var wordExists = A2(
 					$elm$core$List$any,
 					function (w) {
-						return _Utils_eq(w.e, newWord.e);
+						return _Utils_eq(w.g, newWord.g);
 					},
-					language.g);
+					language.e);
 				var updatedLanguage = wordExists ? language : _Utils_update(
 					language,
 					{
-						g: _Utils_ap(
-							language.g,
+						e: _Utils_ap(
+							language.e,
 							_List_fromArray(
 								[newWord]))
 					});
@@ -11626,10 +11651,10 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{A: updatedGeneratedWords, a: updatedProject}),
+						{B: updatedGeneratedWords, a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 136:
+			case 137:
 				var language = model.a.c;
 				var newWords = A2(
 					$elm$core$List$map,
@@ -11637,16 +11662,17 @@ var $author$project$Main$update = F2(
 						var ipaForm = word;
 						var orthographyForm = A2(
 							$author$project$Main$applyOrthography,
-							language.n.q.R,
+							language.n.r.S,
 							$author$project$Main$removeSyllableSeparators(ipaForm));
 						return {
 							k: _List_Nil,
-							N: '',
-							U: 'Generated word',
-							e: ipaForm,
-							q: orthographyForm,
-							z: 'noun',
-							u: {F: _List_Nil, K: _List_Nil, M: _List_Nil}
+							I: '',
+							V: 'Generated word',
+							g: ipaForm,
+							q: _List_Nil,
+							r: orthographyForm,
+							A: 'noun',
+							v: {H: _List_Nil, M: _List_Nil, O: _List_Nil}
 						};
 					},
 					A2(
@@ -11655,69 +11681,69 @@ var $author$project$Main$update = F2(
 							return !A2(
 								$elm$core$List$any,
 								function (w) {
-									return _Utils_eq(w.e, word);
+									return _Utils_eq(w.g, word);
 								},
-								language.g);
+								language.e);
 						},
-						A2($elm$core$List$map, $elm$core$String$trim, model.A)));
+						A2($elm$core$List$map, $elm$core$String$trim, model.B)));
 				var updatedLanguage = _Utils_update(
 					language,
 					{
-						g: _Utils_ap(language.g, newWords)
+						e: _Utils_ap(language.e, newWords)
 					});
 				var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{A: _List_Nil, a: updatedProject}),
+						{B: _List_Nil, a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 137:
+			case 138:
 				var projectId = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							bl: $elm$core$Maybe$Just(projectId)
+							bm: $elm$core$Maybe$Just(projectId)
 						}),
 					$author$project$Main$loadProjectById(projectId));
-			case 138:
+			case 139:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bM: $elm$core$Maybe$Nothing, bl: $elm$core$Maybe$Nothing}),
+						{bN: $elm$core$Maybe$Nothing, bm: $elm$core$Maybe$Nothing}),
 					$elm$core$Platform$Cmd$none);
-			case 139:
-				var csvContent = $author$project$Main$lexiconToCSV(model.a.c.g);
+			case 140:
+				var csvContent = $author$project$Main$lexiconToCSV(model.a.c.e);
 				return _Utils_Tuple2(
 					model,
 					$author$project$Main$exportCSV(csvContent));
-			case 140:
+			case 141:
 				return _Utils_Tuple2(
 					model,
 					$author$project$Main$triggerCSVImport(0));
-			case 141:
+			case 142:
 				var csvData = msg.a;
-				var _v30 = $author$project$Main$parseCSVToLexicon(csvData);
-				if (!_v30.$) {
-					var newLexemes = _v30.a;
+				var _v31 = $author$project$Main$parseCSVToLexicon(csvData);
+				if (!_v31.$) {
+					var newLexemes = _v31.a;
 					var language = model.a.c;
 					var existingForms = A2(
 						$elm$core$List$map,
 						function ($) {
-							return $.e;
+							return $.g;
 						},
-						language.g);
+						language.e);
 					var uniqueNewLexemes = A2(
 						$elm$core$List$filter,
 						function (lex) {
-							return !A2($elm$core$List$member, lex.e, existingForms);
+							return !A2($elm$core$List$member, lex.g, existingForms);
 						},
 						newLexemes);
 					var updatedLanguage = _Utils_update(
 						language,
 						{
-							g: _Utils_ap(language.g, uniqueNewLexemes)
+							e: _Utils_ap(language.e, uniqueNewLexemes)
 						});
 					var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 					return _Utils_Tuple2(
@@ -11729,42 +11755,42 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			case 142:
+			case 143:
 				var pattern = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{ay: pattern}),
 					$elm$core$Platform$Cmd$none);
-			case 143:
+			case 144:
 				var replacement = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{az: replacement}),
 					$elm$core$Platform$Cmd$none);
-			case 144:
+			case 145:
 				var context = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aR: context}),
 					$elm$core$Platform$Cmd$none);
-			case 145:
+			case 146:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{by: true}),
+						{bA: true}),
 					$elm$core$Platform$Cmd$none);
-			case 146:
+			case 147:
 				var language = model.a.c;
 				var updatedLexicon = A2(
 					$elm$core$List$map,
 					A3($author$project$Main$applySoundChangeToWord, model.ay, model.az, model.aR),
-					language.g);
+					language.e);
 				var updatedLanguage = _Utils_update(
 					language,
-					{g: updatedLexicon});
+					{e: updatedLexicon});
 				var updatedProject = A3($author$project$Main$updateProjectLanguage, model.a, model.i, updatedLanguage);
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -11772,73 +11798,73 @@ var $author$project$Main$update = F2(
 						{
 							a: updatedProject,
 							Z: _List_Nil,
-							by: false,
+							bA: false,
 							aR: '',
 							ay: '',
 							az: '',
-							B: A2($elm$core$List$cons, model.a, model.B)
+							E: A2($elm$core$List$cons, model.a, model.E)
 						}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 147:
+			case 148:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{by: false, aR: '', ay: '', az: ''}),
+						{bA: false, aR: '', ay: '', az: ''}),
 					$elm$core$Platform$Cmd$none);
-			case 148:
-				var _v31 = model.B;
-				if (!_v31.b) {
+			case 149:
+				var _v32 = model.E;
+				if (!_v32.b) {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				} else {
-					var previousState = _v31.a;
-					var remainingUndo = _v31.b;
+					var previousState = _v32.a;
+					var remainingUndo = _v32.b;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
 								a: previousState,
 								Z: A2($elm$core$List$cons, model.a, model.Z),
-								B: remainingUndo
+								E: remainingUndo
 							}),
 						$author$project$Main$saveToStorage(
 							$author$project$Main$encodeProject(previousState)));
 				}
-			case 149:
-				var _v32 = model.Z;
-				if (!_v32.b) {
+			case 150:
+				var _v33 = model.Z;
+				if (!_v33.b) {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				} else {
-					var nextState = _v32.a;
-					var remainingRedo = _v32.b;
+					var nextState = _v33.a;
+					var remainingRedo = _v33.b;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
 								a: nextState,
 								Z: remainingRedo,
-								B: A2($elm$core$List$cons, model.a, model.B)
+								E: A2($elm$core$List$cons, model.a, model.E)
 							}),
 						$author$project$Main$saveToStorage(
 							$author$project$Main$encodeProject(nextState)));
 				}
-			case 150:
+			case 151:
 				var cell = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							bN: $elm$core$Maybe$Just(cell),
-							bO: true
+							bO: $elm$core$Maybe$Just(cell),
+							bP: true
 						}),
 					$elm$core$Platform$Cmd$none);
-			case 151:
+			case 152:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bN: $elm$core$Maybe$Nothing, bO: false}),
+						{bO: $elm$core$Maybe$Nothing, bP: false}),
 					$elm$core$Platform$Cmd$none);
-			case 152:
+			case 153:
 				var phoneme = msg.a;
 				var updatedProject = model.a;
 				var language = model.a.c;
@@ -11846,7 +11872,7 @@ var $author$project$Main$update = F2(
 				var allSounds = A2(
 					$elm$core$List$concatMap,
 					function ($) {
-						return $.t;
+						return $.u;
 					},
 					phonology.k);
 				var updatedSounds = function () {
@@ -11857,12 +11883,12 @@ var $author$project$Main$update = F2(
 								return _Utils_update(
 									cat,
 									{
-										t: A2(
+										u: A2(
 											$elm$core$List$filter,
 											function (s) {
 												return !_Utils_eq(s, phoneme);
 											},
-											cat.t)
+											cat.u)
 									});
 							},
 							phonology.k);
@@ -11881,8 +11907,8 @@ var $author$project$Main$update = F2(
 								return _Utils_eq(cat.b, categoryName) ? _Utils_update(
 									cat,
 									{
-										t: _Utils_ap(
-											cat.t,
+										u: _Utils_ap(
+											cat.u,
 											_List_fromArray(
 												[phoneme]))
 									}) : cat;
@@ -11905,9 +11931,9 @@ var $author$project$Main$update = F2(
 									_List_fromArray(
 										[
 											{
-											H: label,
+											J: label,
 											b: categoryName,
-											t: _List_fromArray(
+											u: _List_fromArray(
 												[phoneme])
 										}
 										]));
@@ -11933,28 +11959,28 @@ var $author$project$Main$update = F2(
 						{a: finalProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(finalProject)));
-			case 157:
+			case 158:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{bd: input}),
 					$elm$core$Platform$Cmd$none);
-			case 158:
+			case 159:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{bc: input}),
 					$elm$core$Platform$Cmd$none);
-			case 159:
+			case 160:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aY: input}),
 					$elm$core$Platform$Cmd$none);
-			case 160:
+			case 161:
 				var trimmedPhoneme = $elm$core$String$trim(model.bd);
 				var trimmedGrapheme = $elm$core$String$trim(model.bc);
 				if ($elm$core$String$isEmpty(trimmedPhoneme) || $elm$core$String$isEmpty(trimmedGrapheme)) {
@@ -11962,13 +11988,13 @@ var $author$project$Main$update = F2(
 				} else {
 					var language = model.a.c;
 					var phonology = language.n;
-					var orthography = phonology.q;
+					var orthography = phonology.r;
 					var exists = A2(
 						$elm$core$List$any,
 						function (m) {
 							return _Utils_eq(m.f, trimmedPhoneme);
 						},
-						orthography.R);
+						orthography.S);
 					var updatedMappings = exists ? A2(
 						$elm$core$List$map,
 						function (m) {
@@ -11979,8 +12005,8 @@ var $author$project$Main$update = F2(
 									h: trimmedGrapheme
 								}) : m;
 						},
-						orthography.R) : _Utils_ap(
-						orthography.R,
+						orthography.S) : _Utils_ap(
+						orthography.S,
 						_List_fromArray(
 							[
 								{
@@ -11991,10 +12017,10 @@ var $author$project$Main$update = F2(
 							]));
 					var updatedOrthography = _Utils_update(
 						orthography,
-						{R: updatedMappings});
+						{S: updatedMappings});
 					var updatedPhonology = _Utils_update(
 						phonology,
-						{q: updatedOrthography});
+						{r: updatedOrthography});
 					var updatedLanguage = _Utils_update(
 						language,
 						{n: updatedPhonology});
@@ -12006,23 +12032,23 @@ var $author$project$Main$update = F2(
 						$author$project$Main$saveToStorage(
 							$author$project$Main$encodeProject(updatedProject)));
 				}
-			case 161:
+			case 162:
 				var phoneme = msg.a;
 				var language = model.a.c;
 				var phonology = language.n;
-				var orthography = phonology.q;
+				var orthography = phonology.r;
 				var updatedMappings = A2(
 					$elm$core$List$filter,
 					function (m) {
 						return !_Utils_eq(m.f, phoneme);
 					},
-					orthography.R);
+					orthography.S);
 				var updatedOrthography = _Utils_update(
 					orthography,
-					{R: updatedMappings});
+					{S: updatedMappings});
 				var updatedPhonology = _Utils_update(
 					phonology,
-					{q: updatedOrthography});
+					{r: updatedOrthography});
 				var updatedLanguage = _Utils_update(
 					language,
 					{n: updatedPhonology});
@@ -12036,10 +12062,10 @@ var $author$project$Main$update = F2(
 			default:
 				var language = model.a.c;
 				var phonology = language.n;
-				var orthography = phonology.q;
+				var orthography = phonology.r;
 				var newDisplayMode = function () {
-					var _v34 = orthography.aC;
-					if (!_v34) {
+					var _v35 = orthography.aC;
+					if (!_v35) {
 						return 1;
 					} else {
 						return 0;
@@ -12050,7 +12076,7 @@ var $author$project$Main$update = F2(
 					{aC: newDisplayMode});
 				var updatedPhonology = _Utils_update(
 					phonology,
-					{q: updatedOrthography});
+					{r: updatedOrthography});
 				var updatedLanguage = _Utils_update(
 					language,
 					{n: updatedPhonology});
@@ -12074,10 +12100,10 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$DismissImportError = {$: 37};
-var $author$project$Main$ExportProject = {$: 34};
-var $author$project$Main$ImportProject = {$: 35};
-var $author$project$Main$SaveProject = {$: 33};
+var $author$project$Main$DismissImportError = {$: 38};
+var $author$project$Main$ExportProject = {$: 35};
+var $author$project$Main$ImportProject = {$: 36};
+var $author$project$Main$SaveProject = {$: 34};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
@@ -12177,11 +12203,11 @@ var $author$project$Main$viewActions = function (model) {
 			}()
 			]));
 };
-var $author$project$Main$CancelDeleteProject = {$: 154};
+var $author$project$Main$CancelDeleteProject = {$: 155};
 var $author$project$Main$ConfirmDeleteProject = function (a) {
-	return {$: 153, a: a};
+	return {$: 154, a: a};
 };
-var $author$project$Main$NoOp = {$: 27};
+var $author$project$Main$NoOp = {$: 28};
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
 	return {$: 1, a: a};
@@ -12330,18 +12356,18 @@ var $author$project$Main$viewDeleteProjectConfirm = F2(
 						]))
 				]));
 	});
-var $author$project$Main$OpenSaveTemplateModal = {$: 109};
-var $author$project$Main$ToggleProjectList = {$: 102};
+var $author$project$Main$OpenSaveTemplateModal = {$: 110};
+var $author$project$Main$ToggleProjectList = {$: 103};
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$virtual_dom$VirtualDom$node = function (tag) {
 	return _VirtualDom_node(
 		_VirtualDom_noScript(tag));
 };
 var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
-var $author$project$Main$CloseNewProjectModal = {$: 104};
-var $author$project$Main$CreateNewProject = {$: 106};
+var $author$project$Main$CloseNewProjectModal = {$: 105};
+var $author$project$Main$CreateNewProject = {$: 107};
 var $author$project$Main$UpdateNewProjectNameInput = function (a) {
-	return {$: 105, a: a};
+	return {$: 106, a: a};
 };
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$input = _VirtualDom_node('input');
@@ -12504,29 +12530,29 @@ var $author$project$Main$viewNewProjectModal = function (model) {
 					]))
 			]));
 };
-var $author$project$Main$OpenNewProjectModal = {$: 103};
-var $author$project$Main$ToggleDefaultTemplates = {$: 114};
-var $author$project$Main$ToggleTemplatesSection = {$: 115};
+var $author$project$Main$OpenNewProjectModal = {$: 104};
+var $author$project$Main$ToggleDefaultTemplates = {$: 115};
+var $author$project$Main$ToggleTemplatesSection = {$: 116};
 var $elm$html$Html$h4 = _VirtualDom_node('h4');
-var $author$project$Main$CancelRenameProject = {$: 123};
+var $author$project$Main$CancelRenameProject = {$: 124};
 var $author$project$Main$ConfirmRenameProject = function (a) {
-	return {$: 122, a: a};
+	return {$: 123, a: a};
 };
 var $author$project$Main$DeleteProject = function (a) {
-	return {$: 119, a: a};
+	return {$: 120, a: a};
 };
 var $author$project$Main$DuplicateProject = function (a) {
-	return {$: 125, a: a};
+	return {$: 126, a: a};
 };
 var $author$project$Main$StartRenameProject = F2(
 	function (a, b) {
-		return {$: 120, a: a, b: b};
+		return {$: 121, a: a, b: b};
 	});
 var $author$project$Main$SwitchToProject = function (a) {
-	return {$: 118, a: a};
+	return {$: 119, a: a};
 };
 var $author$project$Main$UpdateRenameInput = function (a) {
-	return {$: 121, a: a};
+	return {$: 122, a: a};
 };
 var $author$project$Main$formatTimestamp = function (timestamp) {
 	return $elm$core$String$isEmpty(timestamp) ? 'Unknown' : A2($elm$core$String$left, 10, timestamp);
@@ -12535,7 +12561,7 @@ var $elm$html$Html$span = _VirtualDom_node('span');
 var $author$project$Main$viewProjectItem = F2(
 	function (model, project) {
 		var isRenaming = _Utils_eq(
-			model.bm,
+			model.bn,
 			$elm$core$Maybe$Just(project.o));
 		var isCurrentProject = _Utils_eq(project.o, model.aB);
 		return A2(
@@ -12750,10 +12776,10 @@ var $author$project$Main$viewProjectItem = F2(
 				]));
 	});
 var $author$project$Main$DeleteTemplate = function (a) {
-	return {$: 113, a: a};
+	return {$: 114, a: a};
 };
 var $author$project$Main$LoadTemplate = function (a) {
-	return {$: 107, a: a};
+	return {$: 108, a: a};
 };
 var $author$project$Main$viewTemplateItem = F2(
 	function (model, template) {
@@ -13028,7 +13054,7 @@ var $author$project$Main$viewProjectList = function (model) {
 											$author$project$Main$viewTemplateItem(model),
 											$author$project$Main$availableTemplates))
 									])) : $elm$html$Html$text(''),
-								(!$elm$core$List$isEmpty(model.bB)) ? A2(
+								(!$elm$core$List$isEmpty(model.bD)) ? A2(
 								$elm$html$Html$div,
 								_List_Nil,
 								_List_fromArray(
@@ -13057,7 +13083,7 @@ var $author$project$Main$viewProjectList = function (model) {
 										A2(
 											$elm$core$List$map,
 											$author$project$Main$viewTemplateItem(model),
-											model.bB))
+											model.bD))
 									])) : $elm$html$Html$text('')
 							])) : $elm$html$Html$text('')
 					])),
@@ -13100,13 +13126,13 @@ var $author$project$Main$viewProjectList = function (model) {
 					]))
 			]));
 };
-var $author$project$Main$CloseSaveTemplateModal = {$: 110};
-var $author$project$Main$SaveCurrentProjectAsTemplate = {$: 108};
+var $author$project$Main$CloseSaveTemplateModal = {$: 111};
+var $author$project$Main$SaveCurrentProjectAsTemplate = {$: 109};
 var $author$project$Main$UpdateSaveAsTemplateDescInput = function (a) {
-	return {$: 112, a: a};
+	return {$: 113, a: a};
 };
 var $author$project$Main$UpdateSaveAsTemplateNameInput = function (a) {
-	return {$: 111, a: a};
+	return {$: 112, a: a};
 };
 var $elm$html$Html$textarea = _VirtualDom_node('textarea');
 var $author$project$Main$viewSaveTemplateModal = function (model) {
@@ -13337,49 +13363,49 @@ var $author$project$Main$viewHeader = function (model) {
 							]))
 					])),
 				model.aq ? $author$project$Main$viewProjectList(model) : $elm$html$Html$text(''),
-				model.bx ? $author$project$Main$viewSaveTemplateModal(model) : $elm$html$Html$text(''),
-				model.bw ? $author$project$Main$viewNewProjectModal(model) : $elm$html$Html$text('')
+				model.bz ? $author$project$Main$viewSaveTemplateModal(model) : $elm$html$Html$text(''),
+				model.by ? $author$project$Main$viewNewProjectModal(model) : $elm$html$Html$text('')
 			]));
 };
-var $author$project$Main$ApplySoundChanges = {$: 146};
-var $author$project$Main$BatchAddCategory = {$: 100};
-var $author$project$Main$BatchDeleteWords = {$: 96};
-var $author$project$Main$BatchExportWords = {$: 101};
-var $author$project$Main$BatchUpdatePos = {$: 98};
-var $author$project$Main$CancelSoundChanges = {$: 147};
-var $author$project$Main$ClearReferenceProject = {$: 138};
-var $author$project$Main$DeselectAllWords = {$: 95};
-var $author$project$Main$ExportLexiconCSV = {$: 139};
-var $author$project$Main$ImportLexiconCSV = {$: 140};
+var $author$project$Main$ApplySoundChanges = {$: 147};
+var $author$project$Main$BatchAddCategory = {$: 101};
+var $author$project$Main$BatchDeleteWords = {$: 97};
+var $author$project$Main$BatchExportWords = {$: 102};
+var $author$project$Main$BatchUpdatePos = {$: 99};
+var $author$project$Main$CancelSoundChanges = {$: 148};
+var $author$project$Main$ClearReferenceProject = {$: 139};
+var $author$project$Main$DeselectAllWords = {$: 96};
+var $author$project$Main$ExportLexiconCSV = {$: 140};
+var $author$project$Main$ImportLexiconCSV = {$: 141};
 var $author$project$Main$OpenAddModal = {$: 18};
-var $author$project$Main$PreviewSoundChanges = {$: 145};
-var $author$project$Main$SelectAllWords = {$: 94};
+var $author$project$Main$PreviewSoundChanges = {$: 146};
+var $author$project$Main$SelectAllWords = {$: 95};
 var $author$project$Main$SelectReferenceProject = function (a) {
-	return {$: 137, a: a};
+	return {$: 138, a: a};
 };
 var $author$project$Main$UpdateBatchCategoryInput = function (a) {
-	return {$: 99, a: a};
+	return {$: 100, a: a};
 };
 var $author$project$Main$UpdateBatchPosInput = function (a) {
-	return {$: 97, a: a};
+	return {$: 98, a: a};
 };
 var $author$project$Main$UpdateFilterCategory = function (a) {
-	return {$: 92, a: a};
+	return {$: 93, a: a};
 };
 var $author$project$Main$UpdateFilterPos = function (a) {
-	return {$: 29, a: a};
+	return {$: 30, a: a};
 };
 var $author$project$Main$UpdateSearchQuery = function (a) {
-	return {$: 28, a: a};
+	return {$: 29, a: a};
 };
 var $author$project$Main$UpdateSoundChangeContext = function (a) {
-	return {$: 144, a: a};
+	return {$: 145, a: a};
 };
 var $author$project$Main$UpdateSoundChangePattern = function (a) {
-	return {$: 142, a: a};
+	return {$: 143, a: a};
 };
 var $author$project$Main$UpdateSoundChangeReplacement = function (a) {
-	return {$: 143, a: a};
+	return {$: 144, a: a};
 };
 var $elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -13395,7 +13421,7 @@ var $author$project$Main$filterByCategory = F2(
 	});
 var $author$project$Main$filterByPos = F2(
 	function (filterValue, lexeme) {
-		return (filterValue === 'all') ? true : _Utils_eq(lexeme.z, filterValue);
+		return (filterValue === 'all') ? true : _Utils_eq(lexeme.A, filterValue);
 	});
 var $author$project$Main$filterBySearch = F2(
 	function (query, lexeme) {
@@ -13403,9 +13429,9 @@ var $author$project$Main$filterBySearch = F2(
 			return true;
 		} else {
 			var lowerQuery = $elm$core$String$toLower(query);
-			var lowerPos = $elm$core$String$toLower(lexeme.z);
-			var lowerForm = $elm$core$String$toLower(lexeme.e);
-			var lowerDef = $elm$core$String$toLower(lexeme.N);
+			var lowerPos = $elm$core$String$toLower(lexeme.A);
+			var lowerForm = $elm$core$String$toLower(lexeme.g);
+			var lowerDef = $elm$core$String$toLower(lexeme.I);
 			return A2($elm$core$String$contains, lowerQuery, lowerForm) || (A2($elm$core$String$contains, lowerQuery, lowerDef) || A2($elm$core$String$contains, lowerQuery, lowerPos));
 		}
 	});
@@ -13442,9 +13468,9 @@ var $author$project$Main$searchRelevance = F2(
 			return 0;
 		} else {
 			var lowerQuery = $elm$core$String$toLower(query);
-			var lowerPos = $elm$core$String$toLower(lexeme.z);
-			var lowerForm = $elm$core$String$toLower(lexeme.e);
-			var lowerDef = $elm$core$String$toLower(lexeme.N);
+			var lowerPos = $elm$core$String$toLower(lexeme.A);
+			var lowerForm = $elm$core$String$toLower(lexeme.g);
+			var lowerDef = $elm$core$String$toLower(lexeme.I);
 			return _Utils_eq(lowerForm, lowerQuery) ? 3 : (A2($elm$core$String$startsWith, lowerQuery, lowerForm) ? 2 : (A2($elm$core$String$contains, lowerQuery, lowerDef) ? 1 : (A2($elm$core$String$contains, lowerQuery, lowerPos) ? 0 : (-1))));
 		}
 	});
@@ -13842,8 +13868,8 @@ var $author$project$Main$viewAddModal = function (model) {
 					]))
 			]));
 };
-var $author$project$Main$CancelBatchDelete = {$: 156};
-var $author$project$Main$ConfirmBatchDelete = {$: 155};
+var $author$project$Main$CancelBatchDelete = {$: 157};
+var $author$project$Main$ConfirmBatchDelete = {$: 156};
 var $author$project$Main$viewBatchDeleteConfirm = function (selectedWords) {
 	var wordCount = $elm$core$List$length(selectedWords);
 	var wordText = (wordCount === 1) ? 'word' : 'words';
@@ -13957,51 +13983,51 @@ var $author$project$Main$viewBatchDeleteConfirm = function (selectedWords) {
 					]))
 			]));
 };
-var $author$project$Main$AddAntonym = {$: 84};
-var $author$project$Main$AddLexemeCategory = {$: 90};
-var $author$project$Main$AddRelated = {$: 85};
-var $author$project$Main$AddSynonym = {$: 83};
+var $author$project$Main$AddAntonym = {$: 85};
+var $author$project$Main$AddLexemeCategory = {$: 91};
+var $author$project$Main$AddRelated = {$: 86};
+var $author$project$Main$AddSynonym = {$: 84};
 var $author$project$Main$CancelEdit = {$: 23};
 var $author$project$Main$CloseEditModal = {$: 24};
 var $author$project$Main$RemoveAntonym = function (a) {
-	return {$: 87, a: a};
-};
-var $author$project$Main$RemoveLexemeCategory = function (a) {
-	return {$: 91, a: a};
-};
-var $author$project$Main$RemoveRelated = function (a) {
 	return {$: 88, a: a};
 };
-var $author$project$Main$RemoveSynonym = function (a) {
-	return {$: 86, a: a};
+var $author$project$Main$RemoveLexemeCategory = function (a) {
+	return {$: 92, a: a};
 };
-var $author$project$Main$UpdateAntonymInput = function (a) {
-	return {$: 81, a: a};
-};
-var $author$project$Main$UpdateLexemeCategoryInput = function (a) {
+var $author$project$Main$RemoveRelated = function (a) {
 	return {$: 89, a: a};
 };
-var $author$project$Main$UpdateRelatedInput = function (a) {
+var $author$project$Main$RemoveSynonym = function (a) {
+	return {$: 87, a: a};
+};
+var $author$project$Main$UpdateAntonymInput = function (a) {
 	return {$: 82, a: a};
 };
+var $author$project$Main$UpdateLexemeCategoryInput = function (a) {
+	return {$: 90, a: a};
+};
+var $author$project$Main$UpdateRelatedInput = function (a) {
+	return {$: 83, a: a};
+};
 var $author$project$Main$UpdateSynonymInput = function (a) {
-	return {$: 80, a: a};
+	return {$: 81, a: a};
 };
 var $author$project$Main$UpdateWord = {$: 21};
 var $author$project$Main$viewEditModal = function (model) {
-	var _v0 = model.W;
+	var _v0 = model.X;
 	if (!_v0.$) {
 		var index = _v0.a;
 		var stopProp = function (msg) {
-			return {cC: msg, cG: false, cI: true};
+			return {cE: msg, cI: false, cK: true};
 		};
-		var currentWord = A2($author$project$Main$getAt, index, model.a.c.g);
+		var currentWord = A2($author$project$Main$getAt, index, model.a.c.e);
 		var semanticLinks = function () {
 			if (!currentWord.$) {
 				var word = currentWord.a;
-				return word.u;
+				return word.v;
 			} else {
-				return {F: _List_Nil, K: _List_Nil, M: _List_Nil};
+				return {H: _List_Nil, M: _List_Nil, O: _List_Nil};
 			}
 		}();
 		return A2(
@@ -14434,7 +14460,7 @@ var $author$project$Main$viewEditModal = function (model) {
 																	]))
 															]));
 												},
-												semanticLinks.M))
+												semanticLinks.O))
 										])),
 									A2(
 									$elm$html$Html$div,
@@ -14512,7 +14538,7 @@ var $author$project$Main$viewEditModal = function (model) {
 																	]))
 															]));
 												},
-												semanticLinks.F))
+												semanticLinks.H))
 										])),
 									A2(
 									$elm$html$Html$div,
@@ -14590,7 +14616,7 @@ var $author$project$Main$viewEditModal = function (model) {
 																	]))
 															]));
 												},
-												semanticLinks.K))
+												semanticLinks.M))
 										]))
 								])),
 							A2(
@@ -14757,7 +14783,7 @@ var $author$project$Main$EditWord = function (a) {
 	return {$: 20, a: a};
 };
 var $author$project$Main$ToggleWordSelection = function (a) {
-	return {$: 93, a: a};
+	return {$: 94, a: a};
 };
 var $elm$html$Html$Attributes$checked = $elm$html$Html$Attributes$boolProperty('checked');
 var $elm$html$Html$li = _VirtualDom_node('li');
@@ -14821,7 +14847,7 @@ var $author$project$Main$findNextReference = function (text) {
 				$elm$core$String$length(word),
 				afterColon);
 			return ($elm$core$String$isEmpty(projectName) || $elm$core$String$isEmpty(word)) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
-				{bX: afterWord, bU: beforeAt, bV: projectName, bW: word});
+				{bY: afterWord, bV: beforeAt, bW: projectName, bX: word});
 		}
 	}
 };
@@ -14841,17 +14867,17 @@ var $author$project$Main$parseEtymologyHelper = F2(
 							acc));
 				} else {
 					var match = _v0.a;
-					var newAcc = $elm$core$String$isEmpty(match.bU) ? A2(
+					var newAcc = $elm$core$String$isEmpty(match.bV) ? A2(
 						$elm$core$List$cons,
-						A2($author$project$Main$ReferencePart, match.bV, match.bW),
+						A2($author$project$Main$ReferencePart, match.bW, match.bX),
 						acc) : A2(
 						$elm$core$List$cons,
-						A2($author$project$Main$ReferencePart, match.bV, match.bW),
+						A2($author$project$Main$ReferencePart, match.bW, match.bX),
 						A2(
 							$elm$core$List$cons,
-							$author$project$Main$TextPart(match.bU),
+							$author$project$Main$TextPart(match.bV),
 							acc));
-					var $temp$remaining = match.bX,
+					var $temp$remaining = match.bY,
 						$temp$acc = newAcc;
 					remaining = $temp$remaining;
 					acc = $temp$acc;
@@ -14894,66 +14920,12 @@ var $author$project$Main$viewEtymology = function (etymology) {
 		_List_Nil,
 		A2($elm$core$List$map, $author$project$Main$viewEtymologyPart, parts));
 };
-var $author$project$Main$ToggleMorphemeExpansion = function (a) {
+var $author$project$Main$OpenMorphemeModal = function (a) {
 	return {$: 25, a: a};
 };
-var $author$project$Main$ApplyMorphemeToWord = F2(
-	function (a, b) {
-		return {$: 26, a: a, b: b};
-	});
-var $author$project$Main$viewApplicableMorpheme = F4(
-	function (wordIndex, lexeme, morphemeIndex, morpheme) {
-		var previewForm = A2($author$project$Main$applyMorphemeToForm, lexeme.q, morpheme);
-		return A2(
-			$elm$html$Html$button,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('morpheme-apply-button'),
-					A2($elm$html$Html$Attributes$style, 'padding', '4px 10px'),
-					A2($elm$html$Html$Attributes$style, 'font-size', '0.85em'),
-					A2($elm$html$Html$Attributes$style, 'background', '#f3f4f6'),
-					A2($elm$html$Html$Attributes$style, 'border', '1px solid #d1d5db'),
-					A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-					A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-					A2($elm$html$Html$Attributes$style, 'transition', 'all 0.2s'),
-					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-					A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
-					A2($elm$html$Html$Attributes$style, 'align-items', 'flex-start'),
-					$elm$html$Html$Events$onClick(
-					A2($author$project$Main$ApplyMorphemeToWord, wordIndex, morphemeIndex)),
-					$elm$html$Html$Attributes$title('Create new word: ' + previewForm)
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'font-weight', '500')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(morpheme.e + (' (' + (morpheme.C + ')')))
-						])),
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'font-size', '0.8em'),
-							A2($elm$html$Html$Attributes$style, 'color', '#6b7280')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text('→ ' + previewForm)
-						]))
-				]));
-	});
 var $author$project$Main$viewMorphemeApplication = F3(
 	function (model, wordIndex, lexeme) {
-		var morphemes = model.a.c.j.D;
-		var isExpanded = _Utils_eq(
-			model.bG,
-			$elm$core$Maybe$Just(wordIndex));
+		var morphemes = model.a.c.j.q;
 		return $elm$core$List$isEmpty(morphemes) ? $elm$html$Html$text('') : A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -14966,69 +14938,29 @@ var $author$project$Main$viewMorphemeApplication = F3(
 			_List_fromArray(
 				[
 					A2(
-					$elm$html$Html$div,
+					$elm$html$Html$button,
 					_List_fromArray(
 						[
-							A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-							A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-							A2($elm$html$Html$Attributes$style, 'gap', '8px'),
+							A2($elm$html$Html$Attributes$style, 'padding', '4px 8px'),
+							A2($elm$html$Html$Attributes$style, 'font-size', '0.75em'),
+							A2($elm$html$Html$Attributes$style, 'background', '#805ad5'),
+							A2($elm$html$Html$Attributes$style, 'color', 'white'),
+							A2($elm$html$Html$Attributes$style, 'border', 'none'),
+							A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
 							A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+							A2($elm$html$Html$Attributes$style, 'transition', 'all 0.2s'),
 							$elm$html$Html$Events$onClick(
-							$author$project$Main$ToggleMorphemeExpansion(wordIndex))
+							$author$project$Main$OpenMorphemeModal(wordIndex)),
+							$elm$html$Html$Attributes$title('Apply morphemes to create a new word')
 						]),
 					_List_fromArray(
 						[
-							A2(
-							$elm$html$Html$span,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '0.9em'),
-									A2($elm$html$Html$Attributes$style, 'color', '#6b7280'),
-									A2($elm$html$Html$Attributes$style, 'font-weight', '500')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text(
-									isExpanded ? '▼ Apply Morphemes' : '▶ Apply Morphemes')
-								]))
-						])),
-					isExpanded ? A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'margin-top', '10px')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'font-size', '0.85em'),
-									A2($elm$html$Html$Attributes$style, 'color', '#6b7280'),
-									A2($elm$html$Html$Attributes$style, 'margin-bottom', '8px')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Click a morpheme to create a new word with that morpheme applied:')
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-									A2($elm$html$Html$Attributes$style, 'flex-wrap', 'wrap'),
-									A2($elm$html$Html$Attributes$style, 'gap', '6px')
-								]),
-							A2(
-								$elm$core$List$indexedMap,
-								A2($author$project$Main$viewApplicableMorpheme, wordIndex, lexeme),
-								morphemes))
-						])) : $elm$html$Html$text('')
+							$elm$html$Html$text('+ Morphemes')
+						]))
 				]));
 	});
 var $author$project$Main$viewSemanticLinks = function (links) {
-	var hasLinks = (!$elm$core$List$isEmpty(links.M)) || ((!$elm$core$List$isEmpty(links.F)) || (!$elm$core$List$isEmpty(links.K)));
+	var hasLinks = (!$elm$core$List$isEmpty(links.O)) || ((!$elm$core$List$isEmpty(links.H)) || (!$elm$core$List$isEmpty(links.M)));
 	return hasLinks ? A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -15037,7 +14969,7 @@ var $author$project$Main$viewSemanticLinks = function (links) {
 			]),
 		_List_fromArray(
 			[
-				(!$elm$core$List$isEmpty(links.M)) ? A2(
+				(!$elm$core$List$isEmpty(links.O)) ? A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
@@ -15056,9 +14988,9 @@ var $author$project$Main$viewSemanticLinks = function (links) {
 								$elm$html$Html$text('Synonyms: ')
 							])),
 						$elm$html$Html$text(
-						A2($elm$core$String$join, ', ', links.M))
+						A2($elm$core$String$join, ', ', links.O))
 					])) : $elm$html$Html$text(''),
-				(!$elm$core$List$isEmpty(links.F)) ? A2(
+				(!$elm$core$List$isEmpty(links.H)) ? A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
@@ -15077,9 +15009,9 @@ var $author$project$Main$viewSemanticLinks = function (links) {
 								$elm$html$Html$text('Antonyms: ')
 							])),
 						$elm$html$Html$text(
-						A2($elm$core$String$join, ', ', links.F))
+						A2($elm$core$String$join, ', ', links.H))
 					])) : $elm$html$Html$text(''),
-				(!$elm$core$List$isEmpty(links.K)) ? A2(
+				(!$elm$core$List$isEmpty(links.M)) ? A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
@@ -15098,7 +15030,7 @@ var $author$project$Main$viewSemanticLinks = function (links) {
 								$elm$html$Html$text('Related: ')
 							])),
 						$elm$html$Html$text(
-						A2($elm$core$String$join, ', ', links.K))
+						A2($elm$core$String$join, ', ', links.M))
 					])) : $elm$html$Html$text('')
 			])) : $elm$html$Html$text('');
 };
@@ -15118,7 +15050,7 @@ var $author$project$Main$viewLexeme = F3(
 						[
 							$elm$html$Html$Attributes$type_('checkbox'),
 							$elm$html$Html$Attributes$checked(
-							A2($elm$core$List$member, index, model.E)),
+							A2($elm$core$List$member, index, model.F)),
 							$elm$html$Html$Events$onCheck(
 							function (_v0) {
 								return $author$project$Main$ToggleWordSelection(index);
@@ -15158,7 +15090,7 @@ var $author$project$Main$viewLexeme = F3(
 												]),
 											_List_fromArray(
 												[
-													$elm$html$Html$text(lexeme.q)
+													$elm$html$Html$text(lexeme.r)
 												])),
 											A2(
 											$elm$html$Html$div,
@@ -15168,7 +15100,7 @@ var $author$project$Main$viewLexeme = F3(
 												]),
 											_List_fromArray(
 												[
-													$elm$html$Html$text(lexeme.e)
+													$elm$html$Html$text(lexeme.g)
 												]))
 										])),
 									A2(
@@ -15179,7 +15111,7 @@ var $author$project$Main$viewLexeme = F3(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(' (' + (lexeme.z + ')'))
+											$elm$html$Html$text(' (' + (lexeme.A + ')'))
 										]))
 								])),
 							A2(
@@ -15190,9 +15122,9 @@ var $author$project$Main$viewLexeme = F3(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(lexeme.N)
+									$elm$html$Html$text(lexeme.I)
 								])),
-							(!$elm$core$String$isEmpty(lexeme.U)) ? A2(
+							(!$elm$core$String$isEmpty(lexeme.V)) ? A2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
@@ -15210,9 +15142,9 @@ var $author$project$Main$viewLexeme = F3(
 										[
 											$elm$html$Html$text('Etymology: ')
 										])),
-									$author$project$Main$viewEtymology(lexeme.U)
+									$author$project$Main$viewEtymology(lexeme.V)
 								])) : $elm$html$Html$text(''),
-							$author$project$Main$viewSemanticLinks(lexeme.u),
+							$author$project$Main$viewSemanticLinks(lexeme.v),
 							(!$elm$core$List$isEmpty(lexeme.k)) ? A2(
 							$elm$html$Html$div,
 							_List_fromArray(
@@ -15283,6 +15215,205 @@ var $author$project$Main$viewLexeme = F3(
 						]))
 				]));
 	});
+var $author$project$Main$CloseMorphemeModal = {$: 26};
+var $author$project$Main$ApplyMorphemeToWord = F2(
+	function (a, b) {
+		return {$: 27, a: a, b: b};
+	});
+var $author$project$Main$viewApplicableMorpheme = F5(
+	function (model, wordIndex, lexeme, morphemeIndex, morpheme) {
+		var rules = model.a.c.j.P;
+		var formWithMorpheme = A2($author$project$Main$applyMorpheme, morpheme, lexeme.r);
+		var previewForm = A2($author$project$Main$applyMorphophonemicRules, rules, formWithMorpheme);
+		var wordExists = A2(
+			$elm$core$List$any,
+			function (lex) {
+				return _Utils_eq(lex.r, previewForm);
+			},
+			model.a.c.e);
+		var textColor = wordExists ? '#9ca3af' : '#1f2937';
+		var tooltipText = wordExists ? ('Word already exists: ' + previewForm) : (((!$elm$core$String$isEmpty(morpheme.C)) && (!$elm$core$String$isEmpty(morpheme.G))) ? (morpheme.C + ('=' + morpheme.G)) : ('Create new word: ' + previewForm));
+		var cursorStyle = wordExists ? 'not-allowed' : 'pointer';
+		var borderColor = wordExists ? '#cbd5e0' : '#d1d5db';
+		var bgColor = wordExists ? '#e2e8f0' : '#f3f4f6';
+		return A2(
+			$elm$html$Html$button,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('morpheme-apply-button'),
+					A2($elm$html$Html$Attributes$style, 'padding', '6px 12px'),
+					A2($elm$html$Html$Attributes$style, 'font-size', '0.85em'),
+					A2($elm$html$Html$Attributes$style, 'background', bgColor),
+					A2($elm$html$Html$Attributes$style, 'border', '1px solid ' + borderColor),
+					A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+					A2($elm$html$Html$Attributes$style, 'cursor', cursorStyle),
+					A2($elm$html$Html$Attributes$style, 'transition', 'all 0.2s'),
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
+					A2($elm$html$Html$Attributes$style, 'align-items', 'flex-start'),
+					wordExists ? $elm$html$Html$Attributes$disabled(true) : $elm$html$Html$Events$onClick(
+					A2($author$project$Main$ApplyMorphemeToWord, wordIndex, morphemeIndex)),
+					$elm$html$Html$Attributes$title(tooltipText)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'font-weight', '500'),
+							A2($elm$html$Html$Attributes$style, 'color', textColor)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(previewForm + (' (' + (morpheme.D + ')')))
+						]))
+				]));
+	});
+var $author$project$Main$viewMorphemeModal = function (model) {
+	var _v0 = model.bh;
+	if (_v0.$ === 1) {
+		return $elm$html$Html$text('');
+	} else {
+		var wordIndex = _v0.a;
+		var morphemes = model.a.c.j.q;
+		var lexeme = A2($author$project$Main$getAt, wordIndex, model.a.c.e);
+		if (lexeme.$ === 1) {
+			return $elm$html$Html$text('');
+		} else {
+			var lex = lexeme.a;
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('modal-overlay'),
+						$elm$html$Html$Events$onClick($author$project$Main$CloseMorphemeModal)
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('modal-content'),
+								A2($elm$html$Html$Attributes$style, 'min-width', '500px'),
+								A2($elm$html$Html$Attributes$style, 'max-width', '700px'),
+								A2(
+								$elm$html$Html$Events$stopPropagationOn,
+								'click',
+								$elm$json$Json$Decode$succeed(
+									_Utils_Tuple2($author$project$Main$NoOp, true)))
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h2,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'margin-top', '0'),
+										A2($elm$html$Html$Attributes$style, 'color', '#2d3748'),
+										A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Apply Morpheme')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px'),
+										A2($elm$html$Html$Attributes$style, 'padding', '12px'),
+										A2($elm$html$Html$Attributes$style, 'background', '#f7fafc'),
+										A2($elm$html$Html$Attributes$style, 'border-radius', '6px')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												A2($elm$html$Html$Attributes$style, 'font-weight', '600'),
+												A2($elm$html$Html$Attributes$style, 'color', '#2d3748'),
+												A2($elm$html$Html$Attributes$style, 'margin-bottom', '4px')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Base word: ' + lex.r)
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												A2($elm$html$Html$Attributes$style, 'font-size', '0.9em'),
+												A2($elm$html$Html$Attributes$style, 'color', '#718096')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text(lex.I)
+											]))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'margin-bottom', '15px')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												A2($elm$html$Html$Attributes$style, 'font-size', '0.9em'),
+												A2($elm$html$Html$Attributes$style, 'color', '#4a5568'),
+												A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Select a morpheme to apply. The morpheme will be applied with morphophonemic rules:')
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+												A2($elm$html$Html$Attributes$style, 'flex-wrap', 'wrap'),
+												A2($elm$html$Html$Attributes$style, 'gap', '8px')
+											]),
+										A2(
+											$elm$core$List$indexedMap,
+											A3($author$project$Main$viewApplicableMorpheme, model, wordIndex, lex),
+											morphemes))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+										A2($elm$html$Html$Attributes$style, 'justify-content', 'flex-end'),
+										A2($elm$html$Html$Attributes$style, 'margin-top', '20px')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$Main$CloseMorphemeModal),
+												A2($elm$html$Html$Attributes$style, 'padding', '10px 20px'),
+												A2($elm$html$Html$Attributes$style, 'cursor', 'pointer')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Close')
+											]))
+									]))
+							]))
+					]));
+		}
+	}
+};
 var $author$project$Main$viewReferenceLexeme = function (lexeme) {
 	return A2(
 		$elm$html$Html$li,
@@ -15318,7 +15449,7 @@ var $author$project$Main$viewReferenceLexeme = function (lexeme) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(lexeme.e)
+										$elm$html$Html$text(lexeme.g)
 									])),
 								A2(
 								$elm$html$Html$span,
@@ -15328,7 +15459,7 @@ var $author$project$Main$viewReferenceLexeme = function (lexeme) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(' (' + (lexeme.z + ')'))
+										$elm$html$Html$text(' (' + (lexeme.A + ')'))
 									]))
 							])),
 						A2(
@@ -15339,9 +15470,9 @@ var $author$project$Main$viewReferenceLexeme = function (lexeme) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text(lexeme.N)
+								$elm$html$Html$text(lexeme.I)
 							])),
-						(!$elm$core$String$isEmpty(lexeme.U)) ? A2(
+						(!$elm$core$String$isEmpty(lexeme.V)) ? A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
@@ -15359,37 +15490,37 @@ var $author$project$Main$viewReferenceLexeme = function (lexeme) {
 									[
 										$elm$html$Html$text('Etymology: ')
 									])),
-								$author$project$Main$viewEtymology(lexeme.U)
+								$author$project$Main$viewEtymology(lexeme.V)
 							])) : $elm$html$Html$text(''),
-						$author$project$Main$viewSemanticLinks(lexeme.u)
+						$author$project$Main$viewSemanticLinks(lexeme.v)
 					]))
 			]));
 };
 var $author$project$Main$viewLexicon = function (model) {
-	var indexedLexicon = A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, model.a.c.g);
+	var indexedLexicon = A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, model.a.c.e);
 	var filteredLexicon = A2(
 		$elm$core$List$sortBy,
 		function (_v9) {
 			var lexeme = _v9.b;
-			return (-1) * A2($author$project$Main$searchRelevance, model.bs, lexeme);
+			return (-1) * A2($author$project$Main$searchRelevance, model.bt, lexeme);
 		},
 		A2(
 			$elm$core$List$filter,
 			function (_v8) {
 				var lexeme = _v8.b;
-				return A2($author$project$Main$filterByCategory, model.bH, lexeme);
+				return A2($author$project$Main$filterByCategory, model.bI, lexeme);
 			},
 			A2(
 				$elm$core$List$filter,
 				function (_v7) {
 					var lexeme = _v7.b;
-					return A2($author$project$Main$filterByPos, model.bI, lexeme);
+					return A2($author$project$Main$filterByPos, model.bJ, lexeme);
 				},
 				A2(
 					$elm$core$List$filter,
 					function (_v6) {
 						var lexeme = _v6.b;
-						return A2($author$project$Main$filterBySearch, model.bs, lexeme);
+						return A2($author$project$Main$filterBySearch, model.bt, lexeme);
 					},
 					indexedLexicon))));
 	return A2(
@@ -15431,7 +15562,7 @@ var $author$project$Main$viewLexicon = function (model) {
 							[
 								$elm$html$Html$Events$onClick($author$project$Main$Undo),
 								$elm$html$Html$Attributes$disabled(
-								$elm$core$List$isEmpty(model.B)),
+								$elm$core$List$isEmpty(model.E)),
 								$elm$html$Html$Attributes$title('Undo (Ctrl+Z)')
 							]),
 						_List_fromArray(
@@ -15503,7 +15634,7 @@ var $author$project$Main$viewLexicon = function (model) {
 								}),
 								$elm$html$Html$Attributes$value(
 								function () {
-									var _v1 = model.bl;
+									var _v1 = model.bm;
 									if (!_v1.$) {
 										var id = _v1.a;
 										return $elm$core$String$fromInt(id);
@@ -15575,7 +15706,7 @@ var $author$project$Main$viewLexicon = function (model) {
 							[
 								$elm$html$Html$Attributes$type_('text'),
 								$elm$html$Html$Attributes$placeholder('Search by word form or definition'),
-								$elm$html$Html$Attributes$value(model.bs),
+								$elm$html$Html$Attributes$value(model.bt),
 								$elm$html$Html$Events$onInput($author$project$Main$UpdateSearchQuery)
 							]),
 						_List_Nil)
@@ -15600,7 +15731,7 @@ var $author$project$Main$viewLexicon = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$Events$onInput($author$project$Main$UpdateFilterPos),
-								$elm$html$Html$Attributes$value(model.bI)
+								$elm$html$Html$Attributes$value(model.bJ)
 							]),
 						_List_fromArray(
 							[
@@ -15726,7 +15857,7 @@ var $author$project$Main$viewLexicon = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$Events$onInput($author$project$Main$UpdateFilterCategory),
-								$elm$html$Html$Attributes$value(model.bH)
+								$elm$html$Html$Attributes$value(model.bI)
 							]),
 						_Utils_ap(
 							_List_fromArray(
@@ -15756,7 +15887,7 @@ var $author$project$Main$viewLexicon = function (model) {
 												$elm$html$Html$text(cat)
 											]));
 								},
-								$author$project$Main$getAllCategories(model.a.c.g))))
+								$author$project$Main$getAllCategories(model.a.c.e))))
 					])),
 				A2(
 				$elm$html$Html$div,
@@ -16032,18 +16163,18 @@ var $author$project$Main$viewLexicon = function (model) {
 									]))
 							])),
 						function () {
-						if (model.by) {
+						if (model.bA) {
 							var previewChanges = A2(
 								$elm$core$List$map,
 								A3($author$project$Main$applySoundChangeToWord, model.ay, model.az, model.aR),
-								model.a.c.g);
-							var zipped = A3($elm$core$List$map2, $elm$core$Tuple$pair, model.a.c.g, previewChanges);
+								model.a.c.e);
+							var zipped = A3($elm$core$List$map2, $elm$core$Tuple$pair, model.a.c.e, previewChanges);
 							var changedWords = A2(
 								$elm$core$List$filter,
 								function (_v3) {
 									var orig = _v3.a;
 									var changed = _v3.b;
-									return !_Utils_eq(orig.e, changed.e);
+									return !_Utils_eq(orig.g, changed.g);
 								},
 								zipped);
 							return A2(
@@ -16090,7 +16221,7 @@ var $author$project$Main$viewLexicon = function (model) {
 														]),
 													_List_fromArray(
 														[
-															$elm$html$Html$text(orig.e + (' → ' + changed.e))
+															$elm$html$Html$text(orig.g + (' → ' + changed.g))
 														]));
 											},
 											A2($elm$core$List$take, 10, changedWords))),
@@ -16155,7 +16286,7 @@ var $author$project$Main$viewLexicon = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$core$List$isEmpty(model.a.c.g) ? A2(
+						$elm$core$List$isEmpty(model.a.c.e) ? A2(
 						$elm$html$Html$div,
 						_List_Nil,
 						_List_fromArray(
@@ -16208,7 +16339,7 @@ var $author$project$Main$viewLexicon = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						(!$elm$core$List$isEmpty(model.a.c.g)) ? A2(
+						(!$elm$core$List$isEmpty(model.a.c.e)) ? A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
@@ -16253,7 +16384,7 @@ var $author$project$Main$viewLexicon = function (model) {
 											[
 												$elm$html$Html$text('Deselect All')
 											])),
-										(!$elm$core$List$isEmpty(model.E)) ? A2(
+										(!$elm$core$List$isEmpty(model.F)) ? A2(
 										$elm$html$Html$div,
 										_List_fromArray(
 											[
@@ -16271,7 +16402,7 @@ var $author$project$Main$viewLexicon = function (model) {
 													[
 														$elm$html$Html$text(
 														$elm$core$String$fromInt(
-															$elm$core$List$length(model.E)) + ' word(s) selected')
+															$elm$core$List$length(model.F)) + ' word(s) selected')
 													])),
 												A2(
 												$elm$html$Html$div,
@@ -16286,7 +16417,7 @@ var $author$project$Main$viewLexicon = function (model) {
 														_List_fromArray(
 															[
 																$elm$html$Html$Events$onInput($author$project$Main$UpdateBatchPosInput),
-																$elm$html$Html$Attributes$value(model.bE)
+																$elm$html$Html$Attributes$value(model.bG)
 															]),
 														_List_fromArray(
 															[
@@ -16517,7 +16648,7 @@ var $author$project$Main$viewLexicon = function (model) {
 								$elm$html$Html$text(
 								'Showing ' + ($elm$core$String$fromInt(
 									$elm$core$List$length(filteredLexicon)) + (' of ' + ($elm$core$String$fromInt(
-									$elm$core$List$length(model.a.c.g)) + ' words'))))
+									$elm$core$List$length(model.a.c.e)) + ' words'))))
 							])),
 						A2(
 						$elm$html$Html$ul,
@@ -16535,7 +16666,7 @@ var $author$project$Main$viewLexicon = function (model) {
 							filteredLexicon))
 					])),
 				function () {
-				var _v5 = model.bM;
+				var _v5 = model.bN;
 				if (!_v5.$) {
 					var refProject = _v5.a;
 					return A2(
@@ -16572,7 +16703,7 @@ var $author$project$Main$viewLexicon = function (model) {
 									[
 										$elm$html$Html$text('Read-only view of the reference project\'s lexicon for comparison')
 									])),
-								$elm$core$List$isEmpty(refProject.c.g) ? A2(
+								$elm$core$List$isEmpty(refProject.c.e) ? A2(
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
@@ -16598,7 +16729,7 @@ var $author$project$Main$viewLexicon = function (model) {
 											[
 												$elm$html$Html$text(
 												$elm$core$String$fromInt(
-													$elm$core$List$length(refProject.c.g)) + ' words in reference lexicon')
+													$elm$core$List$length(refProject.c.e)) + ' words in reference lexicon')
 											])),
 										A2(
 										$elm$html$Html$ul,
@@ -16606,7 +16737,7 @@ var $author$project$Main$viewLexicon = function (model) {
 											[
 												$elm$html$Html$Attributes$class('word-list')
 											]),
-										A2($elm$core$List$map, $author$project$Main$viewReferenceLexeme, refProject.c.g))
+										A2($elm$core$List$map, $author$project$Main$viewReferenceLexeme, refProject.c.e))
 									]))
 							]));
 				} else {
@@ -16614,26 +16745,27 @@ var $author$project$Main$viewLexicon = function (model) {
 				}
 			}(),
 				model.a4 ? $author$project$Main$viewEditModal(model) : $elm$html$Html$text(''),
-				model.bu ? $author$project$Main$viewAddModal(model) : $elm$html$Html$text(''),
-				model.bv ? $author$project$Main$viewBatchDeleteConfirm(model.E) : $elm$html$Html$text('')
+				model.bv ? $author$project$Main$viewAddModal(model) : $elm$html$Html$text(''),
+				model.bw ? $author$project$Main$viewBatchDeleteConfirm(model.F) : $elm$html$Html$text(''),
+				model.bx ? $author$project$Main$viewMorphemeModal(model) : $elm$html$Html$text('')
 			]));
 };
-var $author$project$Main$AddFeature = {$: 47};
+var $author$project$Main$AddFeature = {$: 48};
 var $author$project$Main$UpdateFeatureNameInput = function (a) {
-	return {$: 45, a: a};
+	return {$: 46, a: a};
 };
 var $author$project$Main$AddFeatureValue = function (a) {
-	return {$: 48, a: a};
-};
-var $author$project$Main$RemoveFeature = function (a) {
 	return {$: 49, a: a};
 };
+var $author$project$Main$RemoveFeature = function (a) {
+	return {$: 50, a: a};
+};
 var $author$project$Main$UpdateFeatureValueInput = function (a) {
-	return {$: 46, a: a};
+	return {$: 47, a: a};
 };
 var $author$project$Main$RemoveFeatureValue = F2(
 	function (a, b) {
-		return {$: 50, a: a, b: b};
+		return {$: 51, a: a, b: b};
 	});
 var $author$project$Main$viewFeatureValue = F2(
 	function (featureName, value) {
@@ -16706,7 +16838,7 @@ var $author$project$Main$viewFeature = F2(
 					A2(
 						$elm$core$List$map,
 						$author$project$Main$viewFeatureValue(feature.b),
-						feature.Q)),
+						feature.R)),
 					A2(
 					$elm$html$Html$div,
 					_List_fromArray(
@@ -16825,23 +16957,23 @@ var $author$project$Main$viewFeatures = function (model) {
 					model.a.c.j.p))
 			]));
 };
-var $author$project$Main$AddMorpheme = {$: 56};
-var $author$project$Main$CancelMorphemeEdit = {$: 60};
-var $author$project$Main$SaveMorphemeEdit = {$: 59};
+var $author$project$Main$AddMorpheme = {$: 57};
+var $author$project$Main$CancelMorphemeEdit = {$: 61};
+var $author$project$Main$SaveMorphemeEdit = {$: 60};
 var $author$project$Main$SelectMorphemeType = function (a) {
-	return {$: 53, a: a};
-};
-var $author$project$Main$UpdateMorphemeFeatureInput = function (a) {
 	return {$: 54, a: a};
 };
-var $author$project$Main$UpdateMorphemeFormInput = function (a) {
-	return {$: 51, a: a};
+var $author$project$Main$UpdateMorphemeFeatureInput = function (a) {
+	return {$: 55, a: a};
 };
-var $author$project$Main$UpdateMorphemeGlossInput = function (a) {
+var $author$project$Main$UpdateMorphemeFormInput = function (a) {
 	return {$: 52, a: a};
 };
+var $author$project$Main$UpdateMorphemeGlossInput = function (a) {
+	return {$: 53, a: a};
+};
 var $author$project$Main$UpdateMorphemeValueInput = function (a) {
-	return {$: 55, a: a};
+	return {$: 56, a: a};
 };
 var $author$project$Main$morphemeTypeToString = function (morphemeType) {
 	switch (morphemeType) {
@@ -16870,10 +17002,10 @@ var $author$project$Main$stringToMorphemeType = function (str) {
 	}
 };
 var $author$project$Main$EditMorpheme = function (a) {
-	return {$: 58, a: a};
+	return {$: 59, a: a};
 };
 var $author$project$Main$RemoveMorpheme = function (a) {
-	return {$: 57, a: a};
+	return {$: 58, a: a};
 };
 var $author$project$Main$viewMorpheme = F3(
 	function (model, index, morpheme) {
@@ -16901,7 +17033,7 @@ var $author$project$Main$viewMorpheme = F3(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(morpheme.e)
+									$elm$html$Html$text(morpheme.g)
 								])),
 							A2(
 							$elm$html$Html$span,
@@ -16911,7 +17043,7 @@ var $author$project$Main$viewMorpheme = F3(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text('- ' + morpheme.C)
+									$elm$html$Html$text('- ' + morpheme.D)
 								])),
 							A2(
 							$elm$html$Html$span,
@@ -16922,9 +17054,9 @@ var $author$project$Main$viewMorpheme = F3(
 							_List_fromArray(
 								[
 									$elm$html$Html$text(
-									' [' + ($author$project$Main$morphemeTypeToString(morpheme.I) + ']'))
+									' [' + ($author$project$Main$morphemeTypeToString(morpheme.K) + ']'))
 								])),
-							$elm$core$String$isEmpty(morpheme.G) ? $elm$html$Html$text('') : A2(
+							$elm$core$String$isEmpty(morpheme.C) ? $elm$html$Html$text('') : A2(
 							$elm$html$Html$span,
 							_List_fromArray(
 								[
@@ -16932,7 +17064,7 @@ var $author$project$Main$viewMorpheme = F3(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(' (' + (morpheme.G + ('=' + (morpheme.P + ')'))))
+									$elm$html$Html$text(' (' + (morpheme.C + ('=' + (morpheme.G + ')'))))
 								]))
 						])),
 					A2(
@@ -17215,7 +17347,7 @@ var $author$project$Main$viewMorphemes = function (model) {
 							var featureValues = function () {
 								if (!selectedFeature.$) {
 									var feature = selectedFeature.a;
-									return feature.Q;
+									return feature.R;
 								} else {
 									return _List_Nil;
 								}
@@ -17295,7 +17427,7 @@ var $author$project$Main$viewMorphemes = function (model) {
 								$elm$html$Html$text('Cancel')
 							]))
 					])),
-				$elm$core$List$isEmpty(model.a.c.j.D) ? A2(
+				$elm$core$List$isEmpty(model.a.c.j.q) ? A2(
 				$elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
@@ -17310,27 +17442,27 @@ var $author$project$Main$viewMorphemes = function (model) {
 				A2(
 					$elm$core$List$indexedMap,
 					$author$project$Main$viewMorpheme(model),
-					model.a.c.j.D))
+					model.a.c.j.q))
 			]));
 };
-var $author$project$Main$AddMorphophonemicRule = {$: 77};
+var $author$project$Main$AddMorphophonemicRule = {$: 78};
 var $author$project$Main$SelectRuleType = function (a) {
-	return {$: 76, a: a};
+	return {$: 77, a: a};
 };
 var $author$project$Main$UpdateRuleContextInput = function (a) {
-	return {$: 72, a: a};
+	return {$: 73, a: a};
 };
 var $author$project$Main$UpdateRuleDescriptionInput = function (a) {
-	return {$: 75, a: a};
+	return {$: 76, a: a};
 };
 var $author$project$Main$UpdateRuleNameInput = function (a) {
-	return {$: 71, a: a};
+	return {$: 72, a: a};
 };
 var $author$project$Main$UpdateRuleReplacementInput = function (a) {
-	return {$: 74, a: a};
+	return {$: 75, a: a};
 };
 var $author$project$Main$UpdateRuleTargetInput = function (a) {
-	return {$: 73, a: a};
+	return {$: 74, a: a};
 };
 var $author$project$Main$selectRuleTypeFromString = function (str) {
 	switch (str) {
@@ -17348,7 +17480,7 @@ var $author$project$Main$selectRuleTypeFromString = function (str) {
 };
 var $elm$html$Html$Attributes$selected = $elm$html$Html$Attributes$boolProperty('selected');
 var $author$project$Main$RemoveMorphophonemicRule = function (a) {
-	return {$: 78, a: a};
+	return {$: 79, a: a};
 };
 var $author$project$Main$ruleTypeToString = function (ruleType) {
 	switch (ruleType) {
@@ -17486,7 +17618,7 @@ var $author$project$Main$viewMorphophonemicRules = function (model) {
 							[
 								$elm$html$Html$Attributes$type_('text'),
 								$elm$html$Html$Attributes$placeholder('e.g., Nasal Assimilation, Vowel Harmony'),
-								$elm$html$Html$Attributes$value(model.bp),
+								$elm$html$Html$Attributes$value(model.bq),
 								$elm$html$Html$Events$onInput($author$project$Main$UpdateRuleNameInput)
 							]),
 						_List_Nil)
@@ -17582,7 +17714,7 @@ var $author$project$Main$viewMorphophonemicRules = function (model) {
 							[
 								$elm$html$Html$Attributes$type_('text'),
 								$elm$html$Html$Attributes$placeholder('e.g., _n (before \'n\'), V_ (after vowel)'),
-								$elm$html$Html$Attributes$value(model.bn),
+								$elm$html$Html$Attributes$value(model.bo),
 								$elm$html$Html$Events$onInput($author$project$Main$UpdateRuleContextInput)
 							]),
 						_List_Nil),
@@ -17618,7 +17750,7 @@ var $author$project$Main$viewMorphophonemicRules = function (model) {
 							[
 								$elm$html$Html$Attributes$type_('text'),
 								$elm$html$Html$Attributes$placeholder('e.g., t, k, p (sounds to change)'),
-								$elm$html$Html$Attributes$value(model.br),
+								$elm$html$Html$Attributes$value(model.bs),
 								$elm$html$Html$Events$onInput($author$project$Main$UpdateRuleTargetInput)
 							]),
 						_List_Nil)
@@ -17644,7 +17776,7 @@ var $author$project$Main$viewMorphophonemicRules = function (model) {
 							[
 								$elm$html$Html$Attributes$type_('text'),
 								$elm$html$Html$Attributes$placeholder('e.g., n, g, b (what they become)'),
-								$elm$html$Html$Attributes$value(model.bq),
+								$elm$html$Html$Attributes$value(model.br),
 								$elm$html$Html$Events$onInput($author$project$Main$UpdateRuleReplacementInput)
 							]),
 						_List_Nil)
@@ -17670,7 +17802,7 @@ var $author$project$Main$viewMorphophonemicRules = function (model) {
 							[
 								$elm$html$Html$Attributes$type_('text'),
 								$elm$html$Html$Attributes$placeholder('e.g., /t/ becomes /n/ before nasals'),
-								$elm$html$Html$Attributes$value(model.bo),
+								$elm$html$Html$Attributes$value(model.bp),
 								$elm$html$Html$Events$onInput($author$project$Main$UpdateRuleDescriptionInput)
 							]),
 						_List_Nil)
@@ -17685,7 +17817,7 @@ var $author$project$Main$viewMorphophonemicRules = function (model) {
 					[
 						$elm$html$Html$text('Add Rule')
 					])),
-				$elm$core$List$isEmpty(model.a.c.j.Y) ? A2(
+				$elm$core$List$isEmpty(model.a.c.j.P) ? A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
@@ -17712,19 +17844,19 @@ var $author$project$Main$viewMorphophonemicRules = function (model) {
 						A2(
 						$elm$html$Html$div,
 						_List_Nil,
-						A2($elm$core$List$map, $author$project$Main$viewMorphophonemicRule, model.a.c.j.Y))
+						A2($elm$core$List$map, $author$project$Main$viewMorphophonemicRule, model.a.c.j.P))
 					]))
 			]));
 };
-var $author$project$Main$GenerateParadigm = {$: 65};
+var $author$project$Main$GenerateParadigm = {$: 66};
 var $author$project$Main$UpdateInflectionBase = function (a) {
-	return {$: 64, a: a};
+	return {$: 65, a: a};
 };
 var $author$project$Main$UpdateParadigmNameInput = function (a) {
-	return {$: 61, a: a};
+	return {$: 62, a: a};
 };
 var $author$project$Main$UpdateParadigmPosInput = function (a) {
-	return {$: 62, a: a};
+	return {$: 63, a: a};
 };
 var $author$project$Main$countCombinations = function (model) {
 	var selectedFeatureObjects = A2(
@@ -17742,13 +17874,13 @@ var $author$project$Main$countCombinations = function (model) {
 	var counts = A2(
 		$elm$core$List$map,
 		function (f) {
-			return $elm$core$List$length(f.Q);
+			return $elm$core$List$length(f.R);
 		},
 		selectedFeatureObjects);
 	return A3($elm$core$List$foldl, $elm$core$Basics$mul, 1, counts);
 };
 var $author$project$Main$ToggleFeatureSelection = function (a) {
-	return {$: 63, a: a};
+	return {$: 64, a: a};
 };
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $author$project$Main$viewFeatureCheckbox = F2(
@@ -17783,34 +17915,34 @@ var $author$project$Main$viewFeatureCheckbox = F2(
 						[
 							$elm$html$Html$text(
 							feature.b + (' (' + ($elm$core$String$fromInt(
-								$elm$core$List$length(feature.Q)) + ' values)')))
+								$elm$core$List$length(feature.R)) + ' values)')))
 						]))
 				]));
 	});
 var $author$project$Main$ApplyRulesToParadigm = function (a) {
-	return {$: 79, a: a};
+	return {$: 80, a: a};
 };
 var $author$project$Main$AutoGenerateParadigmForms = function (a) {
-	return {$: 69, a: a};
-};
-var $author$project$Main$DuplicateParadigm = function (a) {
 	return {$: 70, a: a};
 };
+var $author$project$Main$DuplicateParadigm = function (a) {
+	return {$: 71, a: a};
+};
 var $author$project$Main$RemoveParadigm = function (a) {
-	return {$: 66, a: a};
+	return {$: 67, a: a};
 };
 var $author$project$Main$UpdateParadigmBaseForm = F2(
 	function (a, b) {
-		return {$: 68, a: a, b: b};
+		return {$: 69, a: a, b: b};
 	});
 var $author$project$Main$UpdateParadigmForm = F3(
 	function (a, b, c) {
-		return {$: 67, a: a, b: b, c: c};
+		return {$: 68, a: a, b: b, c: c};
 	});
 var $author$project$Main$viewParadigmRow = F2(
 	function (paradigmName, combination) {
 		var isEmpty = $elm$core$String$isEmpty(
-			$elm$core$String$trim(combination.e));
+			$elm$core$String$trim(combination.g));
 		var cellClass = isEmpty ? 'paradigm-form paradigm-form-empty' : 'paradigm-form paradigm-form-filled';
 		return A3(
 			$elm$html$Html$node,
@@ -17849,7 +17981,7 @@ var $author$project$Main$viewParadigmRow = F2(
 									_List_fromArray(
 										[
 											$elm$html$Html$Attributes$type_('text'),
-											$elm$html$Html$Attributes$value(combination.e),
+											$elm$html$Html$Attributes$value(combination.g),
 											$elm$html$Html$Events$onInput(
 											function (newForm) {
 												return A3($author$project$Main$UpdateParadigmForm, paradigmName, newForm, combination.p);
@@ -17863,15 +17995,15 @@ var $author$project$Main$viewParadigmRow = F2(
 	});
 var $author$project$Main$viewParadigm = F2(
 	function (morphology, paradigm) {
-		var totalForms = $elm$core$List$length(paradigm.V);
+		var totalForms = $elm$core$List$length(paradigm.W);
 		var filledForms = $elm$core$List$length(
 			A2(
 				$elm$core$List$filter,
 				function (fc) {
 					return !$elm$core$String$isEmpty(
-						$elm$core$String$trim(fc.e));
+						$elm$core$String$trim(fc.g));
 				},
-				paradigm.V));
+				paradigm.W));
 		var completionPercent = (totalForms > 0) ? ((filledForms / totalForms) * 100) : 0;
 		var allFeatures = A3(
 			$elm$core$List$foldl,
@@ -17888,16 +18020,16 @@ var $author$project$Main$viewParadigm = F2(
 					function ($) {
 						return $.p;
 					},
-					paradigm.V)));
+					paradigm.W)));
 		var coveredFeatures = A2(
 			$elm$core$List$filter,
 			function (featureName) {
 				return A2(
 					$elm$core$List$any,
 					function (m) {
-						return _Utils_eq(m.G, featureName) && (!$elm$core$String$isEmpty(m.P));
+						return _Utils_eq(m.C, featureName) && (!$elm$core$String$isEmpty(m.G));
 					},
-					morphology.D);
+					morphology.q);
 			},
 			allFeatures);
 		var morphemeCoveragePercent = $elm$core$List$isEmpty(allFeatures) ? 100 : (($elm$core$List$length(coveredFeatures) / $elm$core$List$length(allFeatures)) * 100);
@@ -17950,7 +18082,7 @@ var $author$project$Main$viewParadigm = F2(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text('(' + (paradigm.z + ')'))
+											$elm$html$Html$text('(' + (paradigm.A + ')'))
 										])),
 									A2(
 									$elm$html$Html$span,
@@ -18111,7 +18243,7 @@ var $author$project$Main$viewParadigm = F2(
 												_List_fromArray(
 													[
 														function () {
-														var _v0 = $elm$core$List$head(paradigm.V);
+														var _v0 = $elm$core$List$head(paradigm.W);
 														if (!_v0.$) {
 															var combo = _v0.a;
 															return A2(
@@ -18152,7 +18284,7 @@ var $author$project$Main$viewParadigm = F2(
 									A2(
 										$elm$core$List$map,
 										$author$project$Main$viewParadigmRow(paradigm.b),
-										paradigm.V))
+										paradigm.W))
 								]))
 						]))
 				]));
@@ -18222,7 +18354,7 @@ var $author$project$Main$viewParadigms = function (model) {
 									[
 										$elm$html$Html$Attributes$type_('text'),
 										$elm$html$Html$Attributes$placeholder('e.g., Noun Declension, Verb Conjugation'),
-										$elm$html$Html$Attributes$value(model.bh),
+										$elm$html$Html$Attributes$value(model.bi),
 										$elm$html$Html$Events$onInput($author$project$Main$UpdateParadigmNameInput)
 									]),
 								_List_Nil)
@@ -18248,7 +18380,7 @@ var $author$project$Main$viewParadigms = function (model) {
 									[
 										$elm$html$Html$Attributes$type_('text'),
 										$elm$html$Html$Attributes$placeholder('e.g., noun, verb, adjective'),
-										$elm$html$Html$Attributes$value(model.bi),
+										$elm$html$Html$Attributes$value(model.bj),
 										$elm$html$Html$Events$onInput($author$project$Main$UpdateParadigmPosInput)
 									]),
 								_List_Nil)
@@ -18328,7 +18460,7 @@ var $author$project$Main$viewParadigms = function (model) {
 									$author$project$Main$countCombinations(model)) + ' forms based on selected features'))
 							])) : $elm$html$Html$text('')
 					])),
-				$elm$core$List$isEmpty(model.a.c.j.x) ? A2(
+				$elm$core$List$isEmpty(model.a.c.j.y) ? A2(
 				$elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
@@ -18343,7 +18475,7 @@ var $author$project$Main$viewParadigms = function (model) {
 				A2(
 					$elm$core$List$map,
 					$author$project$Main$viewParadigmWithContext(model.a.c.j),
-					model.a.c.j.x))
+					model.a.c.j.y))
 			]));
 };
 var $author$project$Main$viewMorphology = function (model) {
@@ -18358,23 +18490,23 @@ var $author$project$Main$viewMorphology = function (model) {
 				$author$project$Main$viewParadigms(model)
 			]));
 };
-var $author$project$Main$AddConstraint = {$: 42};
-var $author$project$Main$AddGraphemeMapping = {$: 160};
+var $author$project$Main$AddConstraint = {$: 43};
+var $author$project$Main$AddGraphemeMapping = {$: 161};
 var $author$project$Main$AddPattern = {$: 8};
 var $author$project$Main$SelectConstraintType = function (a) {
-	return {$: 41, a: a};
+	return {$: 42, a: a};
 };
 var $author$project$Main$UpdateConstraintInput = function (a) {
-	return {$: 40, a: a};
+	return {$: 41, a: a};
 };
 var $author$project$Main$UpdateGraphemeDescriptionInput = function (a) {
-	return {$: 159, a: a};
+	return {$: 160, a: a};
 };
 var $author$project$Main$UpdateGraphemeGraphemeInput = function (a) {
-	return {$: 158, a: a};
+	return {$: 159, a: a};
 };
 var $author$project$Main$UpdateGraphemePhonemeInput = function (a) {
-	return {$: 157, a: a};
+	return {$: 158, a: a};
 };
 var $author$project$Main$UpdatePatternInput = function (a) {
 	return {$: 2, a: a};
@@ -18410,7 +18542,7 @@ var $author$project$Main$stringToConstraintType = function (str) {
 	}
 };
 var $author$project$Main$RemoveConstraint = function (a) {
-	return {$: 43, a: a};
+	return {$: 44, a: a};
 };
 var $author$project$Main$viewConstraint = function (constraint) {
 	return A2(
@@ -18436,7 +18568,7 @@ var $author$project$Main$viewConstraint = function (constraint) {
 			]));
 };
 var $author$project$Main$RemoveGraphemeMapping = function (a) {
-	return {$: 161, a: a};
+	return {$: 162, a: a};
 };
 var $author$project$Main$viewGraphemeMapping = function (mapping) {
 	return A2(
@@ -18483,9 +18615,9 @@ var $author$project$Main$viewGraphemeMapping = function (mapping) {
 					]))
 			]));
 };
-var $author$project$Main$CloseIPACellModal = {$: 151};
+var $author$project$Main$CloseIPACellModal = {$: 152};
 var $author$project$Main$TogglePhonemeInCell = function (a) {
-	return {$: 152, a: a};
+	return {$: 153, a: a};
 };
 var $author$project$Main$backnessToString = function (backness) {
 	switch (backness) {
@@ -19000,7 +19132,7 @@ var $author$project$Main$placeToString = function (place) {
 };
 var $author$project$Main$viewIPACellModal = F2(
 	function (model, allSounds) {
-		var _v0 = model.bN;
+		var _v0 = model.bO;
 		if (_v0.$ === 1) {
 			return $elm$html$Html$text('');
 		} else {
@@ -19104,7 +19236,7 @@ var $author$project$Main$viewIPACellModal = F2(
 		}
 	});
 var $author$project$Main$OpenIPACellModal = function (a) {
-	return {$: 150, a: a};
+	return {$: 151, a: a};
 };
 var $author$project$Main$OtherSymbolCell = function (a) {
 	return {$: 2, a: a};
@@ -19391,7 +19523,7 @@ var $author$project$Main$TogglePatternSelection = function (a) {
 };
 var $author$project$Main$viewSavedPattern = F2(
 	function (selectedPatterns, pattern) {
-		var isSelected = A2($elm$core$List$member, pattern.v, selectedPatterns);
+		var isSelected = A2($elm$core$List$member, pattern.w, selectedPatterns);
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -19415,17 +19547,17 @@ var $author$project$Main$viewSavedPattern = F2(
 									$elm$html$Html$Attributes$type_('checkbox'),
 									$elm$html$Html$Attributes$checked(isSelected),
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$TogglePatternSelection(pattern.v))
+									$author$project$Main$TogglePatternSelection(pattern.w))
 								]),
 							_List_Nil),
-							$elm$html$Html$text(' ' + pattern.v)
+							$elm$html$Html$text(' ' + pattern.w)
 						])),
 					A2(
 					$elm$html$Html$button,
 					_List_fromArray(
 						[
 							$elm$html$Html$Events$onClick(
-							$author$project$Main$RemovePattern(pattern.v))
+							$author$project$Main$RemovePattern(pattern.w))
 						]),
 					_List_fromArray(
 						[
@@ -19721,57 +19853,57 @@ var $author$project$Main$VowelCell = F2(
 var $author$project$Main$classifyVowel = function (phoneme) {
 	switch (phoneme) {
 		case 'i':
-			return {r: 0, s: 0};
+			return {s: 0, t: 0};
 		case 'y':
-			return {r: 0, s: 0};
+			return {s: 0, t: 0};
 		case 'ɨ':
-			return {r: 1, s: 0};
+			return {s: 1, t: 0};
 		case 'ʉ':
-			return {r: 1, s: 0};
+			return {s: 1, t: 0};
 		case 'ɯ':
-			return {r: 2, s: 0};
+			return {s: 2, t: 0};
 		case 'u':
-			return {r: 2, s: 0};
+			return {s: 2, t: 0};
 		case 'ɪ':
-			return {r: 0, s: 1};
+			return {s: 0, t: 1};
 		case 'ʊ':
-			return {r: 2, s: 1};
+			return {s: 2, t: 1};
 		case 'e':
-			return {r: 0, s: 2};
+			return {s: 0, t: 2};
 		case 'ø':
-			return {r: 0, s: 2};
+			return {s: 0, t: 2};
 		case 'ɘ':
-			return {r: 1, s: 2};
+			return {s: 1, t: 2};
 		case 'ɵ':
-			return {r: 1, s: 2};
+			return {s: 1, t: 2};
 		case 'ɤ':
-			return {r: 2, s: 2};
+			return {s: 2, t: 2};
 		case 'o':
-			return {r: 2, s: 2};
+			return {s: 2, t: 2};
 		case 'ə':
-			return {r: 1, s: 3};
+			return {s: 1, t: 3};
 		case 'ɛ':
-			return {r: 0, s: 4};
+			return {s: 0, t: 4};
 		case 'œ':
-			return {r: 0, s: 4};
+			return {s: 0, t: 4};
 		case 'ɜ':
-			return {r: 1, s: 4};
+			return {s: 1, t: 4};
 		case 'ɞ':
-			return {r: 1, s: 4};
+			return {s: 1, t: 4};
 		case 'ʌ':
-			return {r: 2, s: 4};
+			return {s: 2, t: 4};
 		case 'ɔ':
-			return {r: 2, s: 4};
+			return {s: 2, t: 4};
 		case 'æ':
-			return {r: 0, s: 5};
+			return {s: 0, t: 5};
 		case 'a':
-			return {r: 0, s: 6};
+			return {s: 0, t: 6};
 		case 'ɑ':
-			return {r: 2, s: 6};
+			return {s: 2, t: 6};
 		case 'ɒ':
-			return {r: 2, s: 6};
+			return {s: 2, t: 6};
 		default:
-			return {r: 1, s: 6};
+			return {s: 1, t: 6};
 	}
 };
 var $author$project$Main$viewStaticVowelChart = F2(
@@ -19835,7 +19967,7 @@ var $author$project$Main$viewStaticVowelChart = F2(
 					$elm$core$List$filter,
 					function (sound) {
 						var classification = $author$project$Main$classifyVowel(sound);
-						return _Utils_eq(classification.s, height) && _Utils_eq(classification.r, backness);
+						return _Utils_eq(classification.t, height) && _Utils_eq(classification.s, backness);
 					},
 					A2($elm$core$List$filter, $author$project$Main$isVowelSound, allSounds));
 			});
@@ -19912,7 +20044,7 @@ var $author$project$Main$viewPhonology = function (model) {
 	var allSounds = A2(
 		$elm$core$List$concatMap,
 		function ($) {
-			return $.t;
+			return $.u;
 		},
 		model.a.c.n.k);
 	return A2(
@@ -19966,7 +20098,7 @@ var $author$project$Main$viewPhonology = function (model) {
 						$elm$html$Html$text('Vowels')
 					])),
 				A2($author$project$Main$viewStaticVowelChart, allSounds, model),
-				model.bO ? A2($author$project$Main$viewIPACellModal, model, allSounds) : $elm$html$Html$text(''),
+				model.bP ? A2($author$project$Main$viewIPACellModal, model, allSounds) : $elm$html$Html$text(''),
 				A2(
 				$elm$html$Html$div,
 				_List_fromArray(
@@ -20007,7 +20139,7 @@ var $author$project$Main$viewPhonology = function (model) {
 									[
 										$elm$html$Html$Attributes$type_('text'),
 										$elm$html$Html$Attributes$placeholder('Pattern (e.g., CV, C(C)V, (C)V(C))'),
-										$elm$html$Html$Attributes$value(model.bj),
+										$elm$html$Html$Attributes$value(model.bk),
 										$elm$html$Html$Events$onInput($author$project$Main$UpdatePatternInput)
 									]),
 								_List_Nil),
@@ -20054,7 +20186,7 @@ var $author$project$Main$viewPhonology = function (model) {
 							[
 								$elm$html$Html$Attributes$class('phoneme-list')
 							]),
-						A2($elm$core$List$map, $author$project$Main$viewConstraint, model.a.c.n.T)),
+						A2($elm$core$List$map, $author$project$Main$viewConstraint, model.a.c.n.U)),
 						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
@@ -20160,7 +20292,7 @@ var $author$project$Main$viewPhonology = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
-								$author$project$Main$constraintTypeExplanation(model.w))
+								$author$project$Main$constraintTypeExplanation(model.x))
 							]))
 					])),
 				A2(
@@ -20214,7 +20346,7 @@ var $author$project$Main$viewPhonology = function (model) {
 							[
 								$elm$html$Html$Attributes$class('phoneme-list')
 							]),
-						A2($elm$core$List$map, $author$project$Main$viewGraphemeMapping, model.a.c.n.q.R)),
+						A2($elm$core$List$map, $author$project$Main$viewGraphemeMapping, model.a.c.n.r.S)),
 						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
@@ -20272,7 +20404,7 @@ var $author$project$Main$viewPhonology = function (model) {
 			]));
 };
 var $author$project$Main$SwitchTab = function (a) {
-	return {$: 44, a: a};
+	return {$: 45, a: a};
 };
 var $author$project$Main$viewTabs = function (model) {
 	return A2(
@@ -20324,41 +20456,41 @@ var $author$project$Main$viewTabs = function (model) {
 					]))
 			]));
 };
-var $author$project$Main$AddAllGeneratedWordsToLexicon = {$: 136};
-var $author$project$Main$GenerateWords = {$: 31};
+var $author$project$Main$AddAllGeneratedWordsToLexicon = {$: 137};
+var $author$project$Main$GenerateWords = {$: 32};
 var $author$project$Main$MarkovGeneration = 1;
 var $author$project$Main$SelectGenerationMethod = function (a) {
-	return {$: 128, a: a};
-};
-var $author$project$Main$UpdateMarkovMaxLength = function (a) {
-	return {$: 131, a: a};
-};
-var $author$project$Main$UpdateMarkovMinLength = function (a) {
-	return {$: 130, a: a};
-};
-var $author$project$Main$UpdateMarkovOrder = function (a) {
 	return {$: 129, a: a};
 };
-var $author$project$Main$UpdateTemplateMaxSyllables = function (a) {
-	return {$: 133, a: a};
-};
-var $author$project$Main$UpdateTemplateMinSyllables = function (a) {
+var $author$project$Main$UpdateMarkovMaxLength = function (a) {
 	return {$: 132, a: a};
 };
-var $author$project$Main$UpdateWordGenerationCount = function (a) {
+var $author$project$Main$UpdateMarkovMinLength = function (a) {
+	return {$: 131, a: a};
+};
+var $author$project$Main$UpdateMarkovOrder = function (a) {
+	return {$: 130, a: a};
+};
+var $author$project$Main$UpdateTemplateMaxSyllables = function (a) {
 	return {$: 134, a: a};
+};
+var $author$project$Main$UpdateTemplateMinSyllables = function (a) {
+	return {$: 133, a: a};
+};
+var $author$project$Main$UpdateWordGenerationCount = function (a) {
+	return {$: 135, a: a};
 };
 var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
 var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $author$project$Main$AddGeneratedWordToLexicon = function (a) {
-	return {$: 135, a: a};
+	return {$: 136, a: a};
 };
 var $author$project$Main$viewGeneratedWord = F2(
 	function (orthography, word) {
 		var orthographyForm = A2(
 			$author$project$Main$applyOrthography,
-			orthography.R,
+			orthography.S,
 			$author$project$Main$removeSyllableSeparators(word));
 		var ipaForm = word;
 		return A2(
@@ -20415,7 +20547,7 @@ var $author$project$Main$viewGeneratedWord = F2(
 	});
 var $author$project$Main$viewPatternButton = F2(
 	function (selectedPatterns, pattern) {
-		var isSelected = A2($elm$core$List$member, pattern.v, selectedPatterns);
+		var isSelected = A2($elm$core$List$member, pattern.w, selectedPatterns);
 		var buttonClass = isSelected ? 'pattern-button pattern-button-selected' : 'pattern-button';
 		return A2(
 			$elm$html$Html$button,
@@ -20423,11 +20555,11 @@ var $author$project$Main$viewPatternButton = F2(
 				[
 					$elm$html$Html$Attributes$class(buttonClass),
 					$elm$html$Html$Events$onClick(
-					$author$project$Main$TogglePatternSelection(pattern.v))
+					$author$project$Main$TogglePatternSelection(pattern.w))
 				]),
 			_List_fromArray(
 				[
-					$elm$html$Html$text(pattern.v)
+					$elm$html$Html$text(pattern.w)
 				]));
 	});
 var $author$project$Main$viewWordGenerator = function (model) {
@@ -20616,7 +20748,7 @@ var $author$project$Main$viewWordGenerator = function (model) {
 								_List_fromArray(
 									[
 										$elm$html$Html$text(
-										'Max Syllables: ' + $elm$core$String$fromInt(model.bA))
+										'Max Syllables: ' + $elm$core$String$fromInt(model.bC))
 									])),
 								A2(
 								$elm$html$Html$input,
@@ -20627,7 +20759,7 @@ var $author$project$Main$viewWordGenerator = function (model) {
 										$elm$core$String$fromInt(model.aT)),
 										$elm$html$Html$Attributes$max('10'),
 										$elm$html$Html$Attributes$value(
-										$elm$core$String$fromInt(model.bA)),
+										$elm$core$String$fromInt(model.bC)),
 										$elm$html$Html$Events$onInput($author$project$Main$UpdateTemplateMaxSyllables)
 									]),
 								_List_Nil),
@@ -20658,7 +20790,7 @@ var $author$project$Main$viewWordGenerator = function (model) {
 							[
 								$elm$html$Html$text(
 								'Note: Markov generation requires words in your lexicon. You have ' + ($elm$core$String$fromInt(
-									$elm$core$List$length(model.a.c.g)) + ' words.'))
+									$elm$core$List$length(model.a.c.e)) + ' words.'))
 							])),
 						A2(
 						$elm$html$Html$div,
@@ -20748,7 +20880,7 @@ var $author$project$Main$viewWordGenerator = function (model) {
 										$elm$html$Html$Attributes$min(
 										$elm$core$String$fromInt(model.a_)),
 										$elm$html$Html$Attributes$value(
-										$elm$core$String$fromInt(model.bL)),
+										$elm$core$String$fromInt(model.bM)),
 										$elm$html$Html$Events$onInput($author$project$Main$UpdateMarkovMaxLength)
 									]),
 								_List_Nil)
@@ -20842,7 +20974,7 @@ var $author$project$Main$viewWordGenerator = function (model) {
 						$elm$html$Html$text(
 						'Generate ' + ($elm$core$String$fromInt(model.al) + (' Word' + ((model.al === 1) ? '' : 's'))))
 					])),
-				$elm$core$List$isEmpty(model.A) ? $elm$html$Html$text('') : A2(
+				$elm$core$List$isEmpty(model.B) ? $elm$html$Html$text('') : A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
@@ -20889,8 +21021,8 @@ var $author$project$Main$viewWordGenerator = function (model) {
 							]),
 						A2(
 							$elm$core$List$map,
-							$author$project$Main$viewGeneratedWord(model.a.c.n.q),
-							model.A))
+							$author$project$Main$viewGeneratedWord(model.a.c.n.r),
+							model.B))
 					]))
 			]));
 };
@@ -20945,6 +21077,6 @@ var $author$project$Main$view = function (model) {
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{cB: $author$project$Main$init, cJ: $author$project$Main$subscriptions, cL: $author$project$Main$update, cM: $author$project$Main$view});
+	{cD: $author$project$Main$init, cL: $author$project$Main$subscriptions, cN: $author$project$Main$update, cO: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
