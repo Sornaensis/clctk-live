@@ -5,8 +5,9 @@ const app = Elm.Main.init({
 
 // IndexedDB setup
 const DB_NAME = 'clctk-db';
-const DB_VERSION = 2;  // Increment version for schema change
+const DB_VERSION = 3;  // Increment version for schema change
 const STORE_NAME = 'projects';
+const TEMPLATE_STORE_NAME = 'templates';
 
 let db = null;
 
@@ -27,9 +28,14 @@ function openDatabase() {
     request.onupgradeneeded = (event) => {
       const database = event.target.result;
       
-      // Create or update the object store
+      // Create or update the object store for projects
       if (!database.objectStoreNames.contains(STORE_NAME)) {
         database.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+      }
+      
+      // Create templates store
+      if (!database.objectStoreNames.contains(TEMPLATE_STORE_NAME)) {
+        database.createObjectStore(TEMPLATE_STORE_NAME, { keyPath: 'id', autoIncrement: true });
       }
     };
   });
@@ -444,11 +450,145 @@ app.ports.triggerCSVImport.subscribe(() => {
   input.click();
 });
 
+// Save template to IndexedDB
+function saveTemplateToIndexedDB(templateData) {
+  if (!db) {
+    console.error('Database not initialized');
+    return;
+  }
+
+  const transaction = db.transaction([TEMPLATE_STORE_NAME], 'readwrite');
+  const store = transaction.objectStore(TEMPLATE_STORE_NAME);
+
+  // If id is 0 or not set, let IndexedDB auto-assign
+  if (!templateData.id || templateData.id === 0) {
+    delete templateData.id;
+    const request = store.add(templateData);
+    request.onsuccess = () => {
+      console.log('New template created with ID:', request.result);
+      // Reload templates
+      loadAllTemplates();
+    };
+    request.onerror = () => {
+      console.error('Failed to save new template to IndexedDB');
+    };
+  } else {
+    // Update existing template
+    const request = store.put(templateData);
+    request.onsuccess = () => {
+      console.log('Template updated in IndexedDB');
+      loadAllTemplates();
+    };
+    request.onerror = () => {
+      console.error('Failed to update template in IndexedDB');
+    };
+  }
+}
+
+// Load all templates
+function loadAllTemplates() {
+  if (!db) {
+    console.error('Database not initialized');
+    return;
+  }
+
+  const transaction = db.transaction([TEMPLATE_STORE_NAME], 'readonly');
+  const store = transaction.objectStore(TEMPLATE_STORE_NAME);
+  const request = store.getAll();
+
+  request.onsuccess = () => {
+    console.log('All templates loaded:', request.result.length);
+    app.ports.receiveAllTemplates.send(request.result);
+  };
+
+  request.onerror = () => {
+    console.error('Failed to load all templates');
+  };
+}
+
+// Delete a template by ID
+function deleteTemplateById(templateId) {
+  if (!db) {
+    console.error('Database not initialized');
+    return;
+  }
+
+  const transaction = db.transaction([TEMPLATE_STORE_NAME], 'readwrite');
+  const store = transaction.objectStore(TEMPLATE_STORE_NAME);
+  const request = store.delete(templateId);
+
+  request.onsuccess = () => {
+    console.log('Template deleted:', templateId);
+    // Reload the template list
+    loadAllTemplates();
+  };
+
+  request.onerror = () => {
+    console.error('Failed to delete template');
+  };
+}
+
+// Port subscriptions for templates
+app.ports.saveTemplateToStorage.subscribe((data) => {
+  saveTemplateToIndexedDB(data);
+});
+
+app.ports.loadAllTemplates.subscribe(() => {
+  // If database is not ready, wait a bit and try again
+  if (!db) {
+    setTimeout(() => {
+      loadAllTemplates();
+    }, 100);
+  } else {
+    loadAllTemplates();
+  }
+});
+
+app.ports.deleteTemplateById.subscribe((templateId) => {
+  deleteTemplateById(templateId);
+});
+
+// Preferences management using localStorage
+const PREFERENCES_KEY = 'clctk-preferences';
+
+function savePreference(data) {
+  try {
+    let preferences = JSON.parse(localStorage.getItem(PREFERENCES_KEY) || '{}');
+    // Merge new preferences
+    Object.assign(preferences, data);
+    localStorage.setItem(PREFERENCES_KEY, JSON.stringify(preferences));
+    console.log('Preference saved:', data);
+  } catch (error) {
+    console.error('Failed to save preference:', error);
+  }
+}
+
+function loadPreferences() {
+  try {
+    const preferences = JSON.parse(localStorage.getItem(PREFERENCES_KEY) || '{}');
+    console.log('Preferences loaded:', preferences);
+    app.ports.receivePreferences.send(preferences);
+  } catch (error) {
+    console.error('Failed to load preferences:', error);
+    app.ports.receivePreferences.send({});
+  }
+}
+
+app.ports.savePreference.subscribe((data) => {
+  savePreference(data);
+});
+
+app.ports.loadPreferences.subscribe(() => {
+  loadPreferences();
+});
+
 // Initialize database and load existing data
 openDatabase()
   .then(() => {
     console.log('Database initialized');
     loadFromIndexedDB();
+    loadAllTemplates();
+    loadPreferences();
   })
   .catch((error) => {
     console.error('Database initialization failed:', error);
