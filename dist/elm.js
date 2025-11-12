@@ -18739,28 +18739,13 @@ var $author$project$Main$classifyOtherSymbol = function (phoneme) {
 };
 var $author$project$Main$viewOtherSymbolsChart = F2(
 	function (allSounds, model) {
-		var symbolTypes = _List_fromArray(
-			[
-				_Utils_Tuple2(0, 'Labial-velar'),
-				_Utils_Tuple2(1, 'Voiceless labial-velar'),
-				_Utils_Tuple2(3, 'Labial-palatal'),
-				_Utils_Tuple2(2, 'Voiceless labial-palatal'),
-				_Utils_Tuple2(4, 'Alveolar affricate'),
-				_Utils_Tuple2(5, 'Voiced alveolar affricate'),
-				_Utils_Tuple2(6, 'Postalveolar affricate'),
-				_Utils_Tuple2(7, 'Voiced postalveolar affricate'),
-				_Utils_Tuple2(8, 'Alveolo-palatal affricate'),
-				_Utils_Tuple2(9, 'Voiced alveolo-palatal affricate'),
-				_Utils_Tuple2(10, 'Retroflex affricate'),
-				_Utils_Tuple2(11, 'Voiced retroflex affricate')
-			]);
 		var getSoundsForCell = function (symbolType) {
 			return A2(
 				$elm$core$List$filter,
 				function (sound) {
-					var _v1 = $author$project$Main$classifyOtherSymbol(sound);
-					if (!_v1.$) {
-						var st = _v1.a;
+					var _v0 = $author$project$Main$classifyOtherSymbol(sound);
+					if (!_v0.$) {
+						var st = _v0.a;
 						return _Utils_eq(st, symbolType);
 					} else {
 						return false;
@@ -18768,68 +18753,221 @@ var $author$project$Main$viewOtherSymbolsChart = F2(
 				},
 				A2($elm$core$List$filter, $author$project$Main$isOtherSymbolSound, allSounds));
 		};
-		var symbolRows = $elm$core$List$concat(
-			A2(
+		var makeCell = function (symbolType) {
+			var cellSounds = getSoundsForCell(symbolType);
+			var cellContent = $elm$core$List$isEmpty(cellSounds) ? _List_Nil : A2(
 				$elm$core$List$map,
-				function (_v0) {
-					var symbolType = _v0.a;
-					var label = _v0.b;
-					var cellSounds = getSoundsForCell(symbolType);
-					var cellContent = $elm$core$List$isEmpty(cellSounds) ? _List_Nil : A2(
-						$elm$core$List$map,
-						function (s) {
-							return A2(
-								$elm$html$Html$span,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('ipa-phoneme-display')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text(s)
-									]));
-						},
-						cellSounds);
-					var availablePhonemes = $author$project$Main$getOtherSymbolPhonemes(symbolType);
-					var hasChoices = !$elm$core$List$isEmpty(availablePhonemes);
-					return _List_fromArray(
-						[
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('ipa-row-header'),
-									A2($elm$html$Html$Attributes$style, 'grid-column', '1')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text(label)
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class(
-									hasChoices ? 'ipa-cell-clickable' : 'ipa-cell-non-clickable'),
-									hasChoices ? $elm$html$Html$Events$onClick(
-									$author$project$Main$OpenIPACellModal(
-										$author$project$Main$OtherSymbolCell(symbolType))) : $elm$html$Html$Events$onClick($author$project$Main$NoOp),
-									hasChoices ? $elm$html$Html$Attributes$title('Click to add/remove sounds') : $elm$html$Html$Attributes$title(''),
-									A2($elm$html$Html$Attributes$style, 'grid-column', '2')
-								]),
-							cellContent)
-						]);
+				function (s) {
+					return A2(
+						$elm$html$Html$span,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('ipa-phoneme-display')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(s)
+							]));
 				},
-				symbolTypes));
+				cellSounds);
+			var availablePhonemes = $author$project$Main$getOtherSymbolPhonemes(symbolType);
+			var hasChoices = !$elm$core$List$isEmpty(availablePhonemes);
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class(
+						hasChoices ? 'ipa-cell-clickable' : 'ipa-cell-non-clickable'),
+						hasChoices ? $elm$html$Html$Events$onClick(
+						$author$project$Main$OpenIPACellModal(
+							$author$project$Main$OtherSymbolCell(symbolType))) : $elm$html$Html$Events$onClick($author$project$Main$NoOp),
+						hasChoices ? $elm$html$Html$Attributes$title('Click to add/remove sounds') : $elm$html$Html$Attributes$title('')
+					]),
+				cellContent);
+		};
+		var approximantsSection = _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell'),
+						A2($elm$html$Html$Attributes$style, 'grid-column', '1 / -1')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Approximants')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-row-header')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Labial-velar')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Labial-palatal')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-row-header')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Voiceless')
+					])),
+				makeCell(1),
+				makeCell(2),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-row-header')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Voiced')
+					])),
+				makeCell(0),
+				makeCell(3)
+			]);
+		var affricatesSection = _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell'),
+						A2($elm$html$Html$Attributes$style, 'grid-column', '1 / -1')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Affricates')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-row-header')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Alveolar')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Postalveolar')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Alveolo-palatal')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Retroflex')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-row-header')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Voiceless')
+					])),
+				makeCell(4),
+				makeCell(6),
+				makeCell(8),
+				makeCell(10),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-row-header')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Voiced')
+					])),
+				makeCell(5),
+				makeCell(7),
+				makeCell(9),
+				makeCell(11)
+			]);
 		return A2(
 			$elm$html$Html$div,
+			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('ipa-grid'),
-					A2($elm$html$Html$Attributes$style, 'grid-template-columns', '200px 1fr'),
-					A2($elm$html$Html$Attributes$style, 'max-width', '600px')
-				]),
-			symbolRows);
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('ipa-grid'),
+							A2($elm$html$Html$Attributes$style, 'grid-template-columns', '120px 1fr 1fr'),
+							A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
+						]),
+					approximantsSection),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('ipa-grid'),
+							A2($elm$html$Html$Attributes$style, 'grid-template-columns', '120px 1fr 1fr 1fr 1fr')
+						]),
+					affricatesSection)
+				]));
 	});
 var $author$project$Main$RemovePattern = function (a) {
 	return {$: 9, a: a};
@@ -19382,7 +19520,8 @@ var $author$project$Main$viewPhonology = function (model) {
 				$elm$html$Html$h3,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'margin-top', '20px')
+						A2($elm$html$Html$Attributes$style, 'margin-top', '20px'),
+						A2($elm$html$Html$Attributes$style, 'text-align', 'center')
 					]),
 				_List_fromArray(
 					[
@@ -19393,7 +19532,8 @@ var $author$project$Main$viewPhonology = function (model) {
 				$elm$html$Html$h3,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'margin-top', '30px')
+						A2($elm$html$Html$Attributes$style, 'margin-top', '30px'),
+						A2($elm$html$Html$Attributes$style, 'text-align', 'center')
 					]),
 				_List_fromArray(
 					[
@@ -19404,7 +19544,8 @@ var $author$project$Main$viewPhonology = function (model) {
 				$elm$html$Html$h3,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'margin-top', '30px')
+						A2($elm$html$Html$Attributes$style, 'margin-top', '30px'),
+						A2($elm$html$Html$Attributes$style, 'text-align', 'center')
 					]),
 				_List_fromArray(
 					[
