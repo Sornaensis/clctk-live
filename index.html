@@ -389,6 +389,23 @@
             background: #6b46c1;
         }
         
+        .pattern-button-selected {
+            background: #805ad5;
+            color: white;
+            padding: 6px 14px;
+            border: 3px solid #2d3748;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0;
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px #805ad5;
+        }
+        
+        .pattern-button-selected:hover {
+            background: #6b46c1;
+        }
+        
         .help-text {
             font-size: 12px;
             color: #718096;
@@ -525,6 +542,18 @@
 
         .ipa-cell-clickable:hover {
             background: #f0f9ff;
+        }
+
+        .ipa-cell-non-clickable {
+            padding: 8px 12px;
+            min-height: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            cursor: default;
         }
 
         .ipa-phoneme-display {
