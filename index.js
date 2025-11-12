@@ -5,9 +5,10 @@ const app = Elm.Main.init({
 
 // IndexedDB setup
 const DB_NAME = 'clctk-db';
-const DB_VERSION = 3;  // Increment version for schema change
+const DB_VERSION = 4;  // Increment version for IPA chart migration
 const STORE_NAME = 'projects';
 const TEMPLATE_STORE_NAME = 'templates';
+const APP_VERSION = '2.0.0';  // IPA chart redesign version
 
 let db = null;
 
@@ -582,14 +583,63 @@ app.ports.loadPreferences.subscribe(() => {
   loadPreferences();
 });
 
+// Migration function for IPA chart redesign
+function migrateToIPAChart() {
+  try {
+    const preferences = JSON.parse(localStorage.getItem(PREFERENCES_KEY) || '{}');
+    
+    // Check if migration has already been done
+    if (preferences.appVersion === APP_VERSION) {
+      console.log('Already migrated to version', APP_VERSION);
+      return Promise.resolve();
+    }
+    
+    console.log('Starting migration to IPA chart version', APP_VERSION);
+    
+    return new Promise((resolve, reject) => {
+      if (!db) {
+        reject(new Error('Database not initialized'));
+        return;
+      }
+      
+      // Clear all projects as they use the old category system
+      const transaction = db.transaction([STORE_NAME], 'readwrite');
+      const store = transaction.objectStore(STORE_NAME);
+      const clearRequest = store.clear();
+      
+      clearRequest.onsuccess = () => {
+        console.log('Old projects cleared during migration');
+        // Mark migration as complete
+        savePreference({ appVersion: APP_VERSION, migrationDate: new Date().toISOString() });
+        resolve();
+      };
+      
+      clearRequest.onerror = () => {
+        console.error('Failed to clear old projects during migration');
+        reject(new Error('Migration failed'));
+      };
+    });
+  } catch (error) {
+    console.error('Migration error:', error);
+    return Promise.reject(error);
+  }
+}
+
 // Initialize database and load existing data
 openDatabase()
   .then(() => {
     console.log('Database initialized');
+    // Run migration before loading projects
+    return migrateToIPAChart();
+  })
+  .then(() => {
     loadFromIndexedDB();
     loadAllTemplates();
     loadPreferences();
   })
   .catch((error) => {
-    console.error('Database initialization failed:', error);
+    console.error('Database initialization or migration failed:', error);
+    // Still try to load what we can
+    loadAllTemplates();
+    loadPreferences();
   });
