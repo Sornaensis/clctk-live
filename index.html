@@ -241,10 +241,11 @@
             font-size: 15px;
             font-weight: 500;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 80px;
-            min-height: 50px;
+            min-width: 100px;
+            min-height: 60px;
             position: relative;
             transition: all 0.2s;
         }
@@ -252,6 +253,25 @@
         .generated-word:hover {
             border-color: #9f7aea;
             box-shadow: 0 2px 8px rgba(159, 122, 234, 0.2);
+        }
+
+        .generated-word-forms {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .generated-word-ipa {
+            color: #553c9a;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .generated-word-ortho {
+            color: #805ad5;
+            font-size: 14px;
+            font-style: italic;
         }
 
         .generated-word-text {
@@ -840,6 +860,24 @@
             align-items: baseline;
             gap: 8px;
             margin-bottom: 4px;
+        }
+
+        .word-forms {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .word-orthography {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 16px;
+        }
+
+        .word-ipa {
+            font-size: 13px;
+            color: #718096;
+            font-style: italic;
         }
 
         .word-pos {
