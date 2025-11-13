@@ -648,15 +648,6 @@
             background: #f0f9ff;
         }
 
-        /* Show only included phonemes by default, show all on hover of entire chart */
-        .ipa-phoneme-not-included {
-            display: none;
-        }
-
-        .ipa-grid:hover .ipa-phoneme-not-included {
-            display: inline-block;
-        }
-
         /* Style for included phonemes */
         .ipa-phoneme-included {
             background: white;
@@ -676,16 +667,30 @@
             transform: translateY(-1px);
         }
 
-        /* Style for not included phonemes (grayed out) */
+        /* Style for not included phonemes - always rendered but invisible until hover */
         .ipa-phoneme-not-included {
-            color: #a0aec0;
+            color: white; /* Match cell background - invisible by default */
             padding: 4px 8px;
             border-radius: 4px;
+            opacity: 1;
+            transition: all 0.2s;
+        }
+
+        /* When cell is hovered, match the hovered cell background color */
+        .ipa-cell-hoverable:hover .ipa-phoneme-not-included {
+            color: #f0f9ff; /* Match hovered cell background */
+        }
+
+        /* When hovering over the entire chart, reveal all unused phonemes */
+        .ipa-grid:hover .ipa-phoneme-not-included {
+            color: #a0aec0; /* Gray color to indicate not included */
             opacity: 0.5;
         }
 
+        /* When hovering over a specific unused phoneme, make it more visible */
         .ipa-phoneme-not-included:hover {
             background: #edf2f7;
+            color: #718096;
             opacity: 0.8;
             transform: translateY(-1px);
         }
