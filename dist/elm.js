@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.b6.bS === region.ca.bS)
+	if (region.cb.bS === region.cf.bS)
 	{
-		return 'on line ' + region.b6.bS;
+		return 'on line ' + region.cb.bS;
 	}
-	return 'on lines ' + region.b6.bS + ' through ' + region.ca.bS;
+	return 'on lines ' + region.cb.bS + ' through ' + region.cf.bS;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.cH,
-		impl.cR,
-		impl.cP,
+		impl.cM,
+		impl.cV,
+		impl.cU,
 		function() { return function() {} }
 	);
 });
@@ -2719,9 +2719,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		cI: func(record.cI),
-		cO: record.cO,
-		cM: record.cM
+		cN: func(record.cN),
+		cT: record.cT,
+		cR: record.cR
 	}
 });
 
@@ -2989,11 +2989,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.cI;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.cO;
+		var message = !tag ? value : tag < 3 ? value.a : value.cN;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.cT;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.cM) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.cR) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3943,11 +3943,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.cH,
-		impl.cR,
-		impl.cP,
+		impl.cM,
+		impl.cV,
+		impl.cU,
 		function(sendToApp, initialModel) {
-			var view = impl.cS;
+			var view = impl.cW;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3979,12 +3979,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.cH,
-		impl.cR,
-		impl.cP,
+		impl.cM,
+		impl.cV,
+		impl.cU,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.b5 && impl.b5(sendToApp)
-			var view = impl.cS;
+			var divertHrefToApp = impl.ca && impl.ca(sendToApp)
+			var view = impl.cW;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3992,12 +3992,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.cA);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.cF);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.cQ) && (_VirtualDom_doc.title = title = doc.cQ);
+				(title !== doc.b2) && (_VirtualDom_doc.title = title = doc.b2);
 			});
 		}
 	);
@@ -4053,12 +4053,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.cJ;
-	var onUrlRequest = impl.cK;
+	var onUrlChange = impl.cO;
+	var onUrlRequest = impl.cP;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		b5: function(sendToApp)
+		ca: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4074,9 +4074,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.cn === next.cn
-							&& curr.ce === next.ce
-							&& curr.ck.a === next.ck.a
+							&& curr.cs === next.cs
+							&& curr.cj === next.cj
+							&& curr.cp.a === next.cp.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4084,13 +4084,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		cH: function(flags)
+		cM: function(flags)
 		{
-			return A3(impl.cH, flags, _Browser_getUrl(), key);
+			return A3(impl.cM, flags, _Browser_getUrl(), key);
 		},
-		cS: impl.cS,
-		cR: impl.cR,
-		cP: impl.cP
+		cW: impl.cW,
+		cV: impl.cV,
+		cU: impl.cU
 	});
 }
 
@@ -4156,17 +4156,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { cF: 'hidden', cB: 'visibilitychange' }
+		? { cK: 'hidden', cG: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { cF: 'mozHidden', cB: 'mozvisibilitychange' }
+		? { cK: 'mozHidden', cG: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { cF: 'msHidden', cB: 'msvisibilitychange' }
+		? { cK: 'msHidden', cG: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { cF: 'webkitHidden', cB: 'webkitvisibilitychange' }
-		: { cF: 'hidden', cB: 'visibilitychange' };
+		? { cK: 'webkitHidden', cG: 'webkitvisibilitychange' }
+		: { cK: 'hidden', cG: 'visibilitychange' };
 }
 
 
@@ -4247,11 +4247,11 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		cr: _Browser_getScene(),
-		cu: {
-			cw: _Browser_window.pageXOffset,
-			cx: _Browser_window.pageYOffset,
-			cv: _Browser_doc.documentElement.clientWidth,
+		cw: _Browser_getScene(),
+		cz: {
+			cB: _Browser_window.pageXOffset,
+			cC: _Browser_window.pageYOffset,
+			cA: _Browser_doc.documentElement.clientWidth,
 			v: _Browser_doc.documentElement.clientHeight
 		}
 	};
@@ -4262,7 +4262,7 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		cv: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		cA: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
 		v: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
@@ -4286,14 +4286,14 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			cr: {
-				cv: node.scrollWidth,
+			cw: {
+				cA: node.scrollWidth,
 				v: node.scrollHeight
 			},
-			cu: {
-				cw: node.scrollLeft,
-				cx: node.scrollTop,
-				cv: node.clientWidth,
+			cz: {
+				cB: node.scrollLeft,
+				cC: node.scrollTop,
+				cA: node.clientWidth,
 				v: node.clientHeight
 			}
 		};
@@ -4324,17 +4324,17 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			cr: _Browser_getScene(),
-			cu: {
-				cw: x,
-				cx: y,
-				cv: _Browser_doc.documentElement.clientWidth,
+			cw: _Browser_getScene(),
+			cz: {
+				cB: x,
+				cC: y,
+				cA: _Browser_doc.documentElement.clientWidth,
 				v: _Browser_doc.documentElement.clientHeight
 			},
-			cD: {
-				cw: x + rect.left,
-				cx: y + rect.top,
-				cv: rect.width,
+			cI: {
+				cB: x + rect.left,
+				cC: y + rect.top,
+				cA: rect.width,
 				v: rect.height
 			}
 		};
@@ -4957,7 +4957,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {cd: fragment, ce: host, ci: path, ck: port_, cn: protocol, co: query};
+		return {ci: fragment, cj: host, cn: path, cp: port_, cs: protocol, ct: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5276,7 +5276,7 @@ var $author$project$Main$init = function (_v0) {
 			aH: $elm$core$Maybe$Nothing,
 			bw: false,
 			Y: $elm$core$Maybe$Nothing,
-			cc: $elm$core$Maybe$Nothing,
+			ch: $elm$core$Maybe$Nothing,
 			aL: '',
 			aM: '',
 			a3: 'all',
@@ -5360,12 +5360,14 @@ var $author$project$Main$init = function (_v0) {
 			bH: 'C',
 			aJ: _List_Nil,
 			bT: $elm$core$Maybe$Nothing,
+			bU: $elm$core$Maybe$Nothing,
 			aC: _List_Nil,
 			A: _List_Nil,
 			bp: false,
 			bq: false,
 			bc: true,
 			bd: false,
+			bV: false,
 			bI: false,
 			br: false,
 			bJ: false,
@@ -5376,7 +5378,7 @@ var $author$project$Main$init = function (_v0) {
 			aT: '',
 			aj: '',
 			ak: '',
-			bU: 'CV',
+			bW: 'CV',
 			aD: '',
 			be: 3,
 			aK: 1,
@@ -5447,7 +5449,7 @@ var $elm$browser$Browser$Events$MySub = F3(
 	});
 var $elm$browser$Browser$Events$State = F2(
 	function (subs, pids) {
-		return {cj: pids, cs: subs};
+		return {co: pids, cx: subs};
 	});
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
@@ -5679,7 +5681,7 @@ var $elm$core$Dict$merge = F6(
 	});
 var $elm$browser$Browser$Events$Event = F2(
 	function (key, event) {
-		return {cb: event, cf: key};
+		return {cg: event, ck: key};
 	});
 var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
 var $elm$browser$Browser$Events$spawn = F3(
@@ -5754,7 +5756,7 @@ var $elm$browser$Browser$Events$onEffects = F3(
 			stepLeft,
 			stepBoth,
 			stepRight,
-			state.cj,
+			state.co,
 			$elm$core$Dict$fromList(newSubs),
 			_Utils_Tuple3(_List_Nil, $elm$core$Dict$empty, _List_Nil));
 		var deadPids = _v0.a;
@@ -5800,8 +5802,8 @@ var $elm$core$List$filterMap = F2(
 	});
 var $elm$browser$Browser$Events$onSelfMsg = F3(
 	function (router, _v0, state) {
-		var key = _v0.cf;
-		var event = _v0.cb;
+		var key = _v0.ck;
+		var event = _v0.cg;
 		var toMessage = function (_v2) {
 			var subKey = _v2.a;
 			var _v3 = _v2.b;
@@ -5810,7 +5812,7 @@ var $elm$browser$Browser$Events$onSelfMsg = F3(
 			var decoder = _v3.c;
 			return _Utils_eq(subKey, key) ? A2(_Browser_decodeEvent, decoder, event) : $elm$core$Maybe$Nothing;
 		};
-		var messages = A2($elm$core$List$filterMap, toMessage, state.cs);
+		var messages = A2($elm$core$List$filterMap, toMessage, state.cx);
 		return A2(
 			$elm$core$Task$andThen,
 			function (_v1) {
@@ -9398,10 +9400,10 @@ var $author$project$Main$renameProjectById = _Platform_outgoingPort(
 				[
 					_Utils_Tuple2(
 					'newName',
-					$elm$json$Json$Encode$string($.b2)),
+					$elm$json$Json$Encode$string($.b7)),
 					_Utils_Tuple2(
 					'projectId',
-					$elm$json$Json$Encode$int($.b4))
+					$elm$json$Json$Encode$int($.b9))
 				]));
 	});
 var $author$project$Main$savePreference = _Platform_outgoingPort('savePreference', $elm$core$Basics$identity);
@@ -9675,7 +9677,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bU: pattern}),
+						{bW: pattern}),
 					$elm$core$Platform$Cmd$none);
 			case 11:
 				var pattern = msg.a;
@@ -9972,7 +9974,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bU: pattern}),
+						{bW: pattern}),
 					$elm$core$Platform$Cmd$none);
 			case 32:
 				return _Utils_Tuple2(
@@ -11238,7 +11240,7 @@ var $author$project$Main$update = F2(
 						model,
 						{bq: true}),
 					$elm$core$Platform$Cmd$none);
-			case 157:
+			case 159:
 				var sortedIndices = A2(
 					$elm$core$List$sortBy,
 					function (i) {
@@ -11272,7 +11274,7 @@ var $author$project$Main$update = F2(
 						}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 158:
+			case 160:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -11613,14 +11615,14 @@ var $author$project$Main$update = F2(
 							bv: $elm$core$Maybe$Just(projectId)
 						}),
 					$elm$core$Platform$Cmd$none);
-			case 155:
+			case 157:
 				var projectId = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{bv: $elm$core$Maybe$Nothing}),
 					$author$project$Main$deleteProjectById(projectId));
-			case 156:
+			case 158:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -11652,7 +11654,7 @@ var $author$project$Main$update = F2(
 						model,
 						{a9: '', bE: $elm$core$Maybe$Nothing}),
 					$author$project$Main$renameProjectById(
-						{b2: trimmedName, b4: projectId}));
+						{b7: trimmedName, b9: projectId}));
 			case 125:
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -12092,6 +12094,22 @@ var $author$project$Main$update = F2(
 						model,
 						{bT: $elm$core$Maybe$Nothing, bI: false}),
 					$elm$core$Platform$Cmd$none);
+			case 155:
+				var cell = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							bU: $elm$core$Maybe$Just(cell),
+							bV: true
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 156:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{bU: $elm$core$Maybe$Nothing, bV: false}),
+					$elm$core$Platform$Cmd$none);
 			case 154:
 				var phoneme = msg.a;
 				var updatedProject = model.a;
@@ -12187,35 +12205,35 @@ var $author$project$Main$update = F2(
 						{a: finalProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(finalProject)));
-			case 159:
+			case 161:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{ab: input}),
 					$elm$core$Platform$Cmd$none);
-			case 160:
+			case 162:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{aa: input}),
 					$elm$core$Platform$Cmd$none);
-			case 161:
+			case 163:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{a6: input}),
 					$elm$core$Platform$Cmd$none);
-			case 162:
+			case 164:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{a5: input}),
 					$elm$core$Platform$Cmd$none);
-			case 163:
+			case 165:
 				var trimmedPhoneme = $elm$core$String$trim(model.ab);
 				var trimmedGrapheme = $elm$core$String$trim(model.aa);
 				if ($elm$core$String$isEmpty(trimmedPhoneme) || $elm$core$String$isEmpty(trimmedGrapheme)) {
@@ -12269,7 +12287,7 @@ var $author$project$Main$update = F2(
 						$author$project$Main$saveToStorage(
 							$author$project$Main$encodeProject(updatedProject)));
 				}
-			case 164:
+			case 166:
 				var phoneme = msg.a;
 				var language = model.a.c;
 				var phonology = language.m;
@@ -12296,7 +12314,7 @@ var $author$project$Main$update = F2(
 						{a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 165:
+			case 167:
 				var language = model.a.c;
 				var phonology = language.m;
 				var orthography = phonology.q;
@@ -12324,20 +12342,20 @@ var $author$project$Main$update = F2(
 						{a: updatedProject}),
 					$author$project$Main$saveToStorage(
 						$author$project$Main$encodeProject(updatedProject)));
-			case 166:
+			case 168:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{a2: model.a.b, bw: true}),
 					$elm$core$Platform$Cmd$none);
-			case 167:
+			case 169:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{a2: input}),
 					$elm$core$Platform$Cmd$none);
-			case 168:
+			case 170:
 				var newName = $elm$core$String$trim(model.a2);
 				var updatedProject = $elm$core$String$isEmpty(newName) ? model.a : A3($author$project$Main$updateProjectName, model.a, model.j, newName);
 				return _Utils_Tuple2(
@@ -12350,7 +12368,7 @@ var $author$project$Main$update = F2(
 								$author$project$Main$saveToStorage(
 								$author$project$Main$encodeProject(updatedProject)),
 								$author$project$Main$renameProjectById(
-								{b2: newName, b4: model.av})
+								{b7: newName, b9: model.av})
 							])));
 			default:
 				return _Utils_Tuple2(
@@ -12371,9 +12389,9 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$CancelDeleteProject = {$: 156};
+var $author$project$Main$CancelDeleteProject = {$: 158};
 var $author$project$Main$ConfirmDeleteProject = function (a) {
-	return {$: 155, a: a};
+	return {$: 157, a: a};
 };
 var $author$project$Main$NoOp = {$: 28};
 var $elm$html$Html$button = _VirtualDom_node('button');
@@ -13352,9 +13370,9 @@ var $author$project$Main$BatchAddCategory = {$: 102};
 var $author$project$Main$BatchDeleteWords = {$: 98};
 var $author$project$Main$BatchExportWords = {$: 103};
 var $author$project$Main$BatchUpdatePos = {$: 100};
-var $author$project$Main$CancelBatchDelete = {$: 158};
+var $author$project$Main$CancelBatchDelete = {$: 160};
 var $author$project$Main$ClearReferenceProject = {$: 140};
-var $author$project$Main$ConfirmBatchDelete = {$: 157};
+var $author$project$Main$ConfirmBatchDelete = {$: 159};
 var $author$project$Main$DeselectAllWords = {$: 97};
 var $author$project$Main$ExportLexiconCSV = {$: 141};
 var $author$project$Main$ImportLexiconCSV = {$: 142};
@@ -13887,7 +13905,7 @@ var $author$project$Main$viewEditModal = function (model) {
 	if (!_v0.$) {
 		var index = _v0.a;
 		var stopProp = function (msg) {
-			return {cI: msg, cM: false, cO: true};
+			return {cN: msg, cR: false, cT: true};
 		};
 		var currentWord = A2($author$project$Main$getAt, index, model.a.c.f);
 		var semanticLinks = function () {
@@ -14763,7 +14781,7 @@ var $author$project$Main$findNextReference = function (text) {
 				$elm$core$String$length(word),
 				afterColon);
 			return ($elm$core$String$isEmpty(projectName) || $elm$core$String$isEmpty(word)) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
-				{b0: afterWord, bZ: beforeAt, b_: projectName, b$: word});
+				{b5: afterWord, b$: beforeAt, b1: projectName, b4: word});
 		}
 	}
 };
@@ -14783,17 +14801,17 @@ var $author$project$Main$parseEtymologyHelper = F2(
 							acc));
 				} else {
 					var match = _v0.a;
-					var newAcc = $elm$core$String$isEmpty(match.bZ) ? A2(
+					var newAcc = $elm$core$String$isEmpty(match.b$) ? A2(
 						$elm$core$List$cons,
-						A2($author$project$Main$ReferencePart, match.b_, match.b$),
+						A2($author$project$Main$ReferencePart, match.b1, match.b4),
 						acc) : A2(
 						$elm$core$List$cons,
-						A2($author$project$Main$ReferencePart, match.b_, match.b$),
+						A2($author$project$Main$ReferencePart, match.b1, match.b4),
 						A2(
 							$elm$core$List$cons,
-							$author$project$Main$TextPart(match.bZ),
+							$author$project$Main$TextPart(match.b$),
 							acc));
-					var $temp$remaining = match.b0,
+					var $temp$remaining = match.b5,
 						$temp$acc = newAcc;
 					remaining = $temp$remaining;
 					acc = $temp$acc;
@@ -18396,10 +18414,8 @@ var $author$project$Main$viewConstraintsSection = function (model) {
 					]))
 			]));
 };
-var $author$project$Main$CloseIPACellModal = {$: 153};
-var $author$project$Main$TogglePhonemeInCell = function (a) {
-	return {$: 154, a: a};
-};
+var $author$project$Main$CloseIPACellInfoModal = {$: 156};
+var $elm$html$Html$a = _VirtualDom_node('a');
 var $author$project$Main$backnessToString = function (backness) {
 	switch (backness) {
 		case 0:
@@ -18815,6 +18831,62 @@ var $author$project$Main$getVowelPhonemesForCell = F2(
 		}
 		return _List_Nil;
 	});
+var $author$project$Main$getWikimediaUrl = function (phoneme) {
+	var fileMapping = _List_fromArray(
+		[
+			_Utils_Tuple2('p', 'Voiceless_bilabial_plosive.ogg'),
+			_Utils_Tuple2('b', 'Voiced_bilabial_plosive.ogg'),
+			_Utils_Tuple2('t', 'Voiceless_alveolar_plosive.ogg'),
+			_Utils_Tuple2('d', 'Voiced_alveolar_plosive.ogg'),
+			_Utils_Tuple2('k', 'Voiceless_velar_plosive.ogg'),
+			_Utils_Tuple2('ɡ', 'Voiced_velar_plosive.ogg'),
+			_Utils_Tuple2('g', 'Voiced_velar_plosive.ogg'),
+			_Utils_Tuple2('m', 'Bilabial_nasal.ogg'),
+			_Utils_Tuple2('n', 'Alveolar_nasal.ogg'),
+			_Utils_Tuple2('ŋ', 'Velar_nasal.ogg'),
+			_Utils_Tuple2('f', 'Voiceless_labiodental_fricative.ogg'),
+			_Utils_Tuple2('v', 'Voiced_labiodental_fricative.ogg'),
+			_Utils_Tuple2('θ', 'Voiceless_dental_fricative.ogg'),
+			_Utils_Tuple2('ð', 'Voiced_dental_fricative.ogg'),
+			_Utils_Tuple2('s', 'Voiceless_alveolar_sibilant.ogg'),
+			_Utils_Tuple2('z', 'Voiced_alveolar_sibilant.ogg'),
+			_Utils_Tuple2('ʃ', 'Voiceless_palato-alveolar_sibilant.ogg'),
+			_Utils_Tuple2('ʒ', 'Voiced_palato-alveolar_sibilant.ogg'),
+			_Utils_Tuple2('h', 'Voiceless_glottal_fricative.ogg'),
+			_Utils_Tuple2('l', 'Alveolar_lateral_approximant.ogg'),
+			_Utils_Tuple2('r', 'Alveolar_trill.ogg'),
+			_Utils_Tuple2('j', 'Palatal_approximant.ogg'),
+			_Utils_Tuple2('w', 'Voiced_labio-velar_approximant.ogg'),
+			_Utils_Tuple2('a', 'Open_front_unrounded_vowel.ogg'),
+			_Utils_Tuple2('e', 'Close-mid_front_unrounded_vowel.ogg'),
+			_Utils_Tuple2('i', 'Close_front_unrounded_vowel.ogg'),
+			_Utils_Tuple2('o', 'Close-mid_back_rounded_vowel.ogg'),
+			_Utils_Tuple2('u', 'Close_back_rounded_vowel.ogg'),
+			_Utils_Tuple2('ɑ', 'Open_back_unrounded_vowel.ogg'),
+			_Utils_Tuple2('ɔ', 'Open-mid_back_rounded_vowel.ogg'),
+			_Utils_Tuple2('ə', 'Mid-central_vowel.ogg'),
+			_Utils_Tuple2('ɛ', 'Open-mid_front_unrounded_vowel.ogg'),
+			_Utils_Tuple2('ɪ', 'Near-close_near-front_unrounded_vowel.ogg'),
+			_Utils_Tuple2('ʊ', 'Near-close_near-back_rounded_vowel.ogg'),
+			_Utils_Tuple2('ʌ', 'Open-mid_back_unrounded_vowel.ogg'),
+			_Utils_Tuple2('æ', 'Near-open_front_unrounded_vowel.ogg')
+		]);
+	var fileName = A2(
+		$elm$core$Maybe$withDefault,
+		'International_Phonetic_Alphabet.ogg',
+		A2(
+			$elm$core$Maybe$map,
+			$elm$core$Tuple$second,
+			$elm$core$List$head(
+				A2(
+					$elm$core$List$filter,
+					function (_v0) {
+						var symbol = _v0.a;
+						return _Utils_eq(symbol, phoneme);
+					},
+					fileMapping))));
+	return 'https://commons.wikimedia.org/wiki/File:' + fileName;
+};
 var $author$project$Main$heightToString = function (height) {
 	switch (height) {
 		case 0:
@@ -18832,6 +18904,12 @@ var $author$project$Main$heightToString = function (height) {
 		default:
 			return 'Open';
 	}
+};
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
 };
 var $author$project$Main$mannerToString = function (manner) {
 	switch (manner) {
@@ -18910,6 +18988,175 @@ var $author$project$Main$placeToString = function (place) {
 		default:
 			return 'Other';
 	}
+};
+var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
+var $author$project$Main$viewIPACellInfoModal = function (model) {
+	var _v0 = model.bU;
+	if (_v0.$ === 1) {
+		return $elm$html$Html$text('');
+	} else {
+		var cell = _v0.a;
+		var cellInfo = function () {
+			switch (cell.$) {
+				case 0:
+					var place = cell.a;
+					var manner = cell.b;
+					var wikiTitle = A3(
+						$elm$core$String$replace,
+						' ',
+						'_',
+						$author$project$Main$mannerToString(manner));
+					var url = 'https://en.wikipedia.org/wiki/' + (wikiTitle + '_consonant');
+					var title = $author$project$Main$placeToString(place) + (' ' + $author$project$Main$mannerToString(manner));
+					var description = 'A ' + ($elm$core$String$toLower(
+						$author$project$Main$mannerToString(manner)) + (' consonant articulated at the ' + ($elm$core$String$toLower(
+						$author$project$Main$placeToString(place)) + ' place of articulation.')));
+					return {
+						d: description,
+						b0: A2($author$project$Main$getConsonantPhonemesForCell, place, manner),
+						b2: title,
+						b3: url
+					};
+				case 1:
+					var height = cell.a;
+					var backness = cell.b;
+					var wikiTitle = A3(
+						$elm$core$String$replace,
+						' ',
+						'_',
+						$author$project$Main$heightToString(height) + ('_' + ($author$project$Main$backnessToString(backness) + '_vowel')));
+					var url = 'https://en.wikipedia.org/wiki/' + wikiTitle;
+					var title = $author$project$Main$heightToString(height) + (' ' + ($author$project$Main$backnessToString(backness) + ' Vowel'));
+					var description = 'A ' + ($elm$core$String$toLower(
+						$author$project$Main$heightToString(height)) + (' ' + ($elm$core$String$toLower(
+						$author$project$Main$backnessToString(backness)) + ' vowel.')));
+					return {
+						d: description,
+						b0: A2($author$project$Main$getVowelPhonemesForCell, height, backness),
+						b2: title,
+						b3: url
+					};
+				default:
+					var symbolType = cell.a;
+					var url = 'https://en.wikipedia.org/wiki/International_Phonetic_Alphabet';
+					var title = $author$project$Main$otherSymbolTypeToString(symbolType);
+					var description = 'Special IPA symbol: ' + title;
+					return {
+						d: description,
+						b0: $author$project$Main$getOtherSymbolPhonemes(symbolType),
+						b2: title,
+						b3: url
+					};
+			}
+		}();
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('modal-overlay'),
+					$elm$html$Html$Events$onClick($author$project$Main$CloseIPACellInfoModal)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('modal-content ipa-info-modal'),
+							A2(
+							$elm$html$Html$Events$stopPropagationOn,
+							'click',
+							$elm$json$Json$Decode$succeed(
+								_Utils_Tuple2($author$project$Main$NoOp, true)))
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$h3,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text(cellInfo.b2)
+								])),
+							A2(
+							$elm$html$Html$p,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'margin-bottom', '15px')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(cellInfo.d)
+								])),
+							A2(
+							$elm$html$Html$a,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$href(cellInfo.b3),
+									$elm$html$Html$Attributes$target('_blank'),
+									A2($elm$html$Html$Attributes$style, 'display', 'block'),
+									A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px'),
+									A2($elm$html$Html$Attributes$style, 'color', '#4299e1'),
+									A2($elm$html$Html$Attributes$style, 'text-decoration', 'none')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('📖 Read more on Wikipedia →')
+								])),
+							A2(
+							$elm$html$Html$h4,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Sounds in this category:')
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('ipa-info-phonemes')
+								]),
+							A2(
+								$elm$core$List$map,
+								function (phoneme) {
+									var wikimediaUrl = $author$project$Main$getWikimediaUrl(phoneme);
+									return A2(
+										$elm$html$Html$a,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$href(wikimediaUrl),
+												$elm$html$Html$Attributes$target('_blank'),
+												$elm$html$Html$Attributes$class('ipa-info-phoneme-link'),
+												$elm$html$Html$Attributes$title('Click to hear sound sample on Wikimedia Commons')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text(phoneme)
+											]));
+								},
+								cellInfo.b0)),
+							A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('secondary'),
+									$elm$html$Html$Events$onClick($author$project$Main$CloseIPACellInfoModal),
+									A2($elm$html$Html$Attributes$style, 'margin-top', '20px')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Close')
+								]))
+						]))
+				]));
+	}
+};
+var $author$project$Main$CloseIPACellModal = {$: 153};
+var $author$project$Main$TogglePhonemeInCell = function (a) {
+	return {$: 154, a: a};
 };
 var $author$project$Main$viewIPACellModal = F2(
 	function (model, allSounds) {
@@ -19016,8 +19263,8 @@ var $author$project$Main$viewIPACellModal = F2(
 					]));
 		}
 	});
-var $author$project$Main$OpenIPACellModal = function (a) {
-	return {$: 152, a: a};
+var $author$project$Main$OpenIPACellInfoModal = function (a) {
+	return {$: 155, a: a};
 };
 var $author$project$Main$OtherSymbolCell = function (a) {
 	return {$: 2, a: a};
@@ -19082,33 +19329,44 @@ var $author$project$Main$viewOtherSymbolsChart = F2(
 		};
 		var makeCell = function (symbolType) {
 			var cellSounds = getSoundsForCell(symbolType);
-			var cellContent = $elm$core$List$isEmpty(cellSounds) ? _List_Nil : A2(
+			var availablePhonemes = $author$project$Main$getOtherSymbolPhonemes(symbolType);
+			var cellContent = $elm$core$List$isEmpty(availablePhonemes) ? _List_Nil : A2(
 				$elm$core$List$map,
-				function (s) {
+				function (phoneme) {
+					var isIncluded = A2($elm$core$List$member, phoneme, cellSounds);
+					var className = isIncluded ? 'ipa-phoneme-display ipa-phoneme-included' : 'ipa-phoneme-display ipa-phoneme-not-included';
 					return A2(
 						$elm$html$Html$span,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('ipa-phoneme-display')
+								$elm$html$Html$Attributes$class(className),
+								A2(
+								$elm$html$Html$Events$stopPropagationOn,
+								'click',
+								$elm$json$Json$Decode$succeed(
+									_Utils_Tuple2(
+										$author$project$Main$TogglePhonemeInCell(phoneme),
+										true))),
+								$elm$html$Html$Attributes$title(
+								isIncluded ? 'Click to remove' : 'Click to add')
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text(s)
+								$elm$html$Html$text(phoneme)
 							]));
 				},
-				cellSounds);
-			var availablePhonemes = $author$project$Main$getOtherSymbolPhonemes(symbolType);
+				availablePhonemes);
 			var hasChoices = !$elm$core$List$isEmpty(availablePhonemes);
 			return A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$class(
-						hasChoices ? 'ipa-cell-clickable' : 'ipa-cell-non-clickable'),
+						hasChoices ? 'ipa-cell-hoverable' : 'ipa-cell-non-clickable'),
 						hasChoices ? $elm$html$Html$Events$onClick(
-						$author$project$Main$OpenIPACellModal(
+						$author$project$Main$OpenIPACellInfoModal(
 							$author$project$Main$OtherSymbolCell(symbolType))) : $elm$html$Html$Events$onClick($author$project$Main$NoOp),
-						hasChoices ? $elm$html$Html$Attributes$title('Click to add/remove sounds') : $elm$html$Html$Attributes$title('')
+						hasChoices ? $elm$html$Html$Attributes$title('Hover to see all sounds, click for info') : $elm$html$Html$Attributes$title('')
 					]),
 				cellContent);
 		};
@@ -19518,33 +19776,44 @@ var $author$project$Main$viewStaticConsonantChart = F2(
 					function (_v1) {
 						var place = _v1.a;
 						var cellSounds = A2(getSoundsForCell, place, manner);
-						var cellContent = $elm$core$List$isEmpty(cellSounds) ? _List_Nil : A2(
+						var availablePhonemes = A2($author$project$Main$getConsonantPhonemesForCell, place, manner);
+						var cellContent = $elm$core$List$isEmpty(availablePhonemes) ? _List_Nil : A2(
 							$elm$core$List$map,
-							function (s) {
+							function (phoneme) {
+								var isIncluded = A2($elm$core$List$member, phoneme, cellSounds);
+								var className = isIncluded ? 'ipa-phoneme-display ipa-phoneme-included' : 'ipa-phoneme-display ipa-phoneme-not-included';
 								return A2(
 									$elm$html$Html$span,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class('ipa-phoneme-display')
+											$elm$html$Html$Attributes$class(className),
+											A2(
+											$elm$html$Html$Events$stopPropagationOn,
+											'click',
+											$elm$json$Json$Decode$succeed(
+												_Utils_Tuple2(
+													$author$project$Main$TogglePhonemeInCell(phoneme),
+													true))),
+											$elm$html$Html$Attributes$title(
+											isIncluded ? 'Click to remove' : 'Click to add')
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(s)
+											$elm$html$Html$text(phoneme)
 										]));
 							},
-							cellSounds);
-						var availablePhonemes = A2($author$project$Main$getConsonantPhonemesForCell, place, manner);
+							availablePhonemes);
 						var hasChoices = !$elm$core$List$isEmpty(availablePhonemes);
 						return A2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
 									$elm$html$Html$Attributes$class(
-									hasChoices ? 'ipa-cell-clickable' : 'ipa-cell-non-clickable'),
+									hasChoices ? 'ipa-cell-hoverable' : 'ipa-cell-non-clickable'),
 									hasChoices ? $elm$html$Html$Events$onClick(
-									$author$project$Main$OpenIPACellModal(
+									$author$project$Main$OpenIPACellInfoModal(
 										A2($author$project$Main$ConsonantCell, place, manner))) : $elm$html$Html$Events$onClick($author$project$Main$NoOp),
-									hasChoices ? $elm$html$Html$Attributes$title('Click to add/remove sounds') : $elm$html$Html$Attributes$title('')
+									hasChoices ? $elm$html$Html$Attributes$title('Hover to see all sounds, click for info') : $elm$html$Html$Attributes$title('')
 								]),
 							cellContent);
 					},
@@ -19728,33 +19997,44 @@ var $author$project$Main$viewStaticVowelChart = F2(
 					function (_v1) {
 						var backness = _v1.a;
 						var cellSounds = A2(getSoundsForCell, height, backness);
-						var cellContent = $elm$core$List$isEmpty(cellSounds) ? _List_Nil : A2(
+						var availablePhonemes = A2($author$project$Main$getVowelPhonemesForCell, height, backness);
+						var cellContent = $elm$core$List$isEmpty(availablePhonemes) ? _List_Nil : A2(
 							$elm$core$List$map,
-							function (s) {
+							function (phoneme) {
+								var isIncluded = A2($elm$core$List$member, phoneme, cellSounds);
+								var className = isIncluded ? 'ipa-phoneme-display ipa-phoneme-included' : 'ipa-phoneme-display ipa-phoneme-not-included';
 								return A2(
 									$elm$html$Html$span,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class('ipa-phoneme-display')
+											$elm$html$Html$Attributes$class(className),
+											A2(
+											$elm$html$Html$Events$stopPropagationOn,
+											'click',
+											$elm$json$Json$Decode$succeed(
+												_Utils_Tuple2(
+													$author$project$Main$TogglePhonemeInCell(phoneme),
+													true))),
+											$elm$html$Html$Attributes$title(
+											isIncluded ? 'Click to remove' : 'Click to add')
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(s)
+											$elm$html$Html$text(phoneme)
 										]));
 							},
-							cellSounds);
-						var availablePhonemes = A2($author$project$Main$getVowelPhonemesForCell, height, backness);
+							availablePhonemes);
 						var hasChoices = !$elm$core$List$isEmpty(availablePhonemes);
 						return A2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
 									$elm$html$Html$Attributes$class(
-									hasChoices ? 'ipa-cell-clickable' : 'ipa-cell-non-clickable'),
+									hasChoices ? 'ipa-cell-hoverable' : 'ipa-cell-non-clickable'),
 									hasChoices ? $elm$html$Html$Events$onClick(
-									$author$project$Main$OpenIPACellModal(
+									$author$project$Main$OpenIPACellInfoModal(
 										A2($author$project$Main$VowelCell, height, backness))) : $elm$html$Html$Events$onClick($author$project$Main$NoOp),
-									hasChoices ? $elm$html$Html$Attributes$title('Click to add/remove sounds') : $elm$html$Html$Attributes$title('')
+									hasChoices ? $elm$html$Html$Attributes$title('Hover to see all sounds, click for info') : $elm$html$Html$Attributes$title('')
 								]),
 							cellContent);
 					},
@@ -19829,24 +20109,25 @@ var $author$project$Main$viewIPACharts = function (model) {
 						$elm$html$Html$text('Vowels')
 					])),
 				A2($author$project$Main$viewStaticVowelChart, allSounds, model),
-				model.bI ? A2($author$project$Main$viewIPACellModal, model, allSounds) : $elm$html$Html$text('')
+				model.bI ? A2($author$project$Main$viewIPACellModal, model, allSounds) : $elm$html$Html$text(''),
+				model.bV ? $author$project$Main$viewIPACellInfoModal(model) : $elm$html$Html$text('')
 			]));
 };
-var $author$project$Main$AddGraphemeMapping = {$: 163};
+var $author$project$Main$AddGraphemeMapping = {$: 165};
 var $author$project$Main$UpdateGraphemeContextInput = function (a) {
-	return {$: 162, a: a};
+	return {$: 164, a: a};
 };
 var $author$project$Main$UpdateGraphemeDescriptionInput = function (a) {
-	return {$: 161, a: a};
+	return {$: 163, a: a};
 };
 var $author$project$Main$UpdateGraphemeGraphemeInput = function (a) {
-	return {$: 160, a: a};
+	return {$: 162, a: a};
 };
 var $author$project$Main$UpdateGraphemePhonemeInput = function (a) {
-	return {$: 159, a: a};
+	return {$: 161, a: a};
 };
 var $author$project$Main$RemoveGraphemeMapping = function (a) {
-	return {$: 164, a: a};
+	return {$: 166, a: a};
 };
 var $author$project$Main$viewGraphemeMapping = function (mapping) {
 	return A2(
@@ -20804,15 +21085,15 @@ var $author$project$Main$viewPhonologySection = F2(
 				return $author$project$Main$viewIPACharts(model);
 		}
 	});
-var $author$project$Main$CancelEditProjectName = {$: 169};
+var $author$project$Main$CancelEditProjectName = {$: 171};
 var $author$project$Main$DismissImportError = {$: 38};
 var $author$project$Main$ExportProject = {$: 35};
 var $author$project$Main$ImportProject = {$: 36};
 var $author$project$Main$OpenSaveTemplateModal = {$: 111};
-var $author$project$Main$SaveEditProjectName = {$: 168};
-var $author$project$Main$StartEditProjectName = {$: 166};
+var $author$project$Main$SaveEditProjectName = {$: 170};
+var $author$project$Main$StartEditProjectName = {$: 168};
 var $author$project$Main$UpdateEditProjectNameInput = function (a) {
-	return {$: 167, a: a};
+	return {$: 169, a: a};
 };
 var $elm$html$Html$Events$onBlur = function (msg) {
 	return A2(
@@ -21889,6 +22170,6 @@ var $author$project$Main$view = function (model) {
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{cH: $author$project$Main$init, cP: $author$project$Main$subscriptions, cR: $author$project$Main$update, cS: $author$project$Main$view});
+	{cM: $author$project$Main$init, cU: $author$project$Main$subscriptions, cV: $author$project$Main$update, cW: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
