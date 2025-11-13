@@ -18,7 +18,7 @@
         }
         
         #app {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -68,6 +68,22 @@
             margin-bottom: 10px;
         }
         
+        input[type="text"].error, textarea.error {
+            border-color: #fc8181;
+            background-color: #fff5f5;
+        }
+        
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        
+        input[type="text"].error:focus, textarea.error:focus {
+            border-color: #fc8181;
+            box-shadow: 0 0 0 3px rgba(252, 129, 129, 0.1);
+        }
+        
         button {
             background: #4299e1;
             color: white;
@@ -79,8 +95,36 @@
             margin-bottom: 8px;
         }
         
+        button.plus-btn {
+            background: #48bb78;
+            color: white;
+            padding: 8px 14px;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1;
+            min-width: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        button.plus-btn:hover:not(:disabled) {
+            background: #38a169;
+        }
+        
+        button:disabled {
+            background: #cbd5e0;
+            color: #a0aec0;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
         button:hover {
             background: #3182ce;
+        }
+        
+        button:hover:disabled {
+            background: #cbd5e0;
         }
         
         button.secondary {
