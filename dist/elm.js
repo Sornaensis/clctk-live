@@ -10224,18 +10224,31 @@ var $author$project$Main$update = F2(
 								]))));
 			case 46:
 				var section = msg.a;
+				var sectionCmd = function () {
+					switch (section) {
+						case 'projects':
+							return $author$project$Main$loadAllProjects(0);
+						case 'templates':
+							return $author$project$Main$loadAllTemplates(0);
+						default:
+							return $elm$core$Platform$Cmd$none;
+					}
+				}();
+				var preferenceCmd = $author$project$Main$savePreference(
+					$elm$json$Json$Encode$object(
+						_List_fromArray(
+							[
+								_Utils_Tuple2(
+								'activeSection',
+								$elm$json$Json$Encode$string(section))
+							])));
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{a3: section}),
-					$author$project$Main$savePreference(
-						$elm$json$Json$Encode$object(
-							_List_fromArray(
-								[
-									_Utils_Tuple2(
-									'activeSection',
-									$elm$json$Json$Encode$string(section))
-								]))));
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[sectionCmd, preferenceCmd])));
 			case 47:
 				var input = msg.a;
 				return _Utils_Tuple2(
@@ -10484,9 +10497,9 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 61:
-				var _v11 = model.bj;
-				if (!_v11.$) {
-					var index = _v11.a;
+				var _v12 = model.bj;
+				if (!_v12.$) {
+					var index = _v12.a;
 					var value = $elm$core$String$trim(model.aH);
 					var language = model.a.c;
 					var morphology = language.k;
@@ -10944,9 +10957,9 @@ var $author$project$Main$update = F2(
 						{ay: input}),
 					$elm$core$Platform$Cmd$none);
 			case 85:
-				var _v13 = model._;
-				if (!_v13.$) {
-					var index = _v13.a;
+				var _v14 = model._;
+				if (!_v14.$) {
+					var index = _v14.a;
 					var synonym = $elm$core$String$trim(model.aC);
 					var language = model.a.c;
 					var updatedLexicon = A2(
@@ -10985,9 +10998,9 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 86:
-				var _v14 = model._;
-				if (!_v14.$) {
-					var index = _v14.a;
+				var _v15 = model._;
+				if (!_v15.$) {
+					var index = _v15.a;
 					var language = model.a.c;
 					var antonym = $elm$core$String$trim(model.as);
 					var updatedLexicon = A2(
@@ -11026,9 +11039,9 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 87:
-				var _v15 = model._;
-				if (!_v15.$) {
-					var index = _v15.a;
+				var _v16 = model._;
+				if (!_v16.$) {
+					var index = _v16.a;
 					var related = $elm$core$String$trim(model.ay);
 					var language = model.a.c;
 					var updatedLexicon = A2(
@@ -11068,9 +11081,9 @@ var $author$project$Main$update = F2(
 				}
 			case 88:
 				var synonym = msg.a;
-				var _v16 = model._;
-				if (!_v16.$) {
-					var index = _v16.a;
+				var _v17 = model._;
+				if (!_v17.$) {
+					var index = _v17.a;
 					var language = model.a.c;
 					var updatedLexicon = A2(
 						$elm$core$List$indexedMap,
@@ -11111,9 +11124,9 @@ var $author$project$Main$update = F2(
 				}
 			case 89:
 				var antonym = msg.a;
-				var _v17 = model._;
-				if (!_v17.$) {
-					var index = _v17.a;
+				var _v18 = model._;
+				if (!_v18.$) {
+					var index = _v18.a;
 					var language = model.a.c;
 					var updatedLexicon = A2(
 						$elm$core$List$indexedMap,
@@ -11154,9 +11167,9 @@ var $author$project$Main$update = F2(
 				}
 			case 90:
 				var related = msg.a;
-				var _v18 = model._;
-				if (!_v18.$) {
-					var index = _v18.a;
+				var _v19 = model._;
+				if (!_v19.$) {
+					var index = _v19.a;
 					var language = model.a.c;
 					var updatedLexicon = A2(
 						$elm$core$List$indexedMap,
@@ -11203,9 +11216,9 @@ var $author$project$Main$update = F2(
 						{aL: input}),
 					$elm$core$Platform$Cmd$none);
 			case 92:
-				var _v19 = model._;
-				if (!_v19.$) {
-					var index = _v19.a;
+				var _v20 = model._;
+				if (!_v20.$) {
+					var index = _v20.a;
 					var trimmedCategory = $elm$core$String$trim(model.aL);
 					if ($elm$core$String$isEmpty(trimmedCategory)) {
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -11241,9 +11254,9 @@ var $author$project$Main$update = F2(
 				}
 			case 93:
 				var category = msg.a;
-				var _v20 = model._;
-				if (!_v20.$) {
-					var index = _v20.a;
+				var _v21 = model._;
+				if (!_v21.$) {
+					var index = _v21.a;
 					var language = model.a.c;
 					var updatedLexicon = A2(
 						$elm$core$List$indexedMap,
@@ -11644,12 +11657,12 @@ var $author$project$Main$update = F2(
 							])));
 			case 118:
 				var value = msg.a;
-				var _v22 = A2(
+				var _v23 = A2(
 					$elm$json$Json$Decode$decodeValue,
 					$elm$json$Json$Decode$list($author$project$Main$decodeTemplate),
 					value);
-				if (!_v22.$) {
-					var templates = _v22.a;
+				if (!_v23.$) {
+					var templates = _v23.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -11779,12 +11792,12 @@ var $author$project$Main$update = F2(
 					$author$project$Main$duplicateProjectById(projectId));
 			case 128:
 				var value = msg.a;
-				var _v23 = A2(
+				var _v24 = A2(
 					$elm$json$Json$Decode$decodeValue,
 					$elm$json$Json$Decode$list($author$project$Main$decodeProjectMetadata),
 					value);
-				if (!_v23.$) {
-					var projectList = _v23.a;
+				if (!_v24.$) {
+					var projectList = _v24.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -11795,12 +11808,12 @@ var $author$project$Main$update = F2(
 				}
 			case 129:
 				var value = msg.a;
-				var _v24 = A2($elm$json$Json$Decode$decodeValue, $author$project$Main$decodeProject, value);
-				if (!_v24.$) {
-					var project = _v24.a;
-					var _v25 = model.bq;
-					if (!_v25.$) {
-						var refId = _v25.a;
+				var _v25 = A2($elm$json$Json$Decode$decodeValue, $author$project$Main$decodeProject, value);
+				if (!_v25.$) {
+					var project = _v25.a;
+					var _v26 = model.bq;
+					if (!_v26.$) {
+						var refId = _v26.a;
 						return _Utils_eq(project.p, refId) ? _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -11831,9 +11844,9 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 131:
 				var orderStr = msg.a;
-				var _v26 = $elm$core$String$toInt(orderStr);
-				if (!_v26.$) {
-					var order = _v26.a;
+				var _v27 = $elm$core$String$toInt(orderStr);
+				if (!_v27.$) {
+					var order = _v27.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -11849,9 +11862,9 @@ var $author$project$Main$update = F2(
 				}
 			case 132:
 				var lengthStr = msg.a;
-				var _v27 = $elm$core$String$toInt(lengthStr);
-				if (!_v27.$) {
-					var length = _v27.a;
+				var _v28 = $elm$core$String$toInt(lengthStr);
+				if (!_v28.$) {
+					var length = _v28.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -11864,9 +11877,9 @@ var $author$project$Main$update = F2(
 				}
 			case 133:
 				var lengthStr = msg.a;
-				var _v28 = $elm$core$String$toInt(lengthStr);
-				if (!_v28.$) {
-					var length = _v28.a;
+				var _v29 = $elm$core$String$toInt(lengthStr);
+				if (!_v29.$) {
+					var length = _v29.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -11879,9 +11892,9 @@ var $author$project$Main$update = F2(
 				}
 			case 134:
 				var lengthStr = msg.a;
-				var _v29 = $elm$core$String$toInt(lengthStr);
-				if (!_v29.$) {
-					var length = _v29.a;
+				var _v30 = $elm$core$String$toInt(lengthStr);
+				if (!_v30.$) {
+					var length = _v30.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -11897,9 +11910,9 @@ var $author$project$Main$update = F2(
 				}
 			case 135:
 				var lengthStr = msg.a;
-				var _v30 = $elm$core$String$toInt(lengthStr);
-				if (!_v30.$) {
-					var length = _v30.a;
+				var _v31 = $elm$core$String$toInt(lengthStr);
+				if (!_v31.$) {
+					var length = _v31.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -11915,9 +11928,9 @@ var $author$project$Main$update = F2(
 				}
 			case 136:
 				var countStr = msg.a;
-				var _v31 = $elm$core$String$toInt(countStr);
-				if (!_v31.$) {
-					var count = _v31.a;
+				var _v32 = $elm$core$String$toInt(countStr);
+				if (!_v32.$) {
+					var count = _v32.a;
 					var validCount = A2(
 						$elm$core$List$member,
 						count,
@@ -12046,9 +12059,9 @@ var $author$project$Main$update = F2(
 					$author$project$Main$triggerCSVImport(0));
 			case 143:
 				var csvData = msg.a;
-				var _v32 = $author$project$Main$parseCSVToLexicon(csvData);
-				if (!_v32.$) {
-					var newLexemes = _v32.a;
+				var _v33 = $author$project$Main$parseCSVToLexicon(csvData);
+				if (!_v33.$) {
+					var newLexemes = _v33.a;
 					var language = model.a.c;
 					var existingForms = A2(
 						$elm$core$List$map,
@@ -12135,12 +12148,12 @@ var $author$project$Main$update = F2(
 						{bx: false, aW: '', al: '', am: ''}),
 					$elm$core$Platform$Cmd$none);
 			case 150:
-				var _v33 = model.I;
-				if (!_v33.b) {
+				var _v34 = model.I;
+				if (!_v34.b) {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				} else {
-					var previousState = _v33.a;
-					var remainingUndo = _v33.b;
+					var previousState = _v34.a;
+					var remainingUndo = _v34.b;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -12153,12 +12166,12 @@ var $author$project$Main$update = F2(
 							$author$project$Main$encodeProject(previousState)));
 				}
 			case 151:
-				var _v34 = model.ae;
-				if (!_v34.b) {
+				var _v35 = model.ae;
+				if (!_v35.b) {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				} else {
-					var nextState = _v34.a;
-					var remainingRedo = _v34.b;
+					var nextState = _v35.a;
+					var remainingRedo = _v35.b;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -12411,8 +12424,8 @@ var $author$project$Main$update = F2(
 				var phonology = language.n;
 				var orthography = phonology.q;
 				var newDisplayMode = function () {
-					var _v36 = orthography.aY;
-					if (!_v36) {
+					var _v37 = orthography.aY;
+					if (!_v37) {
 						return 1;
 					} else {
 						return 0;
