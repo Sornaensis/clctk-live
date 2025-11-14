@@ -5,9 +5,10 @@ const app = Elm.Main.init({
 
 // IndexedDB setup
 const DB_NAME = 'clctk-db';
-const DB_VERSION = 4;  // Increment version for IPA chart migration
+const DB_VERSION = 5;  // Increment version for language families
 const STORE_NAME = 'projects';
 const TEMPLATE_STORE_NAME = 'templates';
+const FAMILY_STORE_NAME = 'language-families';
 const APP_VERSION = '2.0.0';  // IPA chart redesign version
 
 let db = null;
@@ -37,6 +38,11 @@ function openDatabase() {
       // Create templates store
       if (!database.objectStoreNames.contains(TEMPLATE_STORE_NAME)) {
         database.createObjectStore(TEMPLATE_STORE_NAME, { keyPath: 'id', autoIncrement: true });
+      }
+      
+      // Create language families store
+      if (!database.objectStoreNames.contains(FAMILY_STORE_NAME)) {
+        database.createObjectStore(FAMILY_STORE_NAME, { keyPath: 'id', autoIncrement: true });
       }
     };
   });
@@ -581,6 +587,106 @@ app.ports.savePreference.subscribe((data) => {
 
 app.ports.loadPreferences.subscribe(() => {
   loadPreferences();
+});
+
+// Language Family Management Functions
+
+// Save language family to IndexedDB
+function saveLanguageFamilyToIndexedDB(familyData) {
+  if (!db) {
+    console.error('Database not initialized');
+    return;
+  }
+
+  const transaction = db.transaction([FAMILY_STORE_NAME], 'readwrite');
+  const store = transaction.objectStore(FAMILY_STORE_NAME);
+
+  // If id is 0 or not set, let IndexedDB auto-assign
+  if (!familyData.id || familyData.id === 0) {
+    delete familyData.id;
+    const request = store.add(familyData);
+    request.onsuccess = () => {
+      console.log('New language family created with ID:', request.result);
+      // Reload language families
+      loadAllLanguageFamilies();
+    };
+    request.onerror = () => {
+      console.error('Failed to save new language family to IndexedDB');
+    };
+  } else {
+    // Update existing family
+    const request = store.put(familyData);
+    request.onsuccess = () => {
+      console.log('Language family updated in IndexedDB');
+      loadAllLanguageFamilies();
+    };
+    request.onerror = () => {
+      console.error('Failed to update language family in IndexedDB');
+    };
+  }
+}
+
+// Load all language families
+function loadAllLanguageFamilies() {
+  if (!db) {
+    console.error('Database not initialized');
+    return;
+  }
+
+  const transaction = db.transaction([FAMILY_STORE_NAME], 'readonly');
+  const store = transaction.objectStore(FAMILY_STORE_NAME);
+  const request = store.getAll();
+
+  request.onsuccess = () => {
+    console.log('All language families loaded:', request.result.length);
+    app.ports.receiveAllLanguageFamilies.send(request.result);
+  };
+
+  request.onerror = () => {
+    console.error('Failed to load all language families');
+  };
+}
+
+// Delete a language family by ID
+function deleteLanguageFamilyById(familyId) {
+  if (!db) {
+    console.error('Database not initialized');
+    return;
+  }
+
+  const transaction = db.transaction([FAMILY_STORE_NAME], 'readwrite');
+  const store = transaction.objectStore(FAMILY_STORE_NAME);
+  const request = store.delete(familyId);
+
+  request.onsuccess = () => {
+    console.log('Language family deleted:', familyId);
+    // Reload the family list
+    loadAllLanguageFamilies();
+  };
+
+  request.onerror = () => {
+    console.error('Failed to delete language family');
+  };
+}
+
+// Port subscriptions for language families
+app.ports.saveLanguageFamily.subscribe((data) => {
+  saveLanguageFamilyToIndexedDB(data);
+});
+
+app.ports.loadAllLanguageFamilies.subscribe(() => {
+  // If database is not ready, wait a bit and try again
+  if (!db) {
+    setTimeout(() => {
+      loadAllLanguageFamilies();
+    }, 100);
+  } else {
+    loadAllLanguageFamilies();
+  }
+});
+
+app.ports.deleteLanguageFamilyById.subscribe((familyId) => {
+  deleteLanguageFamilyById(familyId);
 });
 
 // Migration function for IPA chart redesign
