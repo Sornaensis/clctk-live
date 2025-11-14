@@ -1285,6 +1285,47 @@
             box-shadow: none;
             margin: 0;
         }
+
+        /* IPA Dropdown Styles */
+        .ipa-dropdown-container {
+            position: relative;
+            margin-top: 8px;
+        }
+
+        .ipa-dropdown-trigger {
+            display: inline-block;
+            transition: all 0.2s;
+        }
+
+        .ipa-dropdown-trigger:hover {
+            background: #b2f5ea !important;
+            border-color: #319795 !important;
+        }
+
+        .ipa-dropdown-content {
+            animation: slideDown 0.15s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ipa-symbol-item {
+            transition: all 0.15s;
+        }
+
+        .ipa-symbol-item:hover {
+            background: #e6fffa !important;
+            border-color: #38b2ac !important;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
