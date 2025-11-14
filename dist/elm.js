@@ -5272,7 +5272,7 @@ var $author$project$Main$init = function (_v0) {
 			at: 'languages',
 			au: '',
 			av: '',
-			bs: 'noun',
+			br: 'noun',
 			b4: '',
 			bK: $elm$core$Maybe$Nothing,
 			bL: $elm$core$Maybe$Nothing,
@@ -5283,8 +5283,8 @@ var $author$project$Main$init = function (_v0) {
 			ax: '',
 			a5: '',
 			a6: $elm$core$Maybe$Nothing,
-			bt: $elm$core$Maybe$Nothing,
-			bu: false,
+			bs: $elm$core$Maybe$Nothing,
+			bt: false,
 			ac: $elm$core$Maybe$Nothing,
 			cG: $elm$core$Maybe$Nothing,
 			aS: '',
@@ -5296,13 +5296,13 @@ var $author$project$Main$init = function (_v0) {
 			bg: 'all',
 			H: _List_Nil,
 			aA: 0,
+			bv: '',
 			bh: '',
-			bi: '',
 			af: '',
 			U: '',
 			bw: $elm$core$Maybe$Nothing,
 			b5: '',
-			bj: false,
+			bi: false,
 			b6: $elm$core$Maybe$Nothing,
 			bN: $elm$core$Maybe$Nothing,
 			b7: false,
@@ -5310,7 +5310,7 @@ var $author$project$Main$init = function (_v0) {
 			aW: '',
 			bO: 4,
 			a7: 2,
-			bk: 2,
+			bj: 2,
 			ar: '',
 			ag: '',
 			am: '',
@@ -5365,7 +5365,7 @@ var $author$project$Main$init = function (_v0) {
 			bR: $elm$core$Maybe$Nothing,
 			bB: $elm$core$Maybe$Nothing,
 			aD: '',
-			bm: '',
+			bl: '',
 			bS: $elm$core$Maybe$Nothing,
 			bC: '',
 			bD: '',
@@ -5374,7 +5374,7 @@ var $author$project$Main$init = function (_v0) {
 			aF: '',
 			bT: 0,
 			bE: '',
-			bn: '',
+			bm: '',
 			a1: '',
 			bU: 'C',
 			aH: _List_Nil,
@@ -5387,8 +5387,8 @@ var $author$project$Main$init = function (_v0) {
 			bW: false,
 			bX: false,
 			bG: false,
-			bo: true,
-			bp: false,
+			bn: true,
+			bo: false,
 			cb: false,
 			bY: false,
 			bH: false,
@@ -5403,7 +5403,7 @@ var $author$project$Main$init = function (_v0) {
 			cc: 'CV',
 			aJ: '',
 			bc: $elm$core$Dict$empty,
-			bq: 3,
+			bp: 3,
 			aQ: 1,
 			cl: _List_Nil,
 			K: _List_Nil,
@@ -6099,9 +6099,15 @@ var $author$project$Main$applyRule = F2(
 	function (rule, word) {
 		return $elm$core$String$isEmpty(rule.e) ? A3($elm$core$String$replace, rule.T, rule.aa, word) : A2($author$project$Main$applyContextualRule, rule, word);
 	});
+var $elm$core$List$sortWith = _List_sortWith;
 var $author$project$Main$applyMorphophonemicRules = F2(
 	function (rules, word) {
-		return A3($elm$core$List$foldl, $author$project$Main$applyRule, word, rules);
+		var compareRule = F2(
+			function (r1, r2) {
+				return ($elm$core$String$isEmpty(r1.e) && (!$elm$core$String$isEmpty(r2.e))) ? 2 : (((!$elm$core$String$isEmpty(r1.e)) && $elm$core$String$isEmpty(r2.e)) ? 0 : 1);
+			});
+		var sortedRules = A2($elm$core$List$sortWith, compareRule, rules);
+		return A3($elm$core$List$foldl, $author$project$Main$applyRule, word, sortedRules);
 	});
 var $elm$core$String$endsWith = _String_endsWith;
 var $elm$core$Basics$negate = function (n) {
@@ -6115,7 +6121,6 @@ var $elm$core$String$right = F2(
 			$elm$core$String$length(string),
 			string);
 	});
-var $elm$core$List$sortWith = _List_sortWith;
 var $elm$core$String$trim = _String_trim;
 var $author$project$Main$applySyllableOrthography = F3(
 	function (mappings, diphthongs, syllable) {
@@ -9074,14 +9079,14 @@ var $elm$core$String$repeat = F2(
 	});
 var $author$project$Main$generateMarkovWord = F2(
 	function (model, ngramModel) {
-		var startPrefix = A2($elm$core$String$repeat, model.bk, '^');
+		var startPrefix = A2($elm$core$String$repeat, model.bj, '^');
 		return A2(
 			$elm$random$Random$map,
 			A2($elm$core$String$replace, '$', ''),
 			A2(
 				$elm$random$Random$map,
 				A2($elm$core$String$replace, '^', ''),
-				A4($author$project$Main$generateMarkovHelper, model.bk, ngramModel, startPrefix, '')));
+				A4($author$project$Main$generateMarkovHelper, model.bj, ngramModel, startPrefix, '')));
 	});
 var $elm$random$Random$map2 = F3(
 	function (func, _v0, _v1) {
@@ -9394,7 +9399,7 @@ var $elm$random$Random$list = F2(
 	});
 var $elm$core$String$toUpper = _String_toUpper;
 var $author$project$Main$generateMultiSyllableWord = function (model) {
-	var syllableCountGenerator = A2($elm$random$Random$int, model.aQ, model.bq);
+	var syllableCountGenerator = A2($elm$random$Random$int, model.aQ, model.bp);
 	var phonology = model.a.c.l;
 	var patternsToUse = $elm$core$List$isEmpty(model.aI) ? _List_fromArray(
 		['CV']) : A2($elm$core$List$map, $elm$core$String$toUpper, model.aI);
@@ -9652,7 +9657,7 @@ var $author$project$Main$generateWordsMarkov = function (model) {
 				return $.i;
 			},
 			model.a.c.h));
-	var ngramModel = A2($author$project$Main$buildNgramModel, model.bk, lexicon);
+	var ngramModel = A2($author$project$Main$buildNgramModel, model.bj, lexicon);
 	var candidateCount = $elm$core$List$isEmpty(phonology.Y) ? model.al : (model.al * 5);
 	return $elm$core$Dict$isEmpty(ngramModel) ? $author$project$Main$generateWordsTemplate(model) : A2(
 		$elm$random$Random$map,
@@ -10296,7 +10301,7 @@ var $author$project$Main$update = F2(
 							model,
 							{
 								ac: $elm$core$Maybe$Just(index),
-								bp: true,
+								bo: true,
 								as: word.O,
 								aK: word.ad,
 								ak: word.i,
@@ -10366,7 +10371,7 @@ var $author$project$Main$update = F2(
 								a: updatedProject,
 								ah: _List_Nil,
 								aD: '',
-								bp: false,
+								bo: false,
 								aJ: '',
 								K: A2($elm$core$List$cons, model.a, model.K),
 								as: '',
@@ -10404,13 +10409,13 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{au: '', ac: $elm$core$Maybe$Nothing, aD: '', bp: false, aJ: '', as: '', aK: '', ak: '', aL: '', aM: 'noun'}),
+						{au: '', ac: $elm$core$Maybe$Nothing, aD: '', bo: false, aJ: '', as: '', aK: '', ak: '', aL: '', aM: 'noun'}),
 					$elm$core$Platform$Cmd$none);
 			case 24:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bp: false}),
+						{bo: false}),
 					$elm$core$Platform$Cmd$none);
 			case 25:
 				var wordIndex = msg.a;
@@ -10953,7 +10958,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								bt: $elm$core$Maybe$Just(index),
+								bs: $elm$core$Maybe$Just(index),
 								ar: m.A,
 								ag: m.i,
 								am: m.B,
@@ -10965,7 +10970,7 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 61:
-				var _v12 = model.bt;
+				var _v12 = model.bs;
 				if (!_v12.$) {
 					var index = _v12.a;
 					var value = $elm$core$String$trim(model.aP);
@@ -10992,7 +10997,7 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{bt: $elm$core$Maybe$Nothing, ar: '', ag: '', am: '', aX: 1, aP: '', a: updatedProject}),
+							{bs: $elm$core$Maybe$Nothing, ar: '', ag: '', am: '', aX: 1, aP: '', a: updatedProject}),
 						$author$project$Main$saveToStorage(
 							$author$project$Main$encodeProject(updatedProject)));
 				} else {
@@ -11002,7 +11007,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bt: $elm$core$Maybe$Nothing, ar: '', ag: '', am: '', aX: 1, aP: ''}),
+						{bs: $elm$core$Maybe$Nothing, ar: '', ag: '', am: '', aX: 1, aP: ''}),
 					$elm$core$Platform$Cmd$none);
 			case 63:
 				var input = msg.a;
@@ -11845,7 +11850,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bs: input}),
+						{br: input}),
 					$elm$core$Platform$Cmd$none);
 			case 100:
 				var language = model.a.c;
@@ -11855,7 +11860,7 @@ var $author$project$Main$update = F2(
 						function (i, word) {
 							return A2($elm$core$List$member, i, model.F) ? _Utils_update(
 								word,
-								{J: model.bs}) : word;
+								{J: model.br}) : word;
 						}),
 					language.h);
 				var updatedLanguage = _Utils_update(
@@ -12065,14 +12070,14 @@ var $author$project$Main$update = F2(
 				}
 			case 110:
 				if ($elm$core$String$isEmpty(
-					$elm$core$String$trim(model.bn))) {
+					$elm$core$String$trim(model.bm))) {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				} else {
-					var newTemplate = {d: model.bE, o: 0, bx: false, c: model.a.c, b: model.bn};
+					var newTemplate = {d: model.bE, o: 0, bx: false, c: model.a.c, b: model.bm};
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{bE: '', bn: '', b_: false}),
+							{bE: '', bm: '', b_: false}),
 						$author$project$Main$saveTemplateToStorage(
 							$author$project$Main$encodeTemplate(newTemplate)));
 				}
@@ -12086,14 +12091,14 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bE: '', bn: '', b_: false}),
+						{bE: '', bm: '', b_: false}),
 					$elm$core$Platform$Cmd$none);
 			case 113:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bn: input}),
+						{bm: input}),
 					$elm$core$Platform$Cmd$none);
 			case 114:
 				var input = msg.a;
@@ -12108,11 +12113,11 @@ var $author$project$Main$update = F2(
 					model,
 					$author$project$Main$deleteTemplateById(templateId));
 			case 116:
-				var newShowDefault = !model.bo;
+				var newShowDefault = !model.bn;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bo: newShowDefault}),
+						{bn: newShowDefault}),
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[
@@ -12180,7 +12185,7 @@ var $author$project$Main$update = F2(
 						value));
 				var showDefaultTemplates = A2(
 					$elm$core$Result$withDefault,
-					model.bo,
+					model.bn,
 					A2(
 						$elm$json$Json$Decode$decodeValue,
 						A2($elm$json$Json$Decode$field, 'showDefaultTemplates', $elm$json$Json$Decode$bool),
@@ -12227,7 +12232,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{aR: activeSection, at: activeTab, bo: showDefaultTemplates, b$: showTemplatesSection, bc: tabSections}),
+						{aR: activeSection, at: activeTab, bn: showDefaultTemplates, b$: showTemplatesSection, bc: tabSections}),
 					sectionCmd);
 			case 120:
 				var projectId = msg.a;
@@ -12263,7 +12268,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							bm: currentName,
+							bl: currentName,
 							bS: $elm$core$Maybe$Just(projectId)
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -12272,22 +12277,22 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bm: input}),
+						{bl: input}),
 					$elm$core$Platform$Cmd$none);
 			case 124:
 				var projectId = msg.a;
-				var trimmedName = $elm$core$String$trim(model.bm);
+				var trimmedName = $elm$core$String$trim(model.bl);
 				return $elm$core$String$isEmpty(trimmedName) ? _Utils_Tuple2(model, $elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bm: '', bS: $elm$core$Maybe$Nothing}),
+						{bl: '', bS: $elm$core$Maybe$Nothing}),
 					$author$project$Main$renameProjectById(
 						{cs: trimmedName, cv: projectId}));
 			case 125:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bm: '', bS: $elm$core$Maybe$Nothing}),
+						{bl: '', bS: $elm$core$Maybe$Nothing}),
 					$elm$core$Platform$Cmd$none);
 			case 126:
 				var projectId = msg.a;
@@ -12374,7 +12379,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								bk: A2(
+								bj: A2(
 									$elm$core$Basics$max,
 									1,
 									A2($elm$core$Basics$min, 5, order))
@@ -12440,7 +12445,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								bq: A2(
+								bp: A2(
 									$elm$core$Basics$max,
 									model.aQ,
 									A2($elm$core$Basics$min, 10, length))
@@ -12854,14 +12859,14 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bi: input}),
+						{bh: input}),
 					$elm$core$Platform$Cmd$none);
 			case 164:
 				var input = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bh: input}),
+						{bv: input}),
 					$elm$core$Platform$Cmd$none);
 			case 165:
 				var trimmedPhoneme = $elm$core$String$trim(model.U);
@@ -12869,23 +12874,23 @@ var $author$project$Main$update = F2(
 				if ($elm$core$String$isEmpty(trimmedPhoneme) || $elm$core$String$isEmpty(trimmedGrapheme)) {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				} else {
+					var trimmedContext = $elm$core$String$trim(model.bv);
 					var language = model.a.c;
 					var phonology = language.l;
 					var orthography = phonology.q;
 					var exists = A2(
 						$elm$core$List$any,
 						function (m) {
-							return _Utils_eq(m.f, trimmedPhoneme);
+							return _Utils_eq(m.f, trimmedPhoneme) && _Utils_eq(m.e, trimmedContext);
 						},
 						orthography.L);
 					var updatedMappings = exists ? A2(
 						$elm$core$List$map,
 						function (m) {
-							return _Utils_eq(m.f, trimmedPhoneme) ? _Utils_update(
+							return (_Utils_eq(m.f, trimmedPhoneme) && _Utils_eq(m.e, trimmedContext)) ? _Utils_update(
 								m,
 								{
-									e: $elm$core$String$trim(model.bh),
-									d: $elm$core$String$trim(model.bi),
+									d: $elm$core$String$trim(model.bh),
 									g: trimmedGrapheme
 								}) : m;
 						},
@@ -12894,8 +12899,8 @@ var $author$project$Main$update = F2(
 						_List_fromArray(
 							[
 								{
-								e: $elm$core$String$trim(model.bh),
-								d: $elm$core$String$trim(model.bi),
+								e: trimmedContext,
+								d: $elm$core$String$trim(model.bh),
 								g: trimmedGrapheme,
 								f: trimmedPhoneme
 							}
@@ -12913,7 +12918,7 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{bh: '', bi: '', af: '', U: '', a: updatedProject}),
+							{bv: '', bh: '', af: '', U: '', a: updatedProject}),
 						$author$project$Main$saveToStorage(
 							$author$project$Main$encodeProject(updatedProject)));
 				}
@@ -12976,7 +12981,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{a5: model.a.b, bu: true}),
+						{a5: model.a.b, bt: true}),
 					$elm$core$Platform$Cmd$none);
 			case 169:
 				var input = msg.a;
@@ -12991,7 +12996,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{a5: '', bu: false, a: updatedProject}),
+						{a5: '', bt: false, a: updatedProject}),
 					$elm$core$String$isEmpty(newName) ? $elm$core$Platform$Cmd$none : $elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[
@@ -13004,7 +13009,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{a5: '', bu: false}),
+						{a5: '', bt: false}),
 					$elm$core$Platform$Cmd$none);
 			case 172:
 				return _Utils_Tuple2(
@@ -13016,7 +13021,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bt: $elm$core$Maybe$Nothing, ar: '', ag: '', am: '', aX: 1, aP: '', bV: false}),
+						{bs: $elm$core$Maybe$Nothing, ar: '', ag: '', am: '', aX: 1, aP: '', bV: false}),
 					$elm$core$Platform$Cmd$none);
 			case 174:
 				return _Utils_Tuple2(
@@ -13102,7 +13107,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							bj: false,
+							bi: false,
 							b6: $elm$core$Maybe$Just(fieldName),
 							bN: $elm$core$Maybe$Nothing
 						}),
@@ -13132,13 +13137,13 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bj: false, b6: $elm$core$Maybe$Nothing, bN: $elm$core$Maybe$Nothing}),
+						{bi: false, b6: $elm$core$Maybe$Nothing, bN: $elm$core$Maybe$Nothing}),
 					$elm$core$Platform$Cmd$none);
 			case 184:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bj: !model.bj}),
+						{bi: !model.bi}),
 					$elm$core$Platform$Cmd$none);
 			case 185:
 				var fieldName = msg.a;
@@ -13702,9 +13707,9 @@ var $author$project$Main$viewIPADropdown = F2(
 								_List_fromArray(
 									[
 										$elm$html$Html$text(
-										model.bj ? 'IPA ▲' : 'IPA ▼')
+										model.bi ? 'IPA ▲' : 'IPA ▼')
 									])),
-								model.bj ? A2(
+								model.bi ? A2(
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
@@ -15316,7 +15321,7 @@ var $author$project$Main$viewSaveTemplateModal = function (model) {
 									[
 										$elm$html$Html$Attributes$type_('text'),
 										$elm$html$Html$Attributes$placeholder('e.g., My Custom Template'),
-										$elm$html$Html$Attributes$value(model.bn),
+										$elm$html$Html$Attributes$value(model.bm),
 										$elm$html$Html$Events$onInput($author$project$Main$UpdateSaveAsTemplateNameInput),
 										A2($elm$html$Html$Attributes$style, 'width', '100%'),
 										A2($elm$html$Html$Attributes$style, 'padding', '10px'),
@@ -15471,7 +15476,7 @@ var $author$project$Main$viewHeader = function (model) {
 					]),
 				_List_fromArray(
 					[
-						model.bu ? A2(
+						model.bt ? A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
@@ -16261,7 +16266,7 @@ var $author$project$Main$viewLanguageItem = F3(
 									_List_fromArray(
 										[
 											$elm$html$Html$Attributes$type_('text'),
-											$elm$html$Html$Attributes$value(model.bm),
+											$elm$html$Html$Attributes$value(model.bl),
 											$elm$html$Html$Events$onInput($author$project$Main$UpdateRenameInput),
 											$elm$html$Html$Events$onClick($author$project$Main$NoOp),
 											A2($elm$html$Html$Attributes$style, 'padding', '6px'),
@@ -16806,10 +16811,10 @@ var $author$project$Main$viewTemplatesManagement = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
-								model.bo ? 'Hide Default Templates' : 'Show Default Templates')
+								model.bn ? 'Hide Default Templates' : 'Show Default Templates')
 							]))
 					])),
-				model.bo ? A2(
+				model.bn ? A2(
 				$elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
@@ -19876,7 +19881,7 @@ var $author$project$Main$viewLexiconManagement = function (model) {
 										$elm$html$Html$select,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$value(model.bs),
+												$elm$html$Html$Attributes$value(model.br),
 												$elm$html$Html$Events$onInput($author$project$Main$UpdateBatchPosInput),
 												A2($elm$html$Html$Attributes$style, 'width', 'auto'),
 												A2($elm$html$Html$Attributes$style, 'margin-right', '10px')
@@ -19990,7 +19995,7 @@ var $author$project$Main$viewLexiconManagement = function (model) {
 											[
 												$elm$html$Html$Events$onClick($author$project$Main$BatchUpdatePos),
 												$elm$html$Html$Attributes$disabled(
-												$elm$core$String$isEmpty(model.bs))
+												$elm$core$String$isEmpty(model.br))
 											]),
 										_List_fromArray(
 											[
@@ -20279,7 +20284,7 @@ var $author$project$Main$viewLexiconManagement = function (model) {
 				}
 			}(),
 				function () {
-				if (model.bp) {
+				if (model.bo) {
 					var _v8 = model.ac;
 					if (!_v8.$) {
 						var idx = _v8.a;
@@ -24275,7 +24280,7 @@ var $author$project$Main$viewOrthographySection = function (model) {
 											[
 												$elm$html$Html$Attributes$type_('text'),
 												$elm$html$Html$Attributes$placeholder('Context (e.g., _C, V_, _{r,t})'),
-												$elm$html$Html$Attributes$value(model.bh),
+												$elm$html$Html$Attributes$value(model.bv),
 												$elm$html$Html$Events$onInput($author$project$Main$UpdateGraphemeContextInput),
 												$author$project$Main$onEnter(
 												($author$project$Main$isNonEmpty(model.U) && $author$project$Main$isNonEmpty(model.af)) ? $author$project$Main$AddGraphemeMapping : $author$project$Main$NoOp),
@@ -24289,7 +24294,7 @@ var $author$project$Main$viewOrthographySection = function (model) {
 											[
 												$elm$html$Html$Attributes$type_('text'),
 												$elm$html$Html$Attributes$placeholder('Description (optional)'),
-												$elm$html$Html$Attributes$value(model.bi),
+												$elm$html$Html$Attributes$value(model.bh),
 												$elm$html$Html$Events$onInput($author$project$Main$UpdateGraphemeDescriptionInput),
 												$author$project$Main$onEnter(
 												($author$project$Main$isNonEmpty(model.U) && $author$project$Main$isNonEmpty(model.af)) ? $author$project$Main$AddGraphemeMapping : $author$project$Main$NoOp),
@@ -24591,13 +24596,6 @@ var $author$project$Main$viewWordGeneratorSection = function (model) {
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$h2,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Word Generator')
-					])),
-				A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
@@ -24606,6 +24604,151 @@ var $author$project$Main$viewWordGeneratorSection = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Generate words using template patterns or Markov chains trained on your lexicon')
+					])),
+				A2(
+				$elm$html$Html$h2,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Word Generator')
+					])),
+				$elm$core$List$isEmpty(model.H) ? $elm$html$Html$text('') : A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('generated-words-container')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('generated-words-header')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$span,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('generated-words-title')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Generated Words')
+									])),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('add-all-btn'),
+										$elm$html$Html$Events$onClick($author$project$Main$AddAllGeneratedWordsToLexicon),
+										$elm$html$Html$Attributes$title('Add all generated words to the lexicon at once')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('➕ Add All to Lexicon')
+									]))
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('generated-words')
+							]),
+						A2(
+							$elm$core$List$map,
+							$author$project$Main$viewGeneratedWord(model.a.c.l),
+							model.H))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('form-group')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$label,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Number of Words to Generate')
+							])),
+						A2(
+						$elm$html$Html$select,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value(
+								$elm$core$String$fromInt(model.al)),
+								$elm$html$Html$Events$onInput($author$project$Main$UpdateWordGenerationCount)
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$option,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$value('5')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('5')
+									])),
+								A2(
+								$elm$html$Html$option,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$value('10')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('10')
+									])),
+								A2(
+								$elm$html$Html$option,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$value('15')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('15')
+									])),
+								A2(
+								$elm$html$Html$option,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$value('25')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('25')
+									])),
+								A2(
+								$elm$html$Html$option,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$value('50')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('50')
+									]))
+							]))
+					])),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick($author$project$Main$GenerateWords)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(
+						'Generate ' + ($elm$core$String$fromInt(model.al) + (' Word' + ((model.al === 1) ? '' : 's'))))
 					])),
 				A2(
 				$elm$html$Html$div,
@@ -24767,7 +24910,7 @@ var $author$project$Main$viewWordGeneratorSection = function (model) {
 								_List_fromArray(
 									[
 										$elm$html$Html$text(
-										'Max Syllables: ' + $elm$core$String$fromInt(model.bq))
+										'Max Syllables: ' + $elm$core$String$fromInt(model.bp))
 									])),
 								A2(
 								$elm$html$Html$input,
@@ -24778,7 +24921,7 @@ var $author$project$Main$viewWordGeneratorSection = function (model) {
 										$elm$core$String$fromInt(model.aQ)),
 										$elm$html$Html$Attributes$max('10'),
 										$elm$html$Html$Attributes$value(
-										$elm$core$String$fromInt(model.bq)),
+										$elm$core$String$fromInt(model.bp)),
 										$elm$html$Html$Events$onInput($author$project$Main$UpdateTemplateMaxSyllables)
 									]),
 								_List_Nil),
@@ -24834,7 +24977,7 @@ var $author$project$Main$viewWordGeneratorSection = function (model) {
 										$elm$html$Html$Attributes$min('1'),
 										$elm$html$Html$Attributes$max('5'),
 										$elm$html$Html$Attributes$value(
-										$elm$core$String$fromInt(model.bk)),
+										$elm$core$String$fromInt(model.bj)),
 										$elm$html$Html$Events$onInput($author$project$Main$UpdateMarkovOrder)
 									]),
 								_List_Nil),
@@ -24904,145 +25047,7 @@ var $author$project$Main$viewWordGeneratorSection = function (model) {
 									]),
 								_List_Nil)
 							]))
-					])) : $elm$html$Html$text(''),
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('form-group')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$label,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Number of Words to Generate')
-							])),
-						A2(
-						$elm$html$Html$select,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$value(
-								$elm$core$String$fromInt(model.al)),
-								$elm$html$Html$Events$onInput($author$project$Main$UpdateWordGenerationCount)
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$option,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$value('5')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('5')
-									])),
-								A2(
-								$elm$html$Html$option,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$value('10')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('10')
-									])),
-								A2(
-								$elm$html$Html$option,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$value('15')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('15')
-									])),
-								A2(
-								$elm$html$Html$option,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$value('25')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('25')
-									])),
-								A2(
-								$elm$html$Html$option,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$value('50')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('50')
-									]))
-							]))
-					])),
-				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Events$onClick($author$project$Main$GenerateWords)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						'Generate ' + ($elm$core$String$fromInt(model.al) + (' Word' + ((model.al === 1) ? '' : 's'))))
-					])),
-				$elm$core$List$isEmpty(model.H) ? $elm$html$Html$text('') : A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('generated-words-container')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('generated-words-header')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$span,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('generated-words-title')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Generated Words')
-									])),
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('add-all-btn'),
-										$elm$html$Html$Events$onClick($author$project$Main$AddAllGeneratedWordsToLexicon),
-										$elm$html$Html$Attributes$title('Add all generated words to the lexicon at once')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('➕ Add All to Lexicon')
-									]))
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('generated-words')
-							]),
-						A2(
-							$elm$core$List$map,
-							$author$project$Main$viewGeneratedWord(model.a.c.l),
-							model.H))
-					]))
+					])) : $elm$html$Html$text('')
 			]));
 };
 var $author$project$Main$viewPhonologySection = F2(
