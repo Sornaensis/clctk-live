@@ -689,6 +689,32 @@ app.ports.deleteLanguageFamilyById.subscribe((familyId) => {
   deleteLanguageFamilyById(familyId);
 });
 
+// Handle cursor position insertions
+app.ports.insertAtCursor.subscribe((data) => {
+  const element = document.getElementById(data.fieldId);
+  if (element) {
+    const start = element.selectionStart || 0;
+    const end = element.selectionEnd || 0;
+    const value = element.value;
+    
+    // Insert text at cursor position
+    const newValue = value.substring(0, start) + data.text + value.substring(end);
+    element.value = newValue;
+    
+    // Set cursor position after inserted text
+    const newCursorPos = start + data.text.length;
+    element.selectionStart = newCursorPos;
+    element.selectionEnd = newCursorPos;
+    
+    // Trigger input event to update Elm model
+    const event = new Event('input', { bubbles: true });
+    element.dispatchEvent(event);
+    
+    // Optionally refocus the element
+    element.focus();
+  }
+});
+
 // Migration function for IPA chart redesign
 function migrateToIPAChart() {
   try {
