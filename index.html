@@ -1327,6 +1327,487 @@
             border-color: #38b2ac !important;
             transform: scale(1.05);
         }
+
+        /* ========================================
+           MOBILE & TABLET RESPONSIVE STYLES
+           ======================================== */
+
+        /* Hide mobile menu toggle by default (desktop) */
+        .mobile-menu-toggle {
+            display: none;
+        }
+
+        /* Tablet styles (768px - 1024px) */
+        @media screen and (max-width: 1024px) {
+            #app {
+                padding: 15px;
+            }
+
+            header {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .section {
+                padding: 15px;
+            }
+
+            /* Make sidebar narrower on tablet */
+            .section-sidebar {
+                width: 180px;
+                min-width: 180px;
+            }
+
+            /* Adjust IPA grid for tablets */
+            .consonant-grid {
+                grid-template-columns: 100px repeat(auto-fit, minmax(60px, 1fr));
+            }
+
+            .consonant-grid-static {
+                grid-template-columns: 100px repeat(11, 1fr) 100px;
+            }
+        }
+
+        /* Mobile styles (< 768px) */
+        @media screen and (max-width: 768px) {
+            #app {
+                padding: 10px;
+                max-width: 100%;
+            }
+
+            body {
+                overflow-x: hidden;
+            }
+
+            /* Prevent body scroll when mobile sidebar is open */
+            body:has(.section-sidebar.mobile-open) {
+                overflow: hidden;
+            }
+
+            /* Header adjustments */
+            header {
+                padding: 12px;
+                margin-bottom: 15px;
+                border-radius: 6px;
+            }
+
+            h1 {
+                font-size: 18px;
+                margin-bottom: 4px;
+            }
+
+            .subtitle {
+                font-size: 12px;
+            }
+
+            /* Top navigation tabs - horizontal scroll */
+            .tabs {
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                padding: 8px;
+                margin-bottom: 15px;
+                gap: 8px;
+                flex-wrap: nowrap;
+            }
+
+            .tabs::-webkit-scrollbar {
+                display: none;
+            }
+
+            .tab {
+                min-width: 140px;
+                padding: 10px 16px;
+                font-size: 13px;
+                white-space: nowrap;
+            }
+
+            /* Hide sidebar by default on mobile, show as overlay */
+            .tab-container {
+                position: relative;
+                flex-direction: column;
+            }
+
+            .section-sidebar {
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                min-width: 280px;
+                height: 100vh;
+                z-index: 1000;
+                transition: left 0.3s ease-in-out;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+                overflow-y: auto;
+                padding: 20px 10px;
+            }
+
+            .section-sidebar.mobile-open {
+                left: 0;
+            }
+
+            /* Overlay when sidebar is open */
+            .mobile-sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+
+            .mobile-sidebar-overlay.active {
+                display: block;
+            }
+
+            /* Hamburger menu button */
+            .mobile-menu-toggle {
+                display: block;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 56px;
+                height: 56px;
+                background: #805ad5;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                box-shadow: 0 4px 12px rgba(128, 90, 213, 0.4);
+                cursor: pointer;
+                z-index: 998;
+                font-size: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-menu-toggle:active {
+                transform: scale(0.95);
+            }
+
+            .section-content {
+                max-height: none;
+                overflow-y: visible;
+            }
+
+            /* Sections */
+            .section {
+                padding: 12px;
+                margin-bottom: 15px;
+                border-radius: 6px;
+            }
+
+            .section h2 {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+
+            .section h3 {
+                font-size: 14px;
+            }
+
+            /* Buttons */
+            button {
+                padding: 10px 14px;
+                font-size: 13px;
+                margin-right: 6px;
+                margin-bottom: 6px;
+                /* Ensure touch-friendly size */
+                min-height: 44px;
+            }
+
+            button.small {
+                padding: 6px 10px;
+                font-size: 12px;
+                min-height: 36px;
+            }
+
+            button.plus-btn {
+                padding: 10px 14px;
+                font-size: 18px;
+                min-width: 44px;
+                min-height: 44px;
+            }
+
+            /* Forms */
+            input[type="text"], textarea, select {
+                font-size: 16px; /* Prevents zoom on iOS */
+                padding: 10px 12px;
+            }
+
+            .inline-form {
+                flex-direction: column;
+            }
+
+            .inline-form input {
+                margin-bottom: 8px;
+            }
+
+            /* IPA Charts - horizontal scroll */
+            .ipa-grid {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border-radius: 6px;
+            }
+
+            .consonant-grid {
+                grid-template-columns: 90px repeat(11, 80px) 90px;
+                min-width: 1000px;
+            }
+
+            .consonant-grid-static {
+                grid-template-columns: 90px repeat(11, 80px) 90px;
+                min-width: 1000px;
+            }
+
+            .vowel-grid {
+                grid-template-columns: 80px repeat(3, 1fr);
+                min-width: 320px;
+            }
+
+            .ipa-header-cell,
+            .ipa-row-header,
+            .ipa-cell,
+            .ipa-cell-clickable,
+            .ipa-cell-hoverable,
+            .ipa-cell-non-clickable {
+                padding: 6px 8px;
+                min-height: 44px;
+                font-size: 12px;
+            }
+
+            .ipa-phoneme,
+            .ipa-phoneme-display {
+                font-size: 14px;
+                padding: 4px 8px;
+            }
+
+            /* Phoneme lists */
+            .phoneme-list {
+                gap: 6px;
+            }
+
+            .phoneme-tag {
+                font-size: 13px;
+                padding: 6px 10px;
+            }
+
+            /* Word lists */
+            .word-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px;
+            }
+
+            .word-content {
+                width: 100%;
+                margin-bottom: 8px;
+            }
+
+            .word-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            /* Generated words */
+            .generated-words {
+                gap: 8px;
+            }
+
+            .generated-word {
+                min-width: 80px;
+                min-height: 50px;
+                padding: 10px 35px 10px 12px;
+            }
+
+            .generated-word-ipa,
+            .generated-word-text {
+                font-size: 14px;
+            }
+
+            .generated-word-ortho {
+                font-size: 12px;
+            }
+
+            /* Tables */
+            .paradigm-table {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .paradigm-table table {
+                min-width: 100%;
+                font-size: 13px;
+            }
+
+            .paradigm-table th,
+            .paradigm-table td {
+                padding: 8px;
+            }
+
+            /* Modals */
+            .modal-overlay {
+                padding: 10px;
+            }
+
+            .modal-content {
+                padding: 20px;
+                max-height: 90vh;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .ipa-info-modal {
+                min-width: auto;
+                max-width: 100%;
+            }
+
+            /* Phoneme selector grid */
+            .phoneme-selector-grid {
+                grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+                gap: 8px;
+            }
+
+            .phoneme-selector-item {
+                padding: 10px;
+                font-size: 16px;
+                min-height: 44px;
+            }
+
+            /* Category header */
+            .category-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            /* Feature groups */
+            .feature-group {
+                padding: 12px;
+            }
+
+            .feature-values {
+                gap: 6px;
+            }
+
+            /* Batch operations */
+            .batch-operations {
+                padding: 12px;
+            }
+
+            .batch-actions {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+
+            .batch-actions button {
+                width: 100%;
+                margin: 0;
+            }
+
+            /* Help text */
+            .help-text {
+                font-size: 11px;
+            }
+        }
+
+        /* Very small mobile devices (< 390px) */
+        @media screen and (max-width: 390px) {
+            #app {
+                padding: 8px;
+            }
+
+            header {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 16px;
+            }
+
+            .section {
+                padding: 10px;
+            }
+
+            button {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+
+            .tab {
+                min-width: 120px;
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+
+            .mobile-menu-toggle {
+                width: 50px;
+                height: 50px;
+                bottom: 15px;
+                right: 15px;
+                font-size: 20px;
+            }
+        }
+
+        /* Landscape mode adjustments for mobile */
+        @media screen and (max-width: 768px) and (orientation: landscape) {
+            .mobile-menu-toggle {
+                bottom: 10px;
+                right: 10px;
+                width: 48px;
+                height: 48px;
+            }
+
+            .section-sidebar {
+                width: 260px;
+                min-width: 260px;
+            }
+
+            header {
+                padding: 10px;
+            }
+        }
+
+        /* Touch-friendly improvements for all mobile */
+        @media (hover: none) and (pointer: coarse) {
+            /* Increase tap targets */
+            button,
+            .tab,
+            .section-button,
+            .ipa-cell-clickable,
+            .ipa-cell-hoverable,
+            .phoneme-tag button,
+            .word-item button {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            /* Remove hover effects on touch devices */
+            button:hover,
+            .tab:hover,
+            .ipa-cell:hover,
+            .ipa-phoneme:hover {
+                transform: none;
+            }
+
+            /* Add active/tap states instead */
+            button:active,
+            .tab:active,
+            .ipa-cell-clickable:active,
+            .ipa-phoneme:active {
+                opacity: 0.7;
+                transform: scale(0.98);
+            }
+        }
     </style>
 </head>
 <body>
