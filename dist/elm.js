@@ -14724,7 +14724,6 @@ var $elm$html$Html$Events$custom = F2(
 			event,
 			$elm$virtual_dom$VirtualDom$Custom(decoder));
 	});
-var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$html$Html$Attributes$title = $elm$html$Html$Attributes$stringProperty('title');
 var $author$project$ViewComponents$viewPatternSyntaxButtons = F2(
 	function (model, fieldName) {
@@ -14741,19 +14740,15 @@ var $author$project$ViewComponents$viewPatternSyntaxButtons = F2(
 					return $elm$html$Html$text('');
 				} else {
 					var position = _v1.a;
+					var useTopPosition = position.cF > 450;
 					return A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'left',
-								$elm$core$String$fromFloat(position.cE) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'top',
-								$elm$core$String$fromFloat(position.cF + 40) + 'px'),
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								useTopPosition ? A2($elm$html$Html$Attributes$style, 'bottom', '100%') : A2($elm$html$Html$Attributes$style, 'top', '100%'),
+								A2($elm$html$Html$Attributes$style, 'left', '0'),
+								useTopPosition ? A2($elm$html$Html$Attributes$style, 'margin-bottom', '4px') : A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
 								A2($elm$html$Html$Attributes$style, 'z-index', '999'),
 								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
 								A2($elm$html$Html$Attributes$style, 'gap', '4px'),
@@ -14761,7 +14756,9 @@ var $author$project$ViewComponents$viewPatternSyntaxButtons = F2(
 								A2($elm$html$Html$Attributes$style, 'padding', '8px'),
 								A2($elm$html$Html$Attributes$style, 'border', '2px solid #e2e8f0'),
 								A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
-								A2($elm$html$Html$Attributes$style, 'box-shadow', '0 4px 12px rgba(0,0,0,0.15)')
+								A2($elm$html$Html$Attributes$style, 'box-shadow', '0 4px 12px rgba(0,0,0,0.15)'),
+								A2($elm$html$Html$Attributes$style, 'max-width', 'calc(100vw - 20px)'),
+								A2($elm$html$Html$Attributes$style, 'flex-wrap', 'wrap')
 							]),
 						_List_fromArray(
 							[
@@ -18043,21 +18040,18 @@ var $author$project$ViewComponents$viewIPADropdown = F2(
 					return $elm$html$Html$text('');
 				} else {
 					var position = _v1.a;
+					var useTopPosition = position.cF > 450;
 					return A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
 								$elm$html$Html$Attributes$class('ipa-dropdown-container'),
-								A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'left',
-								$elm$core$String$fromFloat(position.cE) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'top',
-								$elm$core$String$fromFloat(position.cF) + 'px'),
-								A2($elm$html$Html$Attributes$style, 'z-index', '1000')
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								useTopPosition ? A2($elm$html$Html$Attributes$style, 'bottom', '100%') : A2($elm$html$Html$Attributes$style, 'top', '100%'),
+								A2($elm$html$Html$Attributes$style, 'right', '0'),
+								useTopPosition ? A2($elm$html$Html$Attributes$style, 'margin-bottom', '4px') : A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
+								A2($elm$html$Html$Attributes$style, 'z-index', '1000'),
+								A2($elm$html$Html$Attributes$style, 'max-width', 'calc(100vw - 20px)')
 							]),
 						_List_fromArray(
 							[
@@ -18098,18 +18092,18 @@ var $author$project$ViewComponents$viewIPADropdown = F2(
 									[
 										$elm$html$Html$Attributes$class('ipa-dropdown-content'),
 										A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-										A2($elm$html$Html$Attributes$style, 'top', '100%'),
-										A2($elm$html$Html$Attributes$style, 'left', '0'),
+										useTopPosition ? A2($elm$html$Html$Attributes$style, 'bottom', '100%') : A2($elm$html$Html$Attributes$style, 'top', '100%'),
+										A2($elm$html$Html$Attributes$style, 'right', '0'),
 										A2($elm$html$Html$Attributes$style, 'background', 'white'),
 										A2($elm$html$Html$Attributes$style, 'border', '2px solid #38b2ac'),
 										A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
 										A2($elm$html$Html$Attributes$style, 'box-shadow', '0 4px 12px rgba(0,0,0,0.15)'),
 										A2($elm$html$Html$Attributes$style, 'padding', '12px'),
-										A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
-										A2($elm$html$Html$Attributes$style, 'max-height', '400px'),
+										useTopPosition ? A2($elm$html$Html$Attributes$style, 'margin-bottom', '4px') : A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
+										A2($elm$html$Html$Attributes$style, 'max-height', '300px'),
 										A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto'),
 										A2($elm$html$Html$Attributes$style, 'min-width', '300px'),
-										A2($elm$html$Html$Attributes$style, 'max-width', '500px')
+										A2($elm$html$Html$Attributes$style, 'max-width', 'min(500px, calc(100vw - 20px))')
 									]),
 								_List_fromArray(
 									[
@@ -18365,7 +18359,10 @@ var $author$project$ViewLexicon$viewAddModal = function (model) {
 									])),
 								A2(
 								$elm$html$Html$div,
-								_List_Nil,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'position', 'relative')
+									]),
 								_List_fromArray(
 									[
 										A2(
@@ -18818,7 +18815,10 @@ var $author$project$ViewLexicon$viewEditModal = function (model) {
 										])),
 									A2(
 									$elm$html$Html$div,
-									_List_Nil,
+									_List_fromArray(
+										[
+											A2($elm$html$Html$Attributes$style, 'position', 'relative')
+										]),
 									_List_fromArray(
 										[
 											A2(
@@ -22682,7 +22682,10 @@ var $author$project$ViewPhonology$viewConstraintsSection = function (model) {
 						A2($elm$core$List$map, $author$project$ViewPhonology$viewConstraint, model.a.b7.dd.cO)),
 						A2(
 						$elm$html$Html$div,
-						_List_Nil,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'position', 'relative')
+							]),
 						_List_fromArray(
 							[
 								A2(
@@ -22757,30 +22760,42 @@ var $author$project$ViewPhonology$viewConstraintsSection = function (model) {
 													]))
 											])),
 										A2(
-										$elm$html$Html$input,
+										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$type_('text'),
-												$elm$html$Html$Attributes$id('ipa-input-constraint'),
-												$elm$html$Html$Attributes$placeholder('Sequence (e.g., tl, ŋ, r)'),
-												$elm$html$Html$Attributes$value(model.aY),
-												$elm$html$Html$Events$onInput($author$project$Msg$UpdateConstraintInput),
-												$elm$html$Html$Events$onFocus(
-												$author$project$Msg$FocusIPAField('constraint')),
-												$elm$html$Html$Events$onBlur($author$project$Msg$BlurIPAField),
-												$author$project$UpdateHelpers$onEnter(
-												$author$project$UpdateHelpers$isNonEmpty(model.aY) ? $author$project$Msg$AddConstraint : $author$project$Msg$NoOp),
-												$elm$html$Html$Attributes$classList(
+												A2($elm$html$Html$Attributes$style, 'position', 'relative'),
+												A2($elm$html$Html$Attributes$style, 'flex', '1'),
+												A2($elm$html$Html$Attributes$style, 'display', 'flex')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$input,
 												_List_fromArray(
 													[
-														_Utils_Tuple2(
-														'error',
-														(!$author$project$UpdateHelpers$isNonEmpty(model.aY)) && (model.aY !== ''))
-													])),
-												A2($elm$html$Html$Attributes$style, 'flex', '1'),
-												A2($elm$html$Html$Attributes$style, 'min-width', '200px')
-											]),
-										_List_Nil),
+														$elm$html$Html$Attributes$type_('text'),
+														$elm$html$Html$Attributes$id('ipa-input-constraint'),
+														$elm$html$Html$Attributes$placeholder('Sequence (e.g., tl, ŋ, r)'),
+														$elm$html$Html$Attributes$value(model.aY),
+														$elm$html$Html$Events$onInput($author$project$Msg$UpdateConstraintInput),
+														$elm$html$Html$Events$onFocus(
+														$author$project$Msg$FocusIPAField('constraint')),
+														$elm$html$Html$Events$onBlur($author$project$Msg$BlurIPAField),
+														$author$project$UpdateHelpers$onEnter(
+														$author$project$UpdateHelpers$isNonEmpty(model.aY) ? $author$project$Msg$AddConstraint : $author$project$Msg$NoOp),
+														$elm$html$Html$Attributes$classList(
+														_List_fromArray(
+															[
+																_Utils_Tuple2(
+																'error',
+																(!$author$project$UpdateHelpers$isNonEmpty(model.aY)) && (model.aY !== ''))
+															])),
+														A2($elm$html$Html$Attributes$style, 'flex', '1'),
+														A2($elm$html$Html$Attributes$style, 'min-width', '200px')
+													]),
+												_List_Nil),
+												A2($author$project$ViewComponents$viewIPADropdown, model, 'constraint')
+											])),
 										A2(
 										$elm$html$Html$button,
 										_List_fromArray(
@@ -22794,8 +22809,7 @@ var $author$project$ViewPhonology$viewConstraintsSection = function (model) {
 											[
 												$elm$html$Html$text('+')
 											]))
-									])),
-								A2($author$project$ViewComponents$viewIPADropdown, model, 'constraint')
+									]))
 							])),
 						A2(
 						$elm$html$Html$div,
@@ -22903,7 +22917,10 @@ var $author$project$ViewPhonology$viewDiphthongsSection = function (model) {
 						A2($elm$core$List$map, $author$project$ViewPhonology$viewDiphthong, model.a.b7.dd.cQ)),
 						A2(
 						$elm$html$Html$div,
-						_List_Nil,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'position', 'relative')
+							]),
 						_List_fromArray(
 							[
 								A2(
@@ -22915,28 +22932,40 @@ var $author$project$ViewPhonology$viewDiphthongsSection = function (model) {
 								_List_fromArray(
 									[
 										A2(
-										$elm$html$Html$input,
+										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$type_('text'),
-												$elm$html$Html$Attributes$id('ipa-input-diphthong'),
-												$elm$html$Html$Attributes$placeholder('Diphthong (e.g., ai, au, oi, ei)'),
-												$elm$html$Html$Attributes$value(model.a_),
-												$elm$html$Html$Events$onInput($author$project$Msg$UpdateDiphthongInput),
-												$elm$html$Html$Events$onFocus(
-												$author$project$Msg$FocusIPAField('diphthong')),
-												$elm$html$Html$Events$onBlur($author$project$Msg$BlurIPAField),
-												$author$project$UpdateHelpers$onEnter(
-												$author$project$UpdateHelpers$isNonEmpty(model.a_) ? $author$project$Msg$AddDiphthong : $author$project$Msg$NoOp),
-												$elm$html$Html$Attributes$classList(
+												A2($elm$html$Html$Attributes$style, 'position', 'relative'),
+												A2($elm$html$Html$Attributes$style, 'flex', '1'),
+												A2($elm$html$Html$Attributes$style, 'display', 'flex')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$input,
 												_List_fromArray(
 													[
-														_Utils_Tuple2(
-														'error',
-														(!$author$project$UpdateHelpers$isNonEmpty(model.a_)) && (model.a_ !== ''))
-													]))
-											]),
-										_List_Nil),
+														$elm$html$Html$Attributes$type_('text'),
+														$elm$html$Html$Attributes$id('ipa-input-diphthong'),
+														$elm$html$Html$Attributes$placeholder('Diphthong (e.g., ai, au, oi, ei)'),
+														$elm$html$Html$Attributes$value(model.a_),
+														$elm$html$Html$Events$onInput($author$project$Msg$UpdateDiphthongInput),
+														$elm$html$Html$Events$onFocus(
+														$author$project$Msg$FocusIPAField('diphthong')),
+														$elm$html$Html$Events$onBlur($author$project$Msg$BlurIPAField),
+														$author$project$UpdateHelpers$onEnter(
+														$author$project$UpdateHelpers$isNonEmpty(model.a_) ? $author$project$Msg$AddDiphthong : $author$project$Msg$NoOp),
+														$elm$html$Html$Attributes$classList(
+														_List_fromArray(
+															[
+																_Utils_Tuple2(
+																'error',
+																(!$author$project$UpdateHelpers$isNonEmpty(model.a_)) && (model.a_ !== ''))
+															]))
+													]),
+												_List_Nil),
+												A2($author$project$ViewComponents$viewIPADropdown, model, 'diphthong')
+											])),
 										A2(
 										$elm$html$Html$button,
 										_List_fromArray(
@@ -22950,8 +22979,7 @@ var $author$project$ViewPhonology$viewDiphthongsSection = function (model) {
 											[
 												$elm$html$Html$text('+')
 											]))
-									])),
-								A2($author$project$ViewComponents$viewIPADropdown, model, 'diphthong')
+									]))
 							])),
 						A2(
 						$elm$html$Html$div,
@@ -25520,7 +25548,10 @@ var $author$project$ViewPhonology$viewOrthographySection = function (model) {
 							model.a.b7.dd.ce.b4)),
 						A2(
 						$elm$html$Html$div,
-						_List_Nil,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'position', 'relative')
+							]),
 						_List_fromArray(
 							[
 								A2(
@@ -25532,29 +25563,40 @@ var $author$project$ViewPhonology$viewOrthographySection = function (model) {
 								_List_fromArray(
 									[
 										A2(
-										$elm$html$Html$input,
+										$elm$html$Html$div,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$type_('text'),
-												$elm$html$Html$Attributes$id('ipa-input-graphemePhoneme'),
-												$elm$html$Html$Attributes$placeholder('Phoneme (e.g., θ, ʃ, tʃ)'),
-												$elm$html$Html$Attributes$value(model.a4),
-												$elm$html$Html$Events$onInput($author$project$Msg$UpdateGraphemePhonemeInput),
-												$elm$html$Html$Events$onFocus(
-												$author$project$Msg$FocusIPAField('graphemePhoneme')),
-												$elm$html$Html$Events$onBlur($author$project$Msg$BlurIPAField),
-												$author$project$UpdateHelpers$onEnter(
-												($author$project$UpdateHelpers$isNonEmpty(model.a4) && $author$project$UpdateHelpers$isNonEmpty(model.a3)) ? $author$project$Msg$AddGraphemeMapping : $author$project$Msg$NoOp),
-												$elm$html$Html$Attributes$classList(
+												A2($elm$html$Html$Attributes$style, 'position', 'relative'),
+												A2($elm$html$Html$Attributes$style, 'display', 'inline-block')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$input,
 												_List_fromArray(
 													[
-														_Utils_Tuple2(
-														'error',
-														(!$author$project$UpdateHelpers$isNonEmpty(model.a4)) && (model.a4 !== ''))
-													])),
-												A2($elm$html$Html$Attributes$style, 'width', '150px')
-											]),
-										_List_Nil),
+														$elm$html$Html$Attributes$type_('text'),
+														$elm$html$Html$Attributes$id('ipa-input-graphemePhoneme'),
+														$elm$html$Html$Attributes$placeholder('Phoneme (e.g., θ, ʃ, tʃ)'),
+														$elm$html$Html$Attributes$value(model.a4),
+														$elm$html$Html$Events$onInput($author$project$Msg$UpdateGraphemePhonemeInput),
+														$elm$html$Html$Events$onFocus(
+														$author$project$Msg$FocusIPAField('graphemePhoneme')),
+														$elm$html$Html$Events$onBlur($author$project$Msg$BlurIPAField),
+														$author$project$UpdateHelpers$onEnter(
+														($author$project$UpdateHelpers$isNonEmpty(model.a4) && $author$project$UpdateHelpers$isNonEmpty(model.a3)) ? $author$project$Msg$AddGraphemeMapping : $author$project$Msg$NoOp),
+														$elm$html$Html$Attributes$classList(
+														_List_fromArray(
+															[
+																_Utils_Tuple2(
+																'error',
+																(!$author$project$UpdateHelpers$isNonEmpty(model.a4)) && (model.a4 !== ''))
+															])),
+														A2($elm$html$Html$Attributes$style, 'width', '150px')
+													]),
+												_List_Nil),
+												A2($author$project$ViewComponents$viewIPADropdown, model, 'graphemePhoneme')
+											])),
 										$elm$html$Html$text(' → '),
 										A2(
 										$elm$html$Html$input,
@@ -25633,8 +25675,7 @@ var $author$project$ViewPhonology$viewOrthographySection = function (model) {
 											[
 												$elm$html$Html$text('+')
 											]))
-									])),
-								A2($author$project$ViewComponents$viewIPADropdown, model, 'graphemePhoneme')
+									]))
 							]))
 					]))
 			]));
