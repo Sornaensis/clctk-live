@@ -14983,6 +14983,7 @@ var $elm$html$Html$Events$custom = F2(
 			event,
 			$elm$virtual_dom$VirtualDom$Custom(decoder));
 	});
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $author$project$ViewHelpers$isConsonantCategoryByLabel = function (label) {
 	var consonantLabels = _List_fromArray(
 		['C', 'c', 'P', 'p', 'N', 'n', 'F', 'f', 'S', 's', 'L', 'l', 'R', 'r']);
@@ -15072,20 +15073,32 @@ var $author$project$ViewComponents$viewIPADropdown = F2(
 					return $elm$html$Html$text('');
 				} else {
 					var position = _v1.a;
-					var estimatedDropdownHeight = 400;
+					var estimatedTriggerHeight = 35;
+					var estimatedContentHeight = 365;
+					var estimatedTotalHeight = (estimatedTriggerHeight + estimatedContentHeight) + 4;
 					var availableSpaceBelow = model.cB - position.cF;
-					var useTopPosition = _Utils_cmp(availableSpaceBelow, estimatedDropdownHeight) < 0;
+					var availableSpaceAbove = position.cF - position.c1;
+					var useTopPosition = (_Utils_cmp(availableSpaceBelow, estimatedTotalHeight) < 0) && (_Utils_cmp(availableSpaceAbove, estimatedTotalHeight) > -1);
+					var topPosition = useTopPosition ? ((position.cF - position.c1) - estimatedTotalHeight) : position.cF;
 					return A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
 								$elm$html$Html$Attributes$class('ipa-dropdown-container'),
-								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-								useTopPosition ? A2($elm$html$Html$Attributes$style, 'bottom', '100%') : A2($elm$html$Html$Attributes$style, 'top', '100%'),
-								A2($elm$html$Html$Attributes$style, 'left', '0'),
-								useTopPosition ? A2($elm$html$Html$Attributes$style, 'margin-bottom', '4px') : A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
+								A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'top',
+								$elm$core$String$fromFloat(topPosition) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'left',
+								$elm$core$String$fromFloat(position.cE) + 'px'),
 								A2($elm$html$Html$Attributes$style, 'z-index', '1000'),
-								A2($elm$html$Html$Attributes$style, 'max-width', 'calc(100vw - 20px)')
+								A2($elm$html$Html$Attributes$style, 'max-width', 'calc(100vw - 20px)'),
+								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+								A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
+								A2($elm$html$Html$Attributes$style, 'gap', '4px')
 							]),
 						_List_fromArray(
 							[
@@ -15105,15 +15118,18 @@ var $author$project$ViewComponents$viewIPADropdown = F2(
 										$elm$json$Json$Decode$succeed(
 											{l: $author$project$Msg$ToggleIPADropdown, m: true, n: false})),
 										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-										A2($elm$html$Html$Attributes$style, 'padding', '6px 12px'),
+										A2($elm$html$Html$Attributes$style, 'padding', '4px 8px'),
 										A2($elm$html$Html$Attributes$style, 'background', '#e6fffa'),
 										A2($elm$html$Html$Attributes$style, 'border', '1px solid #38b2ac'),
 										A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-										A2($elm$html$Html$Attributes$style, 'font-size', '12px'),
+										A2($elm$html$Html$Attributes$style, 'font-size', '11px'),
 										A2($elm$html$Html$Attributes$style, 'font-weight', '600'),
 										A2($elm$html$Html$Attributes$style, 'color', '#234e52'),
 										A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-										A2($elm$html$Html$Attributes$style, 'user-select', 'none')
+										A2($elm$html$Html$Attributes$style, 'user-select', 'none'),
+										A2($elm$html$Html$Attributes$style, 'line-height', '1'),
+										A2($elm$html$Html$Attributes$style, 'align-self', 'flex-start'),
+										A2($elm$html$Html$Attributes$style, 'white-space', 'nowrap')
 									]),
 								_List_fromArray(
 									[
@@ -15125,19 +15141,16 @@ var $author$project$ViewComponents$viewIPADropdown = F2(
 								_List_fromArray(
 									[
 										$elm$html$Html$Attributes$class('ipa-dropdown-content'),
-										A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-										useTopPosition ? A2($elm$html$Html$Attributes$style, 'bottom', '100%') : A2($elm$html$Html$Attributes$style, 'top', '100%'),
-										A2($elm$html$Html$Attributes$style, 'left', '0'),
-										A2($elm$html$Html$Attributes$style, 'background', 'white'),
+										A2($elm$html$Html$Attributes$style, 'background', '#ffffff'),
 										A2($elm$html$Html$Attributes$style, 'border', '2px solid #38b2ac'),
 										A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
 										A2($elm$html$Html$Attributes$style, 'box-shadow', '0 4px 12px rgba(0,0,0,0.15)'),
 										A2($elm$html$Html$Attributes$style, 'padding', '12px'),
-										useTopPosition ? A2($elm$html$Html$Attributes$style, 'margin-bottom', '4px') : A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
 										A2($elm$html$Html$Attributes$style, 'max-height', '300px'),
 										A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto'),
 										A2($elm$html$Html$Attributes$style, 'min-width', '300px'),
-										A2($elm$html$Html$Attributes$style, 'max-width', 'min(500px, calc(100vw - 20px))')
+										A2($elm$html$Html$Attributes$style, 'max-width', 'min(500px, calc(100vw - 20px))'),
+										A2($elm$html$Html$Attributes$style, 'opacity', '1')
 									]),
 								_List_fromArray(
 									[
@@ -18067,16 +18080,30 @@ var $author$project$ViewLexicon$viewBulkSoundChange = function (model) {
 										$elm$html$Html$text('Find Pattern')
 									])),
 								A2(
-								$elm$html$Html$input,
+								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$type_('text'),
-										$elm$html$Html$Attributes$placeholder('e.g., t'),
-										$elm$html$Html$Attributes$value(model.aN),
-										$elm$html$Html$Events$onInput($author$project$Msg$UpdateSoundChangePattern),
-										A2($elm$html$Html$Attributes$style, 'width', '100%')
+										A2($elm$html$Html$Attributes$style, 'position', 'relative')
 									]),
-								_List_Nil),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$input,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$type_('text'),
+												$elm$html$Html$Attributes$id('ipa-input-soundChangePattern'),
+												$elm$html$Html$Attributes$placeholder('e.g., t'),
+												$elm$html$Html$Attributes$value(model.aN),
+												$elm$html$Html$Events$onInput($author$project$Msg$UpdateSoundChangePattern),
+												$elm$html$Html$Events$onFocus(
+												$author$project$Msg$FocusIPAField('soundChangePattern')),
+												$elm$html$Html$Events$onBlur($author$project$Msg$BlurIPAField),
+												A2($elm$html$Html$Attributes$style, 'width', '100%')
+											]),
+										_List_Nil),
+										A2($author$project$ViewComponents$viewIPADropdown, model, 'soundChangePattern')
+									])),
 								A2(
 								$elm$html$Html$div,
 								_List_fromArray(
@@ -18106,16 +18133,30 @@ var $author$project$ViewLexicon$viewBulkSoundChange = function (model) {
 										$elm$html$Html$text('Replace With')
 									])),
 								A2(
-								$elm$html$Html$input,
+								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$type_('text'),
-										$elm$html$Html$Attributes$placeholder('e.g., d'),
-										$elm$html$Html$Attributes$value(model.aO),
-										$elm$html$Html$Events$onInput($author$project$Msg$UpdateSoundChangeReplacement),
-										A2($elm$html$Html$Attributes$style, 'width', '100%')
+										A2($elm$html$Html$Attributes$style, 'position', 'relative')
 									]),
-								_List_Nil),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$input,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$type_('text'),
+												$elm$html$Html$Attributes$id('ipa-input-soundChangeReplacement'),
+												$elm$html$Html$Attributes$placeholder('e.g., d'),
+												$elm$html$Html$Attributes$value(model.aO),
+												$elm$html$Html$Events$onInput($author$project$Msg$UpdateSoundChangeReplacement),
+												$elm$html$Html$Events$onFocus(
+												$author$project$Msg$FocusIPAField('soundChangeReplacement')),
+												$elm$html$Html$Events$onBlur($author$project$Msg$BlurIPAField),
+												A2($elm$html$Html$Attributes$style, 'width', '100%')
+											]),
+										_List_Nil),
+										A2($author$project$ViewComponents$viewIPADropdown, model, 'soundChangeReplacement')
+									])),
 								A2(
 								$elm$html$Html$div,
 								_List_fromArray(
