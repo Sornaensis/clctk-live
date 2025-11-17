@@ -700,20 +700,23 @@
             transform: translateY(-1px);
         }
 
-        /* Style for not included phonemes - always visible but with gray text */
+        /* Style for not included phonemes - hidden by default */
         .ipa-phoneme-not-included {
-            background: white; /* Match cell background */
+            display: none; /* Hidden by default */
+            background: white;
             color: #a0aec0; /* Gray color to indicate not included */
             padding: 4px 8px;
             border-radius: 4px;
+            border: 2px dashed #cbd5e0; /* Dashed border when visible */
             opacity: 0.7;
             transition: all 0.2s;
             cursor: pointer;
         }
 
-        /* When cell is hovered, match the hovered cell background color */
-        .ipa-cell-hoverable:hover .ipa-phoneme-not-included {
-            background: #f0f9ff; /* Match hovered cell background */
+        /* When any part of the IPA grid is hovered, show ALL unused phonemes chart-wide */
+        .ipa-grid:hover .ipa-phoneme-not-included {
+            display: inline-flex; /* Show on hover */
+            background: white;
             color: #a0aec0; /* Keep gray color */
         }
 
@@ -723,6 +726,7 @@
             color: #718096 !important;
             opacity: 1;
             transform: translateY(-1px);
+            border-color: #718096 !important; /* Darker dashed border on hover */
         }
 
         /* IPA Info Modal Styles */
@@ -1642,15 +1646,20 @@
 
             .ipa-phoneme,
             .ipa-phoneme-display,
-            .ipa-phoneme-included,
-            .ipa-phoneme-not-included,
-            .ipa-phoneme-not-included-visible {
+            .ipa-phoneme-included {
                 font-size: 13px;
                 padding: 4px 6px;
                 min-height: 32px;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
+            }
+
+            /* Mobile: maintain hover behavior for unused phonemes */
+            .ipa-cell-hoverable:hover .ipa-phoneme-not-included {
+                font-size: 13px;
+                padding: 4px 6px;
+                min-height: 32px;
             }
 
             /* Phoneme lists */
