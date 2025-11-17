@@ -2719,9 +2719,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		l: func(record.l),
-		n: record.n,
-		m: record.m
+		e: func(record.e),
+		g: record.g,
+		f: record.f
 	}
 });
 
@@ -2989,11 +2989,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.l;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.n;
+		var message = !tag ? value : tag < 3 ? value.a : value.e;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.g;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.m) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.f) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -4252,7 +4252,7 @@ function _Browser_getViewport()
 			bU: _Browser_window.pageXOffset,
 			bV: _Browser_window.pageYOffset,
 			cH: _Browser_doc.documentElement.clientWidth,
-			f: _Browser_doc.documentElement.clientHeight
+			i: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4263,7 +4263,7 @@ function _Browser_getScene()
 	var elem = _Browser_doc.documentElement;
 	return {
 		cH: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		f: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		i: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4288,13 +4288,13 @@ function _Browser_getViewportOf(id)
 		return {
 			cx: {
 				cH: node.scrollWidth,
-				f: node.scrollHeight
+				i: node.scrollHeight
 			},
 			cF: {
 				bU: node.scrollLeft,
 				bV: node.scrollTop,
 				cH: node.clientWidth,
-				f: node.clientHeight
+				i: node.clientHeight
 			}
 		};
 	});
@@ -4329,13 +4329,13 @@ function _Browser_getElement(id)
 				bU: x,
 				bV: y,
 				cH: _Browser_doc.documentElement.clientWidth,
-				f: _Browser_doc.documentElement.clientHeight
+				i: _Browser_doc.documentElement.clientHeight
 			},
 			a2: {
 				bU: x + rect.left,
 				bV: y + rect.top,
 				cH: rect.width,
-				f: rect.height
+				i: rect.height
 			}
 		};
 	});
@@ -4859,25 +4859,25 @@ var $elm$core$Array$treeFromBuilder = F2(
 	});
 var $elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.h) {
+		if (!builder.k) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.j),
+				$elm$core$Elm$JsArray$length(builder.m),
 				$elm$core$Array$shiftStep,
 				$elm$core$Elm$JsArray$empty,
-				builder.j);
+				builder.m);
 		} else {
-			var treeLen = builder.h * $elm$core$Array$branchFactor;
+			var treeLen = builder.k * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.k) : builder.k;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.h);
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.n) : builder.n;
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.k);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.j) + treeLen,
+				$elm$core$Elm$JsArray$length(builder.m) + treeLen,
 				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
 				tree,
-				builder.j);
+				builder.m);
 		}
 	});
 var $elm$core$Basics$idiv = _Basics_idiv;
@@ -4890,7 +4890,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{k: nodeList, h: (len / $elm$core$Array$branchFactor) | 0, j: tail});
+					{n: nodeList, k: (len / $elm$core$Array$branchFactor) | 0, m: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -5416,7 +5416,7 @@ var $author$project$Main$init = function (_v0) {
 			bT: 1,
 			aq: $elm$core$Maybe$Nothing,
 			cE: _List_Nil,
-			g: _List_Nil,
+			j: _List_Nil,
 			aV: _List_Nil,
 			cG: 768,
 			G: '',
@@ -10189,13 +10189,13 @@ var $author$project$Main$handleRegularProjectLoad = F2(
 				$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 				_Utils_update(
 					model,
-					{z: project.bA, c_: project.cb.c_, a: project, q: _List_Nil, F: false, g: _List_Nil}),
+					{z: project.bA, c_: project.cb.c_, a: project, q: _List_Nil, F: false, j: _List_Nil}),
 				$elm$core$Platform$Cmd$none);
 		} else {
 			return _Utils_Tuple2(
 				_Utils_update(
 					model,
-					{z: project.bA, c_: project.cb.c_, a: project, q: _List_Nil, F: false, g: _List_Nil}),
+					{z: project.bA, c_: project.cb.c_, a: project, q: _List_Nil, F: false, j: _List_Nil}),
 				$elm$core$Platform$Cmd$none);
 		}
 	});
@@ -10892,7 +10892,7 @@ var $author$project$Main$update = F2(
 								ak: '',
 								aM: false,
 								ap: '',
-								g: A2($elm$core$List$cons, model.a, model.g),
+								j: A2($elm$core$List$cons, model.a, model.j),
 								G: '',
 								H: '',
 								I: '',
@@ -10920,7 +10920,7 @@ var $author$project$Main$update = F2(
 						{
 							a: updatedProject,
 							q: _List_Nil,
-							g: A2($elm$core$List$cons, model.a, model.g)
+							j: A2($elm$core$List$cons, model.a, model.j)
 						}),
 					$author$project$Main$saveToStorage(
 						$author$project$JsonCodec$encodeProject(updatedProject)));
@@ -12354,7 +12354,7 @@ var $author$project$Main$update = F2(
 							q: _List_Nil,
 							p: _List_Nil,
 							bp: false,
-							g: A2($elm$core$List$cons, model.a, model.g)
+							j: A2($elm$core$List$cons, model.a, model.j)
 						}),
 					$author$project$Main$saveToStorage(
 						$author$project$JsonCodec$encodeProject(updatedProject)));
@@ -12393,7 +12393,7 @@ var $author$project$Main$update = F2(
 							a: updatedProject,
 							q: _List_Nil,
 							p: _List_Nil,
-							g: A2($elm$core$List$cons, model.a, model.g)
+							j: A2($elm$core$List$cons, model.a, model.j)
 						}),
 					$author$project$Main$saveToStorage(
 						$author$project$JsonCodec$encodeProject(updatedProject)));
@@ -12436,7 +12436,7 @@ var $author$project$Main$update = F2(
 								a: updatedProject,
 								q: _List_Nil,
 								p: _List_Nil,
-								g: A2($elm$core$List$cons, model.a, model.g)
+								j: A2($elm$core$List$cons, model.a, model.j)
 							}),
 						$author$project$Main$saveToStorage(
 							$author$project$JsonCodec$encodeProject(updatedProject)));
@@ -12631,7 +12631,7 @@ var $author$project$Main$update = F2(
 						var newProject = {b$: model.b, bA: 0, cb: updatedLanguage, cc: model.b, R: projectName};
 						var updatedModel = _Utils_update(
 							model,
-							{L: 'languages', z: 0, c_: newProject.cb.c_, ai: $elm$core$Maybe$Nothing, X: '', a: newProject, q: _List_Nil, an: false, F: false, y: updatedTabSections, aq: $elm$core$Maybe$Nothing, g: _List_Nil});
+							{L: 'languages', z: 0, c_: newProject.cb.c_, ai: $elm$core$Maybe$Nothing, X: '', a: newProject, q: _List_Nil, an: false, F: false, y: updatedTabSections, aq: $elm$core$Maybe$Nothing, j: _List_Nil});
 						return _Utils_Tuple2(
 							updatedModel,
 							$elm$core$Platform$Cmd$batch(
@@ -13375,7 +13375,7 @@ var $author$project$Main$update = F2(
 							aO: '',
 							aP: '',
 							aQ: '',
-							g: A2($elm$core$List$cons, model.a, model.g)
+							j: A2($elm$core$List$cons, model.a, model.j)
 						}),
 					$author$project$Main$saveToStorage(
 						$author$project$JsonCodec$encodeProject(updatedProject)));
@@ -13386,7 +13386,7 @@ var $author$project$Main$update = F2(
 						{bt: false, aO: '', aP: '', aQ: ''}),
 					$elm$core$Platform$Cmd$none);
 			case 160:
-				var _v41 = model.g;
+				var _v41 = model.j;
 				if (!_v41.b) {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				} else {
@@ -13398,7 +13398,7 @@ var $author$project$Main$update = F2(
 							{
 								a: previousState,
 								q: A2($elm$core$List$cons, model.a, model.q),
-								g: remainingUndo
+								j: remainingUndo
 							}),
 						$author$project$Main$saveToStorage(
 							$author$project$JsonCodec$encodeProject(previousState)));
@@ -13416,7 +13416,7 @@ var $author$project$Main$update = F2(
 							{
 								a: nextState,
 								q: remainingRedo,
-								g: A2($elm$core$List$cons, model.a, model.g)
+								j: A2($elm$core$List$cons, model.a, model.j)
 							}),
 						$author$project$Main$saveToStorage(
 							$author$project$JsonCodec$encodeProject(nextState)));
@@ -13828,9 +13828,9 @@ var $author$project$Main$update = F2(
 				var result = msg.b;
 				if (!result.$) {
 					var element = result.a;
-					var y = (element.a2.bV + element.a2.f) - element.cF.bV;
+					var y = (element.a2.bV + element.a2.i) - element.cF.bV;
 					var x = element.a2.bU - element.cF.bU;
-					var inputHeight = element.a2.f;
+					var inputHeight = element.a2.i;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -14274,18 +14274,18 @@ var $author$project$ViewComponents$viewIPASymbol = F2(
 					'mousedown',
 					$elm$json$Json$Decode$succeed(
 						{
-							l: A2($author$project$Msg$InsertIPASymbol, fieldName, symbol),
-							m: true,
-							n: false
+							e: A2($author$project$Msg$InsertIPASymbol, fieldName, symbol),
+							f: true,
+							g: false
 						})),
 					A2(
 					$elm$html$Html$Events$custom,
 					'touchstart',
 					$elm$json$Json$Decode$succeed(
 						{
-							l: A2($author$project$Msg$InsertIPASymbol, fieldName, symbol),
-							m: true,
-							n: false
+							e: A2($author$project$Msg$InsertIPASymbol, fieldName, symbol),
+							f: true,
+							g: false
 						})),
 					A2($elm$html$Html$Attributes$style, 'padding', '6px 8px'),
 					A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
@@ -14363,7 +14363,7 @@ var $author$project$ViewComponents$viewIPADropdown = F2(
 								A2($elm$html$Html$Attributes$style, 'max-width', 'calc(100vw - 20px)'),
 								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
 								A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
-								A2($elm$html$Html$Attributes$style, 'gap', '4px')
+								A2($elm$html$Html$Attributes$style, 'align-items', 'flex-start')
 							]),
 						_List_fromArray(
 							[
@@ -14376,12 +14376,12 @@ var $author$project$ViewComponents$viewIPADropdown = F2(
 										$elm$html$Html$Events$custom,
 										'mousedown',
 										$elm$json$Json$Decode$succeed(
-											{l: $author$project$Msg$ToggleIPADropdown, m: true, n: false})),
+											{e: $author$project$Msg$ToggleIPADropdown, f: true, g: false})),
 										A2(
 										$elm$html$Html$Events$custom,
 										'touchstart',
 										$elm$json$Json$Decode$succeed(
-											{l: $author$project$Msg$ToggleIPADropdown, m: true, n: false})),
+											{e: $author$project$Msg$ToggleIPADropdown, f: true, g: false})),
 										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
 										A2($elm$html$Html$Attributes$style, 'padding', '4px 8px'),
 										A2($elm$html$Html$Attributes$style, 'background', '#e6fffa'),
@@ -14406,11 +14406,12 @@ var $author$project$ViewComponents$viewIPADropdown = F2(
 								_List_fromArray(
 									[
 										$elm$html$Html$Attributes$class('ipa-dropdown-content'),
-										A2($elm$html$Html$Attributes$style, 'background', '#ffffff'),
+										A2($elm$html$Html$Attributes$style, 'background', 'white'),
 										A2($elm$html$Html$Attributes$style, 'border', '2px solid #38b2ac'),
 										A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
 										A2($elm$html$Html$Attributes$style, 'box-shadow', '0 4px 12px rgba(0,0,0,0.15)'),
 										A2($elm$html$Html$Attributes$style, 'padding', '12px'),
+										A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
 										A2($elm$html$Html$Attributes$style, 'max-height', '300px'),
 										A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto'),
 										A2($elm$html$Html$Attributes$style, 'min-width', '300px'),
@@ -15401,7 +15402,7 @@ var $author$project$ViewHelpers$selectRuleTypeFromString = function (str) {
 };
 var $elm$html$Html$textarea = _VirtualDom_node('textarea');
 var $elm$html$Html$Attributes$title = $elm$html$Html$Attributes$stringProperty('title');
-var $author$project$ViewComponents$viewPatternSyntaxButtons = F2(
+var $author$project$ViewComponents$viewContextInputHelpers = F2(
 	function (model, fieldName) {
 		var _v0 = model.bB;
 		if (_v0.$ === 1) {
@@ -15416,245 +15417,468 @@ var $author$project$ViewComponents$viewPatternSyntaxButtons = F2(
 					return $elm$html$Html$text('');
 				} else {
 					var position = _v1.a;
-					var useTopPosition = position.bV > 450;
+					var phonology = model.a.cb.dh;
+					var vowels = A2(
+						$elm$core$List$concatMap,
+						function (cat) {
+							return $author$project$ViewHelpers$isVowelCategoryByLabel(cat.c6) ? cat.$7 : _List_Nil;
+						},
+						phonology.bY);
+					var otherSymbols = A2(
+						$elm$core$List$concatMap,
+						function (cat) {
+							return (!($author$project$ViewHelpers$isConsonantCategoryByLabel(cat.c6) || $author$project$ViewHelpers$isVowelCategoryByLabel(cat.c6))) ? cat.$7 : _List_Nil;
+						},
+						phonology.bY);
+					var estimatedDropdownHeight = 400;
+					var diphthongs = phonology.cT;
+					var consonants = A2(
+						$elm$core$List$concatMap,
+						function (cat) {
+							return $author$project$ViewHelpers$isConsonantCategoryByLabel(cat.c6) ? cat.$7 : _List_Nil;
+						},
+						phonology.bY);
+					var availableSpaceBelow = model.cG - position.bV;
+					var useTopPosition = _Utils_cmp(availableSpaceBelow, estimatedDropdownHeight) < 0;
 					return A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
+								$elm$html$Html$Attributes$class('ipa-helpers-container'),
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								useTopPosition ? A2($elm$html$Html$Attributes$style, 'bottom', '100%') : A2($elm$html$Html$Attributes$style, 'top', '100%'),
+								A2($elm$html$Html$Attributes$style, 'left', '0'),
+								useTopPosition ? A2($elm$html$Html$Attributes$style, 'margin-bottom', '4px') : A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
+								A2($elm$html$Html$Attributes$style, 'z-index', '1000'),
+								A2($elm$html$Html$Attributes$style, 'max-width', 'calc(100vw - 20px)'),
 								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-								A2($elm$html$Html$Attributes$style, 'gap', '4px'),
-								A2($elm$html$Html$Attributes$style, 'background', 'white'),
-								A2($elm$html$Html$Attributes$style, 'padding', '8px'),
-								A2($elm$html$Html$Attributes$style, 'border', '2px solid #e2e8f0'),
-								A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
-								A2($elm$html$Html$Attributes$style, 'box-shadow', '0 4px 12px rgba(0,0,0,0.15)'),
-								A2($elm$html$Html$Attributes$style, 'flex-wrap', 'wrap'),
-								A2($elm$html$Html$Attributes$style, 'margin-left', '8px')
+								A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
+								A2($elm$html$Html$Attributes$style, 'align-items', 'flex-start')
 							]),
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$button,
+								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$Events$custom,
-										'mousedown',
-										$elm$json$Json$Decode$succeed(
-											{
-												l: A2($author$project$Msg$InsertIPASymbol, fieldName, '#'),
-												m: true,
-												n: false
-											})),
-										A2(
-										$elm$html$Html$Events$custom,
-										'touchstart',
-										$elm$json$Json$Decode$succeed(
-											{
-												l: A2($author$project$Msg$InsertIPASymbol, fieldName, '#'),
-												m: true,
-												n: false
-											})),
-										$elm$html$Html$Attributes$type_('button'),
-										$elm$html$Html$Attributes$title('Word Boundary - Matches the start or end of a word/syllable'),
-										A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
-										A2($elm$html$Html$Attributes$style, 'font-size', '13px'),
-										A2($elm$html$Html$Attributes$style, 'background', '#f0f9ff'),
-										A2($elm$html$Html$Attributes$style, 'border', '1px solid #0284c7'),
-										A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-										A2($elm$html$Html$Attributes$style, 'color', '#0c4a6e'),
-										A2($elm$html$Html$Attributes$style, 'font-weight', '600')
+										A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+										A2($elm$html$Html$Attributes$style, 'flex-direction', 'row'),
+										A2($elm$html$Html$Attributes$style, 'gap', '4px'),
+										A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+										A2($elm$html$Html$Attributes$style, 'flex-wrap', 'wrap')
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('#')
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('ipa-dropdown-trigger'),
+												A2(
+												$elm$html$Html$Events$custom,
+												'mousedown',
+												$elm$json$Json$Decode$succeed(
+													{e: $author$project$Msg$ToggleIPADropdown, f: true, g: false})),
+												A2(
+												$elm$html$Html$Events$custom,
+												'touchstart',
+												$elm$json$Json$Decode$succeed(
+													{e: $author$project$Msg$ToggleIPADropdown, f: true, g: false})),
+												A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+												A2($elm$html$Html$Attributes$style, 'padding', '6px 12px'),
+												A2($elm$html$Html$Attributes$style, 'background', '#e6fffa'),
+												A2($elm$html$Html$Attributes$style, 'border', '1px solid #38b2ac'),
+												A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+												A2($elm$html$Html$Attributes$style, 'font-size', '12px'),
+												A2($elm$html$Html$Attributes$style, 'font-weight', '600'),
+												A2($elm$html$Html$Attributes$style, 'color', '#234e52'),
+												A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+												A2($elm$html$Html$Attributes$style, 'user-select', 'none')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text(
+												model.aw ? 'IPA ▲' : 'IPA ▼')
+											])),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$Events$custom,
+												'mousedown',
+												$elm$json$Json$Decode$succeed(
+													{
+														e: A2($author$project$Msg$InsertIPASymbol, fieldName, '#'),
+														f: true,
+														g: false
+													})),
+												A2(
+												$elm$html$Html$Events$custom,
+												'touchstart',
+												$elm$json$Json$Decode$succeed(
+													{
+														e: A2($author$project$Msg$InsertIPASymbol, fieldName, '#'),
+														f: true,
+														g: false
+													})),
+												$elm$html$Html$Attributes$type_('button'),
+												$elm$html$Html$Attributes$title('Word Boundary - Matches the start or end of a word/syllable'),
+												A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
+												A2($elm$html$Html$Attributes$style, 'font-size', '13px'),
+												A2($elm$html$Html$Attributes$style, 'background', '#f0f9ff'),
+												A2($elm$html$Html$Attributes$style, 'border', '1px solid #0284c7'),
+												A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+												A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+												A2($elm$html$Html$Attributes$style, 'color', '#0c4a6e'),
+												A2($elm$html$Html$Attributes$style, 'font-weight', '600')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('#')
+											])),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$Events$custom,
+												'mousedown',
+												$elm$json$Json$Decode$succeed(
+													{
+														e: A2($author$project$Msg$InsertIPASymbol, fieldName, 'V'),
+														f: true,
+														g: false
+													})),
+												A2(
+												$elm$html$Html$Events$custom,
+												'touchstart',
+												$elm$json$Json$Decode$succeed(
+													{
+														e: A2($author$project$Msg$InsertIPASymbol, fieldName, 'V'),
+														f: true,
+														g: false
+													})),
+												$elm$html$Html$Attributes$type_('button'),
+												$elm$html$Html$Attributes$title('Vowel - Matches any vowel sound'),
+												A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
+												A2($elm$html$Html$Attributes$style, 'font-size', '13px'),
+												A2($elm$html$Html$Attributes$style, 'background', '#f0fdf4'),
+												A2($elm$html$Html$Attributes$style, 'border', '1px solid #16a34a'),
+												A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+												A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+												A2($elm$html$Html$Attributes$style, 'color', '#14532d'),
+												A2($elm$html$Html$Attributes$style, 'font-weight', '600')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('V')
+											])),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$Events$custom,
+												'mousedown',
+												$elm$json$Json$Decode$succeed(
+													{
+														e: A2($author$project$Msg$InsertIPASymbol, fieldName, 'V̆'),
+														f: true,
+														g: false
+													})),
+												A2(
+												$elm$html$Html$Events$custom,
+												'touchstart',
+												$elm$json$Json$Decode$succeed(
+													{
+														e: A2($author$project$Msg$InsertIPASymbol, fieldName, 'V̆'),
+														f: true,
+														g: false
+													})),
+												$elm$html$Html$Attributes$type_('button'),
+												$elm$html$Html$Attributes$title('Short Vowel - Matches short/lax vowels like ɪ, ɛ, æ, ʌ, ʊ, ɒ, ə'),
+												A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
+												A2($elm$html$Html$Attributes$style, 'font-size', '13px'),
+												A2($elm$html$Html$Attributes$style, 'background', '#fef3c7'),
+												A2($elm$html$Html$Attributes$style, 'border', '1px solid #ca8a04'),
+												A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+												A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+												A2($elm$html$Html$Attributes$style, 'color', '#713f12'),
+												A2($elm$html$Html$Attributes$style, 'font-weight', '600')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('V̆')
+											])),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$Events$custom,
+												'mousedown',
+												$elm$json$Json$Decode$succeed(
+													{
+														e: A2($author$project$Msg$InsertIPASymbol, fieldName, 'C'),
+														f: true,
+														g: false
+													})),
+												A2(
+												$elm$html$Html$Events$custom,
+												'touchstart',
+												$elm$json$Json$Decode$succeed(
+													{
+														e: A2($author$project$Msg$InsertIPASymbol, fieldName, 'C'),
+														f: true,
+														g: false
+													})),
+												$elm$html$Html$Attributes$type_('button'),
+												$elm$html$Html$Attributes$title('Consonant - Matches any consonant sound'),
+												A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
+												A2($elm$html$Html$Attributes$style, 'font-size', '13px'),
+												A2($elm$html$Html$Attributes$style, 'background', '#fef2f2'),
+												A2($elm$html$Html$Attributes$style, 'border', '1px solid #dc2626'),
+												A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+												A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+												A2($elm$html$Html$Attributes$style, 'color', '#7f1d1d'),
+												A2($elm$html$Html$Attributes$style, 'font-weight', '600')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('C')
+											])),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$Events$custom,
+												'mousedown',
+												$elm$json$Json$Decode$succeed(
+													{
+														e: A2($author$project$Msg$InsertIPASymbol, fieldName, '{}'),
+														f: true,
+														g: false
+													})),
+												A2(
+												$elm$html$Html$Events$custom,
+												'touchstart',
+												$elm$json$Json$Decode$succeed(
+													{
+														e: A2($author$project$Msg$InsertIPASymbol, fieldName, '{}'),
+														f: true,
+														g: false
+													})),
+												$elm$html$Html$Attributes$type_('button'),
+												$elm$html$Html$Attributes$title('Phoneme Choice - Use {a,e,i} to match any phoneme in the set'),
+												A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
+												A2($elm$html$Html$Attributes$style, 'font-size', '13px'),
+												A2($elm$html$Html$Attributes$style, 'background', '#f5f3ff'),
+												A2($elm$html$Html$Attributes$style, 'border', '1px solid #7c3aed'),
+												A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+												A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+												A2($elm$html$Html$Attributes$style, 'color', '#4c1d95'),
+												A2($elm$html$Html$Attributes$style, 'font-weight', '600')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('{}')
+											])),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$Events$custom,
+												'mousedown',
+												$elm$json$Json$Decode$succeed(
+													{
+														e: A2($author$project$Msg$InsertIPASymbol, fieldName, '_'),
+														f: true,
+														g: false
+													})),
+												A2(
+												$elm$html$Html$Events$custom,
+												'touchstart',
+												$elm$json$Json$Decode$succeed(
+													{
+														e: A2($author$project$Msg$InsertIPASymbol, fieldName, '_'),
+														f: true,
+														g: false
+													})),
+												$elm$html$Html$Attributes$type_('button'),
+												$elm$html$Html$Attributes$title('Position - Marks where the target sound appears in the context'),
+												A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
+												A2($elm$html$Html$Attributes$style, 'font-size', '13px'),
+												A2($elm$html$Html$Attributes$style, 'background', '#fafaf9'),
+												A2($elm$html$Html$Attributes$style, 'border', '1px solid #78716c'),
+												A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+												A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+												A2($elm$html$Html$Attributes$style, 'color', '#292524'),
+												A2($elm$html$Html$Attributes$style, 'font-weight', '600')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('_')
+											]))
 									])),
-								A2(
-								$elm$html$Html$button,
+								model.aw ? A2(
+								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$Events$custom,
-										'mousedown',
-										$elm$json$Json$Decode$succeed(
-											{
-												l: A2($author$project$Msg$InsertIPASymbol, fieldName, 'V'),
-												m: true,
-												n: false
-											})),
-										A2(
-										$elm$html$Html$Events$custom,
-										'touchstart',
-										$elm$json$Json$Decode$succeed(
-											{
-												l: A2($author$project$Msg$InsertIPASymbol, fieldName, 'V'),
-												m: true,
-												n: false
-											})),
-										$elm$html$Html$Attributes$type_('button'),
-										$elm$html$Html$Attributes$title('Vowel - Matches any vowel sound'),
-										A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
-										A2($elm$html$Html$Attributes$style, 'font-size', '13px'),
-										A2($elm$html$Html$Attributes$style, 'background', '#f0fdf4'),
-										A2($elm$html$Html$Attributes$style, 'border', '1px solid #16a34a'),
-										A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-										A2($elm$html$Html$Attributes$style, 'color', '#14532d'),
-										A2($elm$html$Html$Attributes$style, 'font-weight', '600')
+										$elm$html$Html$Attributes$class('ipa-dropdown-content'),
+										A2($elm$html$Html$Attributes$style, 'background', 'white'),
+										A2($elm$html$Html$Attributes$style, 'border', '2px solid #38b2ac'),
+										A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
+										A2($elm$html$Html$Attributes$style, 'box-shadow', '0 4px 12px rgba(0,0,0,0.15)'),
+										A2($elm$html$Html$Attributes$style, 'padding', '12px'),
+										A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
+										A2($elm$html$Html$Attributes$style, 'max-height', '300px'),
+										A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto'),
+										A2($elm$html$Html$Attributes$style, 'min-width', '300px'),
+										A2($elm$html$Html$Attributes$style, 'max-width', 'min(500px, calc(100vw - 20px))')
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('V')
-									])),
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$Events$custom,
-										'mousedown',
-										$elm$json$Json$Decode$succeed(
-											{
-												l: A2($author$project$Msg$InsertIPASymbol, fieldName, 'V̆'),
-												m: true,
-												n: false
-											})),
-										A2(
-										$elm$html$Html$Events$custom,
-										'touchstart',
-										$elm$json$Json$Decode$succeed(
-											{
-												l: A2($author$project$Msg$InsertIPASymbol, fieldName, 'V̆'),
-												m: true,
-												n: false
-											})),
-										$elm$html$Html$Attributes$type_('button'),
-										$elm$html$Html$Attributes$title('Short Vowel - Matches short/lax vowels like ɪ, ɛ, æ, ʌ, ʊ, ɒ, ə'),
-										A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
-										A2($elm$html$Html$Attributes$style, 'font-size', '13px'),
-										A2($elm$html$Html$Attributes$style, 'background', '#fef3c7'),
-										A2($elm$html$Html$Attributes$style, 'border', '1px solid #ca8a04'),
-										A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-										A2($elm$html$Html$Attributes$style, 'color', '#713f12'),
-										A2($elm$html$Html$Attributes$style, 'font-weight', '600')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('V̆')
-									])),
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$Events$custom,
-										'mousedown',
-										$elm$json$Json$Decode$succeed(
-											{
-												l: A2($author$project$Msg$InsertIPASymbol, fieldName, 'C'),
-												m: true,
-												n: false
-											})),
-										A2(
-										$elm$html$Html$Events$custom,
-										'touchstart',
-										$elm$json$Json$Decode$succeed(
-											{
-												l: A2($author$project$Msg$InsertIPASymbol, fieldName, 'C'),
-												m: true,
-												n: false
-											})),
-										$elm$html$Html$Attributes$type_('button'),
-										$elm$html$Html$Attributes$title('Consonant - Matches any consonant sound'),
-										A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
-										A2($elm$html$Html$Attributes$style, 'font-size', '13px'),
-										A2($elm$html$Html$Attributes$style, 'background', '#fef2f2'),
-										A2($elm$html$Html$Attributes$style, 'border', '1px solid #dc2626'),
-										A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-										A2($elm$html$Html$Attributes$style, 'color', '#7f1d1d'),
-										A2($elm$html$Html$Attributes$style, 'font-weight', '600')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('C')
-									])),
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$Events$custom,
-										'mousedown',
-										$elm$json$Json$Decode$succeed(
-											{
-												l: A2($author$project$Msg$InsertIPASymbol, fieldName, '{}'),
-												m: true,
-												n: false
-											})),
-										A2(
-										$elm$html$Html$Events$custom,
-										'touchstart',
-										$elm$json$Json$Decode$succeed(
-											{
-												l: A2($author$project$Msg$InsertIPASymbol, fieldName, '{}'),
-												m: true,
-												n: false
-											})),
-										$elm$html$Html$Attributes$type_('button'),
-										$elm$html$Html$Attributes$title('Phoneme Choice - Use {a,e,i} to match any phoneme in the set'),
-										A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
-										A2($elm$html$Html$Attributes$style, 'font-size', '13px'),
-										A2($elm$html$Html$Attributes$style, 'background', '#f5f3ff'),
-										A2($elm$html$Html$Attributes$style, 'border', '1px solid #7c3aed'),
-										A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-										A2($elm$html$Html$Attributes$style, 'color', '#4c1d95'),
-										A2($elm$html$Html$Attributes$style, 'font-weight', '600')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('{}')
-									])),
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$Events$custom,
-										'mousedown',
-										$elm$json$Json$Decode$succeed(
-											{
-												l: A2($author$project$Msg$InsertIPASymbol, fieldName, '_'),
-												m: true,
-												n: false
-											})),
-										A2(
-										$elm$html$Html$Events$custom,
-										'touchstart',
-										$elm$json$Json$Decode$succeed(
-											{
-												l: A2($author$project$Msg$InsertIPASymbol, fieldName, '_'),
-												m: true,
-												n: false
-											})),
-										$elm$html$Html$Attributes$type_('button'),
-										$elm$html$Html$Attributes$title('Position - Marks where the target sound appears in the context'),
-										A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
-										A2($elm$html$Html$Attributes$style, 'font-size', '13px'),
-										A2($elm$html$Html$Attributes$style, 'background', '#fafaf9'),
-										A2($elm$html$Html$Attributes$style, 'border', '1px solid #78716c'),
-										A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-										A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-										A2($elm$html$Html$Attributes$style, 'color', '#292524'),
-										A2($elm$html$Html$Attributes$style, 'font-weight', '600')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('_')
-									]))
+										(!$elm$core$List$isEmpty(consonants)) ? A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												A2($elm$html$Html$Attributes$style, 'margin-bottom', '12px')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														A2($elm$html$Html$Attributes$style, 'font-weight', '600'),
+														A2($elm$html$Html$Attributes$style, 'color', '#2d3748'),
+														A2($elm$html$Html$Attributes$style, 'margin-bottom', '6px'),
+														A2($elm$html$Html$Attributes$style, 'font-size', '13px')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Consonants')
+													])),
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('ipa-symbol-grid'),
+														A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+														A2($elm$html$Html$Attributes$style, 'flex-wrap', 'wrap'),
+														A2($elm$html$Html$Attributes$style, 'gap', '0')
+													]),
+												A2(
+													$elm$core$List$map,
+													$author$project$ViewComponents$viewIPASymbol(fieldName),
+													consonants))
+											])) : $elm$html$Html$text(''),
+										(!$elm$core$List$isEmpty(otherSymbols)) ? A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												A2($elm$html$Html$Attributes$style, 'margin-bottom', '12px')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														A2($elm$html$Html$Attributes$style, 'font-weight', '600'),
+														A2($elm$html$Html$Attributes$style, 'color', '#2d3748'),
+														A2($elm$html$Html$Attributes$style, 'margin-bottom', '6px'),
+														A2($elm$html$Html$Attributes$style, 'font-size', '13px')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Other')
+													])),
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('ipa-symbol-grid'),
+														A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+														A2($elm$html$Html$Attributes$style, 'flex-wrap', 'wrap'),
+														A2($elm$html$Html$Attributes$style, 'gap', '0')
+													]),
+												A2(
+													$elm$core$List$map,
+													$author$project$ViewComponents$viewIPASymbol(fieldName),
+													otherSymbols))
+											])) : $elm$html$Html$text(''),
+										(!$elm$core$List$isEmpty(vowels)) ? A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												A2($elm$html$Html$Attributes$style, 'margin-bottom', '12px')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														A2($elm$html$Html$Attributes$style, 'font-weight', '600'),
+														A2($elm$html$Html$Attributes$style, 'color', '#2d3748'),
+														A2($elm$html$Html$Attributes$style, 'margin-bottom', '6px'),
+														A2($elm$html$Html$Attributes$style, 'font-size', '13px')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Vowels')
+													])),
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('ipa-symbol-grid'),
+														A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+														A2($elm$html$Html$Attributes$style, 'flex-wrap', 'wrap'),
+														A2($elm$html$Html$Attributes$style, 'gap', '0')
+													]),
+												A2(
+													$elm$core$List$map,
+													$author$project$ViewComponents$viewIPASymbol(fieldName),
+													vowels))
+											])) : $elm$html$Html$text(''),
+										(!$elm$core$List$isEmpty(diphthongs)) ? A2(
+										$elm$html$Html$div,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														A2($elm$html$Html$Attributes$style, 'font-weight', '600'),
+														A2($elm$html$Html$Attributes$style, 'color', '#2d3748'),
+														A2($elm$html$Html$Attributes$style, 'margin-bottom', '6px'),
+														A2($elm$html$Html$Attributes$style, 'font-size', '13px')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Diphthongs')
+													])),
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('ipa-symbol-grid'),
+														A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+														A2($elm$html$Html$Attributes$style, 'flex-wrap', 'wrap'),
+														A2($elm$html$Html$Attributes$style, 'gap', '0')
+													]),
+												A2(
+													$elm$core$List$map,
+													$author$project$ViewComponents$viewIPASymbol(fieldName),
+													diphthongs))
+											])) : $elm$html$Html$text('')
+									])) : $elm$html$Html$text('')
 							]));
 				}
 			}
@@ -15888,8 +16112,7 @@ var $author$project$ViewApp$viewAddRuleModal = function (model) {
 												A2($elm$html$Html$Attributes$style, 'font-size', '1em')
 											]),
 										_List_Nil),
-										A2($author$project$ViewComponents$viewPatternSyntaxButtons, model, 'ruleContextInput'),
-										A2($author$project$ViewComponents$viewIPADropdown, model, 'ruleContextInput')
+										A2($author$project$ViewComponents$viewContextInputHelpers, model, 'ruleContextInput')
 									]))
 							])),
 						A2(
@@ -19128,7 +19351,7 @@ var $author$project$ViewLexicon$viewEditModal = function (model) {
 	if (!_v0.$) {
 		var index = _v0.a;
 		var stopProp = function (msg) {
-			return {l: msg, m: false, n: true};
+			return {e: msg, f: false, g: true};
 		};
 		var currentWord = A2($author$project$WordGeneration$getAt, index, model.a.cb.c8);
 		var semanticLinks = function () {
@@ -20721,7 +20944,7 @@ var $author$project$ViewLexicon$viewLexiconManagement = function (model) {
 							[
 								$elm$html$Html$Events$onClick($author$project$Msg$Undo),
 								$elm$html$Html$Attributes$disabled(
-								$elm$core$List$isEmpty(model.g)),
+								$elm$core$List$isEmpty(model.j)),
 								$elm$html$Html$Attributes$title('Undo (Ctrl+Z)')
 							]),
 						_List_fromArray(
@@ -25343,63 +25566,63 @@ var $author$project$Model$VowelCell = F2(
 var $author$project$IPAHelpers$classifyVowel = function (phoneme) {
 	switch (phoneme) {
 		case 'i':
-			return {e: 0, f: 0};
+			return {h: 0, i: 0};
 		case 'y':
-			return {e: 0, f: 0};
+			return {h: 0, i: 0};
 		case 'ɨ':
-			return {e: 1, f: 0};
+			return {h: 1, i: 0};
 		case 'ʉ':
-			return {e: 1, f: 0};
+			return {h: 1, i: 0};
 		case 'ɯ':
-			return {e: 2, f: 0};
+			return {h: 2, i: 0};
 		case 'u':
-			return {e: 2, f: 0};
+			return {h: 2, i: 0};
 		case 'ɪ':
-			return {e: 0, f: 1};
+			return {h: 0, i: 1};
 		case 'ʏ':
-			return {e: 0, f: 1};
+			return {h: 0, i: 1};
 		case 'ʊ':
-			return {e: 2, f: 1};
+			return {h: 2, i: 1};
 		case 'e':
-			return {e: 0, f: 2};
+			return {h: 0, i: 2};
 		case 'ø':
-			return {e: 0, f: 2};
+			return {h: 0, i: 2};
 		case 'ɘ':
-			return {e: 1, f: 2};
+			return {h: 1, i: 2};
 		case 'ɵ':
-			return {e: 1, f: 2};
+			return {h: 1, i: 2};
 		case 'ɤ':
-			return {e: 2, f: 2};
+			return {h: 2, i: 2};
 		case 'o':
-			return {e: 2, f: 2};
+			return {h: 2, i: 2};
 		case 'ə':
-			return {e: 1, f: 3};
+			return {h: 1, i: 3};
 		case 'ɛ':
-			return {e: 0, f: 4};
+			return {h: 0, i: 4};
 		case 'œ':
-			return {e: 0, f: 4};
+			return {h: 0, i: 4};
 		case 'ɜ':
-			return {e: 1, f: 4};
+			return {h: 1, i: 4};
 		case 'ɞ':
-			return {e: 1, f: 4};
+			return {h: 1, i: 4};
 		case 'ʌ':
-			return {e: 2, f: 4};
+			return {h: 2, i: 4};
 		case 'ɔ':
-			return {e: 2, f: 4};
+			return {h: 2, i: 4};
 		case 'æ':
-			return {e: 0, f: 5};
+			return {h: 0, i: 5};
 		case 'ɐ':
-			return {e: 1, f: 5};
+			return {h: 1, i: 5};
 		case 'a':
-			return {e: 0, f: 6};
+			return {h: 0, i: 6};
 		case 'ɶ':
-			return {e: 0, f: 6};
+			return {h: 0, i: 6};
 		case 'ɑ':
-			return {e: 2, f: 6};
+			return {h: 2, i: 6};
 		case 'ɒ':
-			return {e: 2, f: 6};
+			return {h: 2, i: 6};
 		default:
-			return {e: 1, f: 6};
+			return {h: 1, i: 6};
 	}
 };
 var $author$project$ViewPhonology$viewStaticVowelChart = F2(
@@ -25463,7 +25686,7 @@ var $author$project$ViewPhonology$viewStaticVowelChart = F2(
 					$elm$core$List$filter,
 					function (sound) {
 						var classification = $author$project$IPAHelpers$classifyVowel(sound);
-						return _Utils_eq(classification.f, height) && _Utils_eq(classification.e, backness);
+						return _Utils_eq(classification.i, height) && _Utils_eq(classification.h, backness);
 					},
 					A2($elm$core$List$filter, $author$project$PhonologyHelpers$isVowelSound, allSounds));
 			});
@@ -26030,8 +26253,7 @@ var $author$project$ViewPhonology$viewOrthographySection = function (model) {
 										_List_fromArray(
 											[
 												A2($elm$html$Html$Attributes$style, 'position', 'relative'),
-												A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-												A2($elm$html$Html$Attributes$style, 'align-items', 'center')
+												A2($elm$html$Html$Attributes$style, 'display', 'inline-block')
 											]),
 										_List_fromArray(
 											[
@@ -26053,8 +26275,7 @@ var $author$project$ViewPhonology$viewOrthographySection = function (model) {
 														$elm$html$Html$Attributes$title('Optional context: _C (before consonant), V_ (after vowel), V̆_ (after short vowel), _{r,t} (before r or t)')
 													]),
 												_List_Nil),
-												A2($author$project$ViewComponents$viewPatternSyntaxButtons, model, 'graphemeContext'),
-												A2($author$project$ViewComponents$viewIPADropdown, model, 'graphemeContext')
+												A2($author$project$ViewComponents$viewContextInputHelpers, model, 'graphemeContext')
 											])),
 										A2(
 										$elm$html$Html$input,
