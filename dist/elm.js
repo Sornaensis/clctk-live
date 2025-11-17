@@ -14247,7 +14247,6 @@ var $elm$html$Html$Events$custom = F2(
 			event,
 			$elm$virtual_dom$VirtualDom$Custom(decoder));
 	});
-var $elm$core$String$fromFloat = _String_fromNumber;
 var $author$project$ViewHelpers$isConsonantCategoryByLabel = function (label) {
 	var consonantLabels = _List_fromArray(
 		['C', 'c', 'P', 'p', 'N', 'n', 'F', 'f', 'S', 's', 'L', 'l', 'R', 'r']);
@@ -14337,28 +14336,20 @@ var $author$project$ViewComponents$viewIPADropdown = F2(
 					return $elm$html$Html$text('');
 				} else {
 					var position = _v1.a;
-					var inputTopY = position.bV - position.c4;
 					var estimatedTriggerHeight = 35;
 					var estimatedContentHeight = 365;
 					var estimatedTotalHeight = (estimatedTriggerHeight + estimatedContentHeight) + 4;
 					var availableSpaceBelow = model.cG - position.bV;
-					var availableSpaceAbove = inputTopY;
-					var useTopPosition = (_Utils_cmp(availableSpaceBelow, estimatedTotalHeight) < 0) && (_Utils_cmp(availableSpaceAbove, estimatedTotalHeight) > -1);
-					var topPosition = useTopPosition ? (inputTopY - estimatedTotalHeight) : position.bV;
+					var useTopPosition = _Utils_cmp(availableSpaceBelow, estimatedTotalHeight) < 0;
 					return A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
 								$elm$html$Html$Attributes$class('ipa-dropdown-container'),
-								A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'top',
-								$elm$core$String$fromFloat(topPosition) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'left',
-								$elm$core$String$fromFloat(position.bU) + 'px'),
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								useTopPosition ? A2($elm$html$Html$Attributes$style, 'bottom', '100%') : A2($elm$html$Html$Attributes$style, 'top', '100%'),
+								A2($elm$html$Html$Attributes$style, 'left', '0'),
+								useTopPosition ? A2($elm$html$Html$Attributes$style, 'margin-bottom', '4px') : A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
 								A2($elm$html$Html$Attributes$style, 'z-index', '1000'),
 								A2($elm$html$Html$Attributes$style, 'max-width', 'calc(100vw - 20px)'),
 								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
