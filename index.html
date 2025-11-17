@@ -680,96 +680,48 @@
 
         /* Style for included phonemes */
         .ipa-phoneme-included {
-            background: #e6fffa;
+            background: white; /* Match unhovered cell background */
             color: #234e52;
             padding: 4px 8px;
             border-radius: 4px;
             font-weight: 500;
             cursor: pointer;
-        }
-
-        /* When hovering over the chart, included phonemes in hovered cell get highlighted */
-        .ipa-cell-hoverable:hover .ipa-phoneme-included {
-            background: #b2f5ea;
-        }
-
-        .ipa-phoneme-included:hover {
-            background: #81e6d9;
-            transform: translateY(-1px);
-        }
-
-        /* Style for not included phonemes - always rendered but invisible until hover */
-        .ipa-phoneme-not-included {
-            color: white; /* Match cell background - invisible by default */
-            padding: 4px 8px;
-            border-radius: 4px;
-            opacity: 1;
             transition: all 0.2s;
-            cursor: pointer;
         }
 
-        /* When cell is hovered, match the hovered cell background color */
-        .ipa-cell-hoverable:hover .ipa-phoneme-not-included {
-            color: #f0f9ff; /* Match hovered cell background */
+        /* When hovering over the cell, included phonemes match the hovered cell background */
+        .ipa-cell-hoverable:hover .ipa-phoneme-included {
+            background: #f0f9ff; /* Match hovered cell background */
         }
 
-        /* When hovering over the entire chart, reveal all unused phonemes */
-        .ipa-grid:hover .ipa-phoneme-not-included {
-            color: #a0aec0; /* Gray color to indicate not included */
-            opacity: 0.5;
-        }
-
-        /* When hovering over a specific unused phoneme, make it more visible */
-        .ipa-phoneme-not-included:hover {
-            background: #edf2f7;
-            color: #718096;
-            opacity: 0.8;
+        /* When hovering over a specific included phoneme, highlight it */
+        .ipa-phoneme-included:hover {
+            background: #b2f5ea !important;
             transform: translateY(-1px);
         }
 
-        /* Style for not included phonemes that are ALWAYS visible (when toggle is on) */
-        .ipa-phoneme-not-included-visible {
-            background: #f7fafc;
-            color: #a0aec0;
+        /* Style for not included phonemes - always visible but with gray text */
+        .ipa-phoneme-not-included {
+            background: white; /* Match cell background */
+            color: #a0aec0; /* Gray color to indicate not included */
             padding: 4px 8px;
             border-radius: 4px;
             opacity: 0.7;
             transition: all 0.2s;
             cursor: pointer;
-            border: 1px dashed #cbd5e0;
-        }
-
-        .ipa-phoneme-not-included-visible:hover {
-            background: #edf2f7;
-            color: #718096;
-            opacity: 1;
-            transform: translateY(-1px);
-            border-color: #a0aec0;
-        }
-        .ipa-phoneme-not-included {
-            color: white; /* Match cell background - invisible by default */
-            padding: 4px 8px;
-            border-radius: 4px;
-            opacity: 1;
-            transition: all 0.2s;
         }
 
         /* When cell is hovered, match the hovered cell background color */
         .ipa-cell-hoverable:hover .ipa-phoneme-not-included {
-            color: #f0f9ff; /* Match hovered cell background */
-        }
-
-        /* When hovering over the entire chart, reveal all unused phonemes */
-        .ipa-grid:hover .ipa-phoneme-not-included {
-            color: #a0aec0; /* Gray color to indicate not included */
-            opacity: 0.5;
+            background: #f0f9ff; /* Match hovered cell background */
+            color: #a0aec0; /* Keep gray color */
         }
 
         /* When hovering over a specific unused phoneme, make it more visible */
         .ipa-phoneme-not-included:hover {
-            background: #edf2f7;
-            color: #718096;
-            opacity: 0.8;
+            background: #edf2f7 !important;
+            color: #718096 !important;
+            opacity: 1;
             transform: translateY(-1px);
         }
 
