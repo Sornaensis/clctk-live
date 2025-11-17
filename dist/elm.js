@@ -6012,9 +6012,13 @@ var $author$project$MorphologyHelpers$applyMorpheme = F2(
 		} else {
 			var morphForm = A3(
 				$elm$core$String$replace,
-				'...',
+				'Ø',
 				'',
-				A3($elm$core$String$replace, '-', '', morpheme.bx));
+				A3(
+					$elm$core$String$replace,
+					'...',
+					'',
+					A3($elm$core$String$replace, '-', '', morpheme.bx)));
 			var _v0 = morpheme.c6;
 			switch (_v0) {
 				case 0:
@@ -7487,8 +7491,244 @@ var $author$project$Templates$quenyaTemplate = {
 	},
 	R: 'Quenya-inspired'
 };
+var $author$project$Templates$russianTemplate = {
+	aZ: 'A template based on Russian phonology and morphology with Latin orthography (no diacritics) and comprehensive inflectional system',
+	by: 0,
+	c2: true,
+	b6: {
+		cX: _List_Nil,
+		c4: $elm$core$Maybe$Nothing,
+		c5: _List_Nil,
+		c7: {
+			bw: _List_fromArray(
+				[
+					{
+					R: 'Number',
+					dq: _List_fromArray(
+						['singular', 'plural'])
+				},
+					{
+					R: 'Gender',
+					dq: _List_fromArray(
+						['masculine', 'feminine', 'neuter'])
+				},
+					{
+					R: 'Case',
+					dq: _List_fromArray(
+						['nominative', 'accusative', 'genitive', 'dative', 'instrumental', 'prepositional'])
+				},
+					{
+					R: 'Animacy',
+					dq: _List_fromArray(
+						['animate', 'inanimate'])
+				},
+					{
+					R: 'Tense',
+					dq: _List_fromArray(
+						['past', 'present', 'future'])
+				},
+					{
+					R: 'Aspect',
+					dq: _List_fromArray(
+						['perfective', 'imperfective'])
+				},
+					{
+					R: 'Person',
+					dq: _List_fromArray(
+						['1st', '2nd', '3rd'])
+				}
+				]),
+			bD: _List_fromArray(
+				[
+					{cV: 'Case', bx: '-Ø', cY: 'NOM.SG.M', c6: 1, dp: 'nominative'},
+					{cV: 'Case', bx: '-a', cY: 'NOM.SG.F', c6: 1, dp: 'nominative'},
+					{cV: 'Case', bx: '-o', cY: 'NOM.SG.N', c6: 1, dp: 'nominative'},
+					{cV: 'Number', bx: '-y', cY: 'NOM.PL', c6: 1, dp: 'plural'},
+					{cV: 'Number', bx: '-i', cY: 'NOM.PL.F', c6: 1, dp: 'plural'},
+					{cV: 'Case', bx: '-Ø', cY: 'ACC.SG.M.INAN', c6: 1, dp: 'accusative'},
+					{cV: 'Case', bx: '-a', cY: 'ACC.SG.M.ANIM', c6: 1, dp: 'accusative'},
+					{cV: 'Case', bx: '-u', cY: 'ACC.SG.F', c6: 1, dp: 'accusative'},
+					{cV: 'Case', bx: '-o', cY: 'ACC.SG.N', c6: 1, dp: 'accusative'},
+					{cV: 'Case', bx: '-ov', cY: 'ACC.PL.ANIM', c6: 1, dp: 'accusative'},
+					{cV: 'Case', bx: '-y', cY: 'ACC.PL.INAN', c6: 1, dp: 'accusative'},
+					{cV: 'Case', bx: '-a', cY: 'GEN.SG.M', c6: 1, dp: 'genitive'},
+					{cV: 'Case', bx: '-y', cY: 'GEN.SG.F', c6: 1, dp: 'genitive'},
+					{cV: 'Case', bx: '-a', cY: 'GEN.SG.N', c6: 1, dp: 'genitive'},
+					{cV: 'Case', bx: '-ov', cY: 'GEN.PL.M', c6: 1, dp: 'genitive'},
+					{cV: 'Case', bx: '-Ø', cY: 'GEN.PL.F', c6: 1, dp: 'genitive'},
+					{cV: 'Case', bx: '-u', cY: 'DAT.SG.M', c6: 1, dp: 'dative'},
+					{cV: 'Case', bx: '-e', cY: 'DAT.SG.F', c6: 1, dp: 'dative'},
+					{cV: 'Case', bx: '-u', cY: 'DAT.SG.N', c6: 1, dp: 'dative'},
+					{cV: 'Case', bx: '-am', cY: 'DAT.PL', c6: 1, dp: 'dative'},
+					{cV: 'Case', bx: '-om', cY: 'INST.SG.M', c6: 1, dp: 'instrumental'},
+					{cV: 'Case', bx: '-oj', cY: 'INST.SG.F', c6: 1, dp: 'instrumental'},
+					{cV: 'Case', bx: '-om', cY: 'INST.SG.N', c6: 1, dp: 'instrumental'},
+					{cV: 'Case', bx: '-ami', cY: 'INST.PL', c6: 1, dp: 'instrumental'},
+					{cV: 'Case', bx: '-e', cY: 'PREP.SG.M', c6: 1, dp: 'prepositional'},
+					{cV: 'Case', bx: '-e', cY: 'PREP.SG.F', c6: 1, dp: 'prepositional'},
+					{cV: 'Case', bx: '-e', cY: 'PREP.SG.N', c6: 1, dp: 'prepositional'},
+					{cV: 'Case', bx: '-akh', cY: 'PREP.PL', c6: 1, dp: 'prepositional'},
+					{cV: 'Person', bx: '-u', cY: '1SG.PRS', c6: 1, dp: '1st'},
+					{cV: 'Person', bx: '-esh', cY: '2SG.PRS', c6: 1, dp: '2nd'},
+					{cV: 'Person', bx: '-et', cY: '3SG.PRS', c6: 1, dp: '3rd'},
+					{cV: 'Person', bx: '-em', cY: '1PL.PRS', c6: 1, dp: '1st'},
+					{cV: 'Person', bx: '-ete', cY: '2PL.PRS', c6: 1, dp: '2nd'},
+					{cV: 'Person', bx: '-ut', cY: '3PL.PRS', c6: 1, dp: '3rd'},
+					{cV: 'Tense', bx: '-l', cY: 'PST.M', c6: 1, dp: 'past'},
+					{cV: 'Tense', bx: '-la', cY: 'PST.F', c6: 1, dp: 'past'},
+					{cV: 'Tense', bx: '-lo', cY: 'PST.N', c6: 1, dp: 'past'},
+					{cV: 'Tense', bx: '-li', cY: 'PST.PL', c6: 1, dp: 'past'},
+					{cV: 'Tense', bx: 'bu-', cY: 'FUT', c6: 0, dp: 'future'}
+				]),
+			cb: _List_fromArray(
+				[
+					{bV: '_C', aZ: 'v becomes f before voiceless consonants', R: 'Voicing Assimilation', dg: 'f', di: 0, dn: 'v'},
+					{bV: '_i', aZ: 't becomes palatalized before i', R: 'Consonant Palatalization', dg: 'tʲ', di: 0, dn: 't'},
+					{bV: '_i', aZ: 'd becomes palatalized before i', R: 'Consonant Palatalization', dg: 'dʲ', di: 0, dn: 'd'},
+					{bV: '', aZ: 'o reduces to a in unstressed positions', R: 'Vowel Reduction', dg: 'a', di: 1, dn: 'o'},
+					{bV: '_C#', aZ: 'final e may delete after consonant', R: 'Yer deletion', dg: '', di: 1, dn: 'e'},
+					{bV: '_e', aZ: 'k becomes palatalized before e', R: 'Stem-final consonant softening', dg: 'kʲ', di: 0, dn: 'k'},
+					{bV: '_i', aZ: 'k becomes palatalized before i', R: 'Stem-final consonant softening', dg: 'kʲ', di: 0, dn: 'k'}
+				]),
+			cf: _List_Nil
+		},
+		de: {
+			bT: _List_fromArray(
+				[
+					{
+					c3: 'C',
+					R: 'Consonants',
+					dl: _List_fromArray(
+						['p', 'b', 't', 'd', 'k', 'g', 'f', 'v', 's', 'z', 'ts', 'tʃ', 'ʃ', 'ʒ', 'x', 'm', 'n', 'l', 'r', 'j'])
+				},
+					{
+					c3: 'P',
+					R: 'PalatalizedConsonants',
+					dl: _List_fromArray(
+						['pʲ', 'bʲ', 'tʲ', 'dʲ', 'kʲ', 'gʲ', 'fʲ', 'vʲ', 'sʲ', 'zʲ', 'mʲ', 'nʲ', 'lʲ', 'rʲ'])
+				},
+					{
+					c3: 'V',
+					R: 'Vowels',
+					dl: _List_fromArray(
+						['a', 'e', 'i', 'o', 'u', 'ɨ'])
+				}
+				]),
+			cO: _List_fromArray(
+				[
+					{cN: 0, aZ: 'Illegal cluster: *tl', dk: 'tl'},
+					{cN: 0, aZ: 'Illegal cluster: *dl', dk: 'dl'},
+					{cN: 0, aZ: 'Illegal cluster: *pb', dk: 'pb'},
+					{cN: 0, aZ: 'Illegal cluster: *bp', dk: 'bp'},
+					{cN: 0, aZ: 'Illegal cluster: *td', dk: 'td'},
+					{cN: 0, aZ: 'Illegal cluster: *dt', dk: 'dt'},
+					{cN: 0, aZ: 'Illegal cluster: *kg', dk: 'kg'},
+					{cN: 0, aZ: 'Illegal cluster: *gk', dk: 'gk'},
+					{cN: 0, aZ: 'Illegal cluster: *fv', dk: 'fv'},
+					{cN: 0, aZ: 'Illegal cluster: *vf', dk: 'vf'},
+					{cN: 0, aZ: 'Illegal cluster: *sz', dk: 'sz'},
+					{cN: 0, aZ: 'Illegal cluster: *zs', dk: 'zs'},
+					{cN: 0, aZ: 'Illegal cluster: *ʃʒ', dk: 'ʃʒ'},
+					{cN: 0, aZ: 'Illegal cluster: *ʒʃ', dk: 'ʒʃ'},
+					{cN: 0, aZ: 'Illegal cluster: *tʃʒ', dk: 'tʃʒ'},
+					{cN: 0, aZ: 'Illegal cluster: *nm', dk: 'nm'},
+					{cN: 0, aZ: 'Illegal cluster: *mn', dk: 'mn'},
+					{cN: 0, aZ: 'Illegal cluster: *lr', dk: 'lr'},
+					{cN: 0, aZ: 'Illegal cluster: *rl', dk: 'rl'},
+					{cN: 0, aZ: 'Illegal cluster: *fm', dk: 'fm'},
+					{cN: 0, aZ: 'Illegal cluster: *vm', dk: 'vm'},
+					{cN: 0, aZ: 'Illegal cluster: *xm', dk: 'xm'},
+					{cN: 0, aZ: 'Illegal cluster: *xn', dk: 'xn'},
+					{cN: 0, aZ: 'Illegal cluster: *fn', dk: 'fn'},
+					{cN: 0, aZ: 'Illegal cluster: *vn', dk: 'vn'},
+					{cN: 0, aZ: 'Illegal cluster: *ʃm', dk: 'ʃm'},
+					{cN: 0, aZ: 'Illegal cluster: *ʃn', dk: 'ʃn'},
+					{cN: 0, aZ: 'Illegal cluster: *ʒm', dk: 'ʒm'},
+					{cN: 0, aZ: 'Illegal cluster: *ʒn', dk: 'ʒn'},
+					{cN: 0, aZ: 'Illegal cluster: *tʃm', dk: 'tʃm'},
+					{cN: 0, aZ: 'Illegal cluster: *tʃn', dk: 'tʃn'},
+					{cN: 0, aZ: 'Illegal cluster: *xl', dk: 'xl'},
+					{cN: 0, aZ: 'Illegal cluster: *xr', dk: 'xr'},
+					{cN: 0, aZ: 'Illegal cluster: *ʃl', dk: 'ʃl'},
+					{cN: 0, aZ: 'Illegal cluster: *ʒl', dk: 'ʒl'},
+					{cN: 0, aZ: 'Illegal cluster: *tʃl', dk: 'tʃl'},
+					{cN: 0, aZ: 'Illegal cluster: *fl', dk: 'fl'},
+					{cN: 0, aZ: 'Illegal cluster: *vl', dk: 'vl'},
+					{cN: 0, aZ: 'Illegal cluster: *ŋk', dk: 'ŋk'},
+					{cN: 0, aZ: 'Illegal cluster: *ŋg', dk: 'ŋg'},
+					{cN: 1, aZ: 'ŋ not allowed in syllable onset', dk: 'ŋ'},
+					{cN: 1, aZ: 'ts restricted in certain onset positions', dk: 'ts'},
+					{cN: 2, aZ: 'h not allowed in syllable coda', dk: 'h'},
+					{cN: 2, aZ: 'x restricted in certain coda positions', dk: 'x'},
+					{cN: 3, aZ: 'ŋ not allowed word-initially', dk: 'ŋ'},
+					{cN: 3, aZ: 'r rare word-initially in Russian', dk: 'r'},
+					{cN: 4, aZ: 'j not allowed word-finally', dk: 'j'}
+				]),
+			cQ: _List_Nil,
+			cd: {
+				bY: 0,
+				b3: _List_fromArray(
+					[
+						{bV: '', aZ: 'voiceless bilabial stop', cZ: 'p', dd: 'p'},
+						{bV: '', aZ: 'voiced bilabial stop', cZ: 'b', dd: 'b'},
+						{bV: '', aZ: 'voiceless alveolar stop', cZ: 't', dd: 't'},
+						{bV: '', aZ: 'voiced alveolar stop', cZ: 'd', dd: 'd'},
+						{bV: '', aZ: 'voiceless velar stop', cZ: 'k', dd: 'k'},
+						{bV: '', aZ: 'voiced velar stop', cZ: 'g', dd: 'g'},
+						{bV: '', aZ: 'voiceless labiodental fricative', cZ: 'f', dd: 'f'},
+						{bV: '', aZ: 'voiced labiodental fricative', cZ: 'v', dd: 'v'},
+						{bV: '', aZ: 'voiceless alveolar fricative', cZ: 's', dd: 's'},
+						{bV: '', aZ: 'voiced alveolar fricative', cZ: 'z', dd: 'z'},
+						{bV: '', aZ: 'voiceless alveolar affricate', cZ: 'c', dd: 'ts'},
+						{bV: '', aZ: 'voiceless postalveolar affricate', cZ: 'ch', dd: 'tʃ'},
+						{bV: '', aZ: 'voiceless postalveolar fricative', cZ: 'sh', dd: 'ʃ'},
+						{bV: '', aZ: 'voiced postalveolar fricative', cZ: 'zh', dd: 'ʒ'},
+						{bV: '', aZ: 'voiceless velar fricative', cZ: 'kh', dd: 'x'},
+						{bV: '', aZ: 'bilabial nasal', cZ: 'm', dd: 'm'},
+						{bV: '', aZ: 'alveolar nasal', cZ: 'n', dd: 'n'},
+						{bV: '', aZ: 'alveolar lateral approximant', cZ: 'l', dd: 'l'},
+						{bV: '', aZ: 'alveolar trill', cZ: 'r', dd: 'r'},
+						{bV: '', aZ: 'palatal approximant', cZ: 'y', dd: 'j'},
+						{bV: '', aZ: 'palatalized voiceless bilabial stop', cZ: 'pj', dd: 'pʲ'},
+						{bV: '', aZ: 'palatalized voiced bilabial stop', cZ: 'bj', dd: 'bʲ'},
+						{bV: '', aZ: 'palatalized voiceless alveolar stop', cZ: 'tj', dd: 'tʲ'},
+						{bV: '', aZ: 'palatalized voiced alveolar stop', cZ: 'dj', dd: 'dʲ'},
+						{bV: '', aZ: 'palatalized voiceless velar stop', cZ: 'kj', dd: 'kʲ'},
+						{bV: '', aZ: 'palatalized voiced velar stop', cZ: 'gj', dd: 'gʲ'},
+						{bV: '', aZ: 'palatalized voiceless labiodental fricative', cZ: 'fj', dd: 'fʲ'},
+						{bV: '', aZ: 'palatalized voiced labiodental fricative', cZ: 'vj', dd: 'vʲ'},
+						{bV: '', aZ: 'palatalized voiceless alveolar fricative', cZ: 'sj', dd: 'sʲ'},
+						{bV: '', aZ: 'palatalized voiced alveolar fricative', cZ: 'zj', dd: 'zʲ'},
+						{bV: '', aZ: 'palatalized bilabial nasal', cZ: 'mj', dd: 'mʲ'},
+						{bV: '', aZ: 'palatalized alveolar nasal', cZ: 'nj', dd: 'nʲ'},
+						{bV: '', aZ: 'palatalized alveolar lateral approximant', cZ: 'lj', dd: 'lʲ'},
+						{bV: '', aZ: 'palatalized alveolar trill', cZ: 'rj', dd: 'rʲ'},
+						{bV: '', aZ: 'open front unrounded vowel', cZ: 'a', dd: 'a'},
+						{bV: '', aZ: 'close-mid front unrounded vowel', cZ: 'e', dd: 'e'},
+						{bV: '', aZ: 'close front unrounded vowel', cZ: 'i', dd: 'i'},
+						{bV: '', aZ: 'close-mid back rounded vowel', cZ: 'o', dd: 'o'},
+						{bV: '', aZ: 'close back rounded vowel', cZ: 'u', dd: 'u'},
+						{bV: '', aZ: 'close central unrounded vowel', cZ: 'y', dd: 'ɨ'}
+					])
+			},
+			dc: _List_fromArray(
+				[
+					{R: 'V', db: 'V'},
+					{R: 'CV', db: 'CV'},
+					{R: 'CVC', db: 'CVC'},
+					{R: 'CVCC', db: 'CVCC'},
+					{R: 'CCV', db: 'CCV'},
+					{R: 'CCVC', db: 'CCVC'},
+					{R: 'CCVCC', db: 'CCVCC'},
+					{R: 'VC', db: 'VC'},
+					{R: 'VCC', db: 'VCC'}
+				])
+		}
+	},
+	R: 'Russian-inspired'
+};
 var $author$project$Templates$availableTemplates = _List_fromArray(
-	[$author$project$Templates$quenyaTemplate, $author$project$Templates$englishTemplate]);
+	[$author$project$Templates$quenyaTemplate, $author$project$Templates$englishTemplate, $author$project$Templates$russianTemplate]);
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $author$project$UpdateHelpers$constraintTypeToDescription = F2(
 	function (constraintType, sequence) {
