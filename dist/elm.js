@@ -6165,6 +6165,15 @@ var $author$project$MorphologyHelpers$applyMorphophonemicRules = F2(
 		return A3($elm$core$List$foldl, $author$project$MorphologyHelpers$applyRule, word, sortedRules);
 	});
 var $elm$core$String$endsWith = _String_endsWith;
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -6177,8 +6186,29 @@ var $elm$core$String$right = F2(
 			string);
 	});
 var $elm$core$String$trim = _String_trim;
-var $author$project$MorphologyHelpers$applySyllableOrthography = F3(
-	function (mappings, diphthongs, syllable) {
+var $author$project$MorphologyHelpers$applySyllableOrthography = F4(
+	function (phonology, mappings, diphthongs, syllable) {
+		var matchesCustomCategory = F3(
+			function (categoryLabel, str, isEnd) {
+				var maybeCategory = $elm$core$List$head(
+					A2(
+						$elm$core$List$filter,
+						function (cat) {
+							return _Utils_eq(cat.c6, categoryLabel);
+						},
+						phonology.bY));
+				if (maybeCategory.$ === 1) {
+					return false;
+				} else {
+					var category = maybeCategory.a;
+					return A2(
+						$elm$core$List$any,
+						function (sound) {
+							return isEnd ? A2($elm$core$String$endsWith, sound, str) : A2($elm$core$String$startsWith, sound, str);
+						},
+						category.$7);
+				}
+			});
 		var isVowel = function (c) {
 			return A2(
 				$elm$core$List$member,
@@ -6226,27 +6256,27 @@ var $author$project$MorphologyHelpers$applySyllableOrthography = F3(
 						return $elm$core$String$isEmpty(before);
 					} else {
 						if (pattern === 'C') {
-							var _v7 = getLastChar(before);
-							if (!_v7.$) {
-								var c = _v7.a;
+							var _v9 = getLastChar(before);
+							if (!_v9.$) {
+								var c = _v9.a;
 								return isConsonant(c);
 							} else {
 								return false;
 							}
 						} else {
 							if (pattern === 'V') {
-								var _v8 = getLastChar(before);
-								if (!_v8.$) {
-									var c = _v8.a;
+								var _v10 = getLastChar(before);
+								if (!_v10.$) {
+									var c = _v10.a;
 									return isVowel(c);
 								} else {
 									return false;
 								}
 							} else {
 								if (pattern === 'V̆') {
-									var _v9 = getLastChar(before);
-									if (!_v9.$) {
-										var c = _v9.a;
+									var _v11 = getLastChar(before);
+									if (!_v11.$) {
+										var c = _v11.a;
 										return isShortVowel(c);
 									} else {
 										return false;
@@ -6267,7 +6297,18 @@ var $author$project$MorphologyHelpers$applySyllableOrthography = F3(
 											},
 											phonemes);
 									} else {
-										return A2($elm$core$String$endsWith, pattern, before);
+										if ($elm$core$String$length(pattern) === 1) {
+											var _v12 = $elm$core$String$uncons(pattern);
+											if (!_v12.$) {
+												var _v13 = _v12.a;
+												var _char = _v13.a;
+												return ($elm$core$Char$isUpper(_char) && ((_char !== 'C') && (_char !== 'V'))) ? A3(matchesCustomCategory, _char, before, true) : A2($elm$core$String$endsWith, pattern, before);
+											} else {
+												return false;
+											}
+										} else {
+											return A2($elm$core$String$endsWith, pattern, before);
+										}
 									}
 								}
 							}
@@ -6325,7 +6366,18 @@ var $author$project$MorphologyHelpers$applySyllableOrthography = F3(
 											},
 											phonemes);
 									} else {
-										return A2($elm$core$String$startsWith, pattern, after);
+										if ($elm$core$String$length(pattern) === 1) {
+											var _v7 = $elm$core$String$uncons(pattern);
+											if (!_v7.$) {
+												var _v8 = _v7.a;
+												var _char = _v8.a;
+												return ($elm$core$Char$isUpper(_char) && ((_char !== 'C') && (_char !== 'V'))) ? A3(matchesCustomCategory, _char, after, false) : A2($elm$core$String$startsWith, pattern, after);
+											} else {
+												return false;
+											}
+										} else {
+											return A2($elm$core$String$startsWith, pattern, after);
+										}
 									}
 								}
 							}
@@ -6434,17 +6486,38 @@ var $author$project$MorphologyHelpers$applySyllableOrthography = F3(
 			});
 		return A2(applyMapping, '', syllable);
 	});
-var $author$project$MorphologyHelpers$applyOrthography = F3(
-	function (mappings, diphthongs, word) {
+var $author$project$MorphologyHelpers$applyOrthography = F4(
+	function (phonology, mappings, diphthongs, word) {
 		var syllables = A2($elm$core$String$split, '.', word);
 		var mappedSyllables = A2(
 			$elm$core$List$map,
-			A2($author$project$MorphologyHelpers$applySyllableOrthography, mappings, diphthongs),
+			A3($author$project$MorphologyHelpers$applySyllableOrthography, phonology, mappings, diphthongs),
 			syllables);
 		return A2($elm$core$String$join, '', mappedSyllables);
 	});
-var $author$project$MorphologyHelpers$applySyllableOrthographyWithTracking = F3(
-	function (mappings, diphthongs, syllable) {
+var $author$project$MorphologyHelpers$applySyllableOrthographyWithTracking = F4(
+	function (phonology, mappings, diphthongs, syllable) {
+		var matchesCustomCategory = F3(
+			function (categoryLabel, str, isEnd) {
+				var maybeCategory = $elm$core$List$head(
+					A2(
+						$elm$core$List$filter,
+						function (cat) {
+							return _Utils_eq(cat.c6, categoryLabel);
+						},
+						phonology.bY));
+				if (maybeCategory.$ === 1) {
+					return false;
+				} else {
+					var category = maybeCategory.a;
+					return A2(
+						$elm$core$List$any,
+						function (sound) {
+							return isEnd ? A2($elm$core$String$endsWith, sound, str) : A2($elm$core$String$startsWith, sound, str);
+						},
+						category.$7);
+				}
+			});
 		var isVowel = function (c) {
 			return A2(
 				$elm$core$List$member,
@@ -6492,27 +6565,27 @@ var $author$project$MorphologyHelpers$applySyllableOrthographyWithTracking = F3(
 						return $elm$core$String$isEmpty(before);
 					} else {
 						if (pattern === 'C') {
-							var _v9 = getLastChar(before);
-							if (!_v9.$) {
-								var c = _v9.a;
+							var _v11 = getLastChar(before);
+							if (!_v11.$) {
+								var c = _v11.a;
 								return isConsonant(c);
 							} else {
 								return false;
 							}
 						} else {
 							if (pattern === 'V') {
-								var _v10 = getLastChar(before);
-								if (!_v10.$) {
-									var c = _v10.a;
+								var _v12 = getLastChar(before);
+								if (!_v12.$) {
+									var c = _v12.a;
 									return isVowel(c);
 								} else {
 									return false;
 								}
 							} else {
 								if (pattern === 'V̆') {
-									var _v11 = getLastChar(before);
-									if (!_v11.$) {
-										var c = _v11.a;
+									var _v13 = getLastChar(before);
+									if (!_v13.$) {
+										var c = _v13.a;
 										return isShortVowel(c);
 									} else {
 										return false;
@@ -6533,7 +6606,18 @@ var $author$project$MorphologyHelpers$applySyllableOrthographyWithTracking = F3(
 											},
 											phonemes);
 									} else {
-										return A2($elm$core$String$endsWith, pattern, before);
+										if ($elm$core$String$length(pattern) === 1) {
+											var _v14 = $elm$core$String$uncons(pattern);
+											if (!_v14.$) {
+												var _v15 = _v14.a;
+												var _char = _v15.a;
+												return ($elm$core$Char$isUpper(_char) && ((_char !== 'C') && (_char !== 'V'))) ? A3(matchesCustomCategory, _char, before, true) : A2($elm$core$String$endsWith, pattern, before);
+											} else {
+												return false;
+											}
+										} else {
+											return A2($elm$core$String$endsWith, pattern, before);
+										}
 									}
 								}
 							}
@@ -6591,7 +6675,18 @@ var $author$project$MorphologyHelpers$applySyllableOrthographyWithTracking = F3(
 											},
 											phonemes);
 									} else {
-										return A2($elm$core$String$startsWith, pattern, after);
+										if ($elm$core$String$length(pattern) === 1) {
+											var _v9 = $elm$core$String$uncons(pattern);
+											if (!_v9.$) {
+												var _v10 = _v9.a;
+												var _char = _v10.a;
+												return ($elm$core$Char$isUpper(_char) && ((_char !== 'C') && (_char !== 'V'))) ? A3(matchesCustomCategory, _char, after, false) : A2($elm$core$String$startsWith, pattern, after);
+											} else {
+												return false;
+											}
+										} else {
+											return A2($elm$core$String$startsWith, pattern, after);
+										}
 									}
 								}
 							}
@@ -6731,12 +6826,12 @@ var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
 };
-var $author$project$MorphologyHelpers$applyOrthographyWithTracking = F3(
-	function (mappings, diphthongs, word) {
+var $author$project$MorphologyHelpers$applyOrthographyWithTracking = F4(
+	function (phonology, mappings, diphthongs, word) {
 		var syllables = A2($elm$core$String$split, '.', word);
 		var results = A2(
 			$elm$core$List$map,
-			A2($author$project$MorphologyHelpers$applySyllableOrthographyWithTracking, mappings, diphthongs),
+			A3($author$project$MorphologyHelpers$applySyllableOrthographyWithTracking, phonology, mappings, diphthongs),
 			syllables);
 		var mappedSyllables = A2($elm$core$List$map, $elm$core$Tuple$first, results);
 		var allTriggeredRules = A2($elm$core$List$concatMap, $elm$core$Tuple$second, results);
@@ -6974,15 +7069,6 @@ var $author$project$MorphologyHelpers$replaceAfterVowel = F3(
 		return $elm$core$String$fromList(
 			A4($author$project$MorphologyHelpers$replaceAfterVowelHelper, patternChars, replacement, chars, $elm$core$Maybe$Nothing));
 	});
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
 var $author$project$MorphologyHelpers$matchesPatternBeforeVowel = F2(
 	function (patternChars, chars) {
 		var patternLen = $elm$core$List$length(patternChars);
@@ -7193,10 +7279,10 @@ var $elm$core$Task$attempt = F2(
 					task)));
 	});
 var $author$project$Types$Circumfix = 3;
-var $author$project$Types$CodaRestriction = 2;
+var $author$project$Types$CodaRestriction = 3;
 var $author$project$Types$Dissimilation = 1;
-var $author$project$Types$NoWordInitial = 3;
-var $author$project$Types$OnsetRestriction = 1;
+var $author$project$Types$NoWordInitial = 4;
+var $author$project$Types$OnsetRestriction = 2;
 var $author$project$Types$Prefix = 0;
 var $author$project$Templates$englishTemplate = {
 	a$: 'A template based on English phonology with common Germanic patterns',
@@ -7270,11 +7356,11 @@ var $author$project$Templates$englishTemplate = {
 					{cQ: 0, a$: 'Illegal cluster: *dl', dn: 'dl'},
 					{cQ: 0, a$: 'Illegal cluster: *bn', dn: 'bn'},
 					{cQ: 0, a$: 'Illegal cluster: *pn (word-initially)', dn: 'pn'},
-					{cQ: 1, a$: 'ŋ not allowed in syllable onset', dn: 'ŋ'},
-					{cQ: 2, a$: 'h not allowed in syllable coda', dn: 'h'},
-					{cQ: 2, a$: 'w not allowed in syllable coda', dn: 'w'},
-					{cQ: 2, a$: 'j not allowed in syllable coda', dn: 'j'},
-					{cQ: 3, a$: 'ŋ not allowed word-initially', dn: 'ŋ'}
+					{cQ: 2, a$: 'ŋ not allowed in syllable onset', dn: 'ŋ'},
+					{cQ: 3, a$: 'h not allowed in syllable coda', dn: 'h'},
+					{cQ: 3, a$: 'w not allowed in syllable coda', dn: 'w'},
+					{cQ: 3, a$: 'j not allowed in syllable coda', dn: 'j'},
+					{cQ: 4, a$: 'ŋ not allowed word-initially', dn: 'ŋ'}
 				]),
 			cT: _List_fromArray(
 				['aɪ', 'aʊ', 'ɔɪ', 'eɪ', 'oʊ']),
@@ -7350,7 +7436,7 @@ var $author$project$Templates$englishTemplate = {
 	},
 	R: 'English-inspired'
 };
-var $author$project$Types$NoWordFinal = 4;
+var $author$project$Types$NoWordFinal = 5;
 var $author$project$Types$VowelHarmony = 2;
 var $author$project$Templates$quenyaTemplate = {
 	a$: 'A template based on Tolkien\'s Quenya with a flowing, vowel-rich phonology',
@@ -7422,11 +7508,11 @@ var $author$project$Templates$quenyaTemplate = {
 					{cQ: 0, a$: 'Illegal cluster: *fn', dn: 'fn'},
 					{cQ: 0, a$: 'Illegal cluster: *tl', dn: 'tl'},
 					{cQ: 0, a$: 'Illegal cluster: *sr', dn: 'sr'},
-					{cQ: 1, a$: 'ŋ not allowed in syllable onset', dn: 'ŋ'},
-					{cQ: 2, a$: 'h not allowed in syllable coda', dn: 'h'},
-					{cQ: 2, a$: 'j not allowed in syllable coda', dn: 'j'},
-					{cQ: 4, a$: 'w not allowed word-finally', dn: 'w'},
-					{cQ: 3, a$: 'ŋ not allowed word-initially', dn: 'ŋ'}
+					{cQ: 2, a$: 'ŋ not allowed in syllable onset', dn: 'ŋ'},
+					{cQ: 3, a$: 'h not allowed in syllable coda', dn: 'h'},
+					{cQ: 3, a$: 'j not allowed in syllable coda', dn: 'j'},
+					{cQ: 5, a$: 'w not allowed word-finally', dn: 'w'},
+					{cQ: 4, a$: 'ŋ not allowed word-initially', dn: 'ŋ'}
 				]),
 			cT: _List_fromArray(
 				['ai', 'ei', 'oi', 'ui', 'au', 'eu', 'iu']),
@@ -7656,13 +7742,13 @@ var $author$project$Templates$russianTemplate = {
 					{cQ: 0, a$: 'Illegal cluster: *vl', dn: 'vl'},
 					{cQ: 0, a$: 'Illegal cluster: *ŋk', dn: 'ŋk'},
 					{cQ: 0, a$: 'Illegal cluster: *ŋg', dn: 'ŋg'},
-					{cQ: 1, a$: 'ŋ not allowed in syllable onset', dn: 'ŋ'},
-					{cQ: 1, a$: 'ts restricted in certain onset positions', dn: 'ts'},
-					{cQ: 2, a$: 'h not allowed in syllable coda', dn: 'h'},
-					{cQ: 2, a$: 'x restricted in certain coda positions', dn: 'x'},
-					{cQ: 3, a$: 'ŋ not allowed word-initially', dn: 'ŋ'},
-					{cQ: 3, a$: 'r rare word-initially in Russian', dn: 'r'},
-					{cQ: 4, a$: 'j not allowed word-finally', dn: 'j'}
+					{cQ: 2, a$: 'ŋ not allowed in syllable onset', dn: 'ŋ'},
+					{cQ: 2, a$: 'ts restricted in certain onset positions', dn: 'ts'},
+					{cQ: 3, a$: 'h not allowed in syllable coda', dn: 'h'},
+					{cQ: 3, a$: 'x restricted in certain coda positions', dn: 'x'},
+					{cQ: 4, a$: 'ŋ not allowed word-initially', dn: 'ŋ'},
+					{cQ: 4, a$: 'r rare word-initially in Russian', dn: 'r'},
+					{cQ: 5, a$: 'j not allowed word-finally', dn: 'j'}
 				]),
 			cT: _List_Nil,
 			ci: {
@@ -7736,10 +7822,12 @@ var $author$project$UpdateHelpers$constraintTypeToDescription = F2(
 			case 0:
 				return 'Illegal cluster: *' + sequence;
 			case 1:
-				return 'Not allowed in onset: ' + sequence;
+				return 'Legal cluster pattern: ' + sequence;
 			case 2:
-				return 'Not allowed in coda: ' + sequence;
+				return 'Not allowed in onset: ' + sequence;
 			case 3:
+				return 'Not allowed in coda: ' + sequence;
+			case 4:
 				return 'Not allowed word-initially: ' + sequence;
 			default:
 				return 'Not allowed word-finally: ' + sequence;
@@ -8015,20 +8103,23 @@ var $author$project$Types$PhonotacticConstraint = F3(
 	function (constraintType, sequence, description) {
 		return {cQ: constraintType, a$: description, dn: sequence};
 	});
+var $author$project$Types$LegalCluster = 1;
 var $author$project$JsonCodec$constraintTypeDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	function (str) {
 		switch (str) {
 			case 'IllegalCluster':
 				return $elm$json$Json$Decode$succeed(0);
-			case 'OnsetRestriction':
+			case 'LegalCluster':
 				return $elm$json$Json$Decode$succeed(1);
-			case 'CodaRestriction':
+			case 'OnsetRestriction':
 				return $elm$json$Json$Decode$succeed(2);
-			case 'NoWordInitial':
+			case 'CodaRestriction':
 				return $elm$json$Json$Decode$succeed(3);
-			case 'NoWordFinal':
+			case 'NoWordInitial':
 				return $elm$json$Json$Decode$succeed(4);
+			case 'NoWordFinal':
+				return $elm$json$Json$Decode$succeed(5);
 			default:
 				return $elm$json$Json$Decode$fail('Unknown constraint type: ' + str);
 		}
@@ -8489,10 +8580,12 @@ var $author$project$JsonCodec$encodeConstraintType = function (constraintType) {
 				case 0:
 					return 'IllegalCluster';
 				case 1:
-					return 'OnsetRestriction';
+					return 'LegalCluster';
 				case 2:
-					return 'CodaRestriction';
+					return 'OnsetRestriction';
 				case 3:
+					return 'CodaRestriction';
+				case 4:
 					return 'NoWordInitial';
 				default:
 					return 'NoWordFinal';
@@ -9836,7 +9929,259 @@ var $elm$core$List$all = F2(
 			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
 			list);
 	});
+var $author$project$WordGeneration$matchCategoryAtStart = F3(
+	function (phonology, categoryLabel, remaining) {
+		if ($elm$core$String$isEmpty(remaining)) {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var maybeCategory = $elm$core$List$head(
+				A2(
+					$elm$core$List$filter,
+					function (cat) {
+						return _Utils_eq(cat.c6, categoryLabel);
+					},
+					phonology.bY));
+			if (maybeCategory.$ === 1) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var category = maybeCategory.a;
+				return A2(
+					$elm$core$Maybe$map,
+					function (matched) {
+						return _Utils_Tuple2(
+							matched,
+							A2(
+								$elm$core$String$dropLeft,
+								$elm$core$String$length(matched),
+								remaining));
+					},
+					$elm$core$List$head(
+						A2(
+							$elm$core$List$filter,
+							function (sound) {
+								return A2($elm$core$String$startsWith, sound, remaining);
+							},
+							A2(
+								$elm$core$List$sortBy,
+								function (s) {
+									return -$elm$core$String$length(s);
+								},
+								category.$7))));
+			}
+		}
+	});
+var $author$project$WordGeneration$clusterMatchesPattern = F3(
+	function (phonology, pattern, cluster) {
+		var patternElements = $author$project$WordGeneration$parsePattern(pattern);
+		var matchCluster = F2(
+			function (elements, remaining) {
+				matchCluster:
+				while (true) {
+					if (!elements.b) {
+						return $elm$core$String$isEmpty(remaining);
+					} else {
+						switch (elements.a.$) {
+							case 0:
+								var _char = elements.a.a;
+								var restPattern = elements.b;
+								var _v1 = A3($author$project$WordGeneration$matchCategoryAtStart, phonology, _char, remaining);
+								if (!_v1.$) {
+									var _v2 = _v1.a;
+									var matched = _v2.a;
+									var afterMatch = _v2.b;
+									var $temp$elements = restPattern,
+										$temp$remaining = afterMatch;
+									elements = $temp$elements;
+									remaining = $temp$remaining;
+									continue matchCluster;
+								} else {
+									return false;
+								}
+							case 1:
+								var _char = elements.a.a;
+								var restPattern = elements.b;
+								var _v3 = A3($author$project$WordGeneration$matchCategoryAtStart, phonology, _char, remaining);
+								if (!_v3.$) {
+									var _v4 = _v3.a;
+									var matched = _v4.a;
+									var afterMatch = _v4.b;
+									var $temp$elements = restPattern,
+										$temp$remaining = afterMatch;
+									elements = $temp$elements;
+									remaining = $temp$remaining;
+									continue matchCluster;
+								} else {
+									var $temp$elements = restPattern,
+										$temp$remaining = remaining;
+									elements = $temp$elements;
+									remaining = $temp$remaining;
+									continue matchCluster;
+								}
+							default:
+								var chars = elements.a.a;
+								var restPattern = elements.b;
+								return A2(
+									$elm$core$List$any,
+									function (_char) {
+										var _v5 = A3($author$project$WordGeneration$matchCategoryAtStart, phonology, _char, remaining);
+										if (!_v5.$) {
+											var _v6 = _v5.a;
+											var matched = _v6.a;
+											var afterMatch = _v6.b;
+											return A2(matchCluster, restPattern, afterMatch);
+										} else {
+											return false;
+										}
+									},
+									chars);
+						}
+					}
+				}
+			});
+		return A2(matchCluster, patternElements, cluster);
+	});
 var $elm$core$Basics$ge = _Utils_ge;
+var $author$project$WordGeneration$collectConsecutiveConsonants = F3(
+	function (consonants, syllable, startPos) {
+		var helper = F2(
+			function (pos, accumulated) {
+				helper:
+				while (true) {
+					if (_Utils_cmp(
+						pos,
+						$elm$core$String$length(syllable)) > -1) {
+						return _Utils_Tuple2(accumulated, pos);
+					} else {
+						var remaining = A2($elm$core$String$dropLeft, pos, syllable);
+						var matchedConsonant = $elm$core$List$head(
+							A2(
+								$elm$core$List$filter,
+								function (c) {
+									return A2($elm$core$String$startsWith, c, remaining);
+								},
+								A2(
+									$elm$core$List$sortBy,
+									function (c) {
+										return -$elm$core$String$length(c);
+									},
+									consonants)));
+						if (!matchedConsonant.$) {
+							var cons = matchedConsonant.a;
+							var $temp$pos = pos + $elm$core$String$length(cons),
+								$temp$accumulated = _Utils_ap(accumulated, cons);
+							pos = $temp$pos;
+							accumulated = $temp$accumulated;
+							continue helper;
+						} else {
+							return _Utils_Tuple2(accumulated, pos);
+						}
+					}
+				}
+			});
+		return A2(helper, startPos, '');
+	});
+var $author$project$WordGeneration$extractConsonantClustersFromSyllable = F2(
+	function (consonants, syllable) {
+		var findConsonantAt = function (pos) {
+			if (_Utils_cmp(
+				pos,
+				$elm$core$String$length(syllable)) > -1) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var remaining = A2($elm$core$String$dropLeft, pos, syllable);
+				var matchedConsonant = $elm$core$List$head(
+					A2(
+						$elm$core$List$filter,
+						function (c) {
+							return A2($elm$core$String$startsWith, c, remaining);
+						},
+						A2(
+							$elm$core$List$sortBy,
+							function (c) {
+								return -$elm$core$String$length(c);
+							},
+							consonants)));
+				return A2(
+					$elm$core$Maybe$map,
+					function (c) {
+						return _Utils_Tuple2(c, pos);
+					},
+					matchedConsonant);
+			}
+		};
+		var collectClusters = F2(
+			function (pos, acc) {
+				collectClusters:
+				while (true) {
+					var _v0 = findConsonantAt(pos);
+					if (_v0.$ === 1) {
+						if (_Utils_cmp(
+							pos,
+							$elm$core$String$length(syllable)) > -1) {
+							return acc;
+						} else {
+							var $temp$pos = pos + 1,
+								$temp$acc = acc;
+							pos = $temp$pos;
+							acc = $temp$acc;
+							continue collectClusters;
+						}
+					} else {
+						var _v1 = _v0.a;
+						var firstCons = _v1.a;
+						var afterFirst = pos + $elm$core$String$length(firstCons);
+						var _v2 = findConsonantAt(afterFirst);
+						if (_v2.$ === 1) {
+							var $temp$pos = afterFirst,
+								$temp$acc = acc;
+							pos = $temp$pos;
+							acc = $temp$acc;
+							continue collectClusters;
+						} else {
+							var _v3 = _v2.a;
+							var secondCons = _v3.a;
+							var _v4 = A3($author$project$WordGeneration$collectConsecutiveConsonants, consonants, syllable, pos);
+							var cluster = _v4.a;
+							var endPos = _v4.b;
+							var $temp$pos = endPos,
+								$temp$acc = A2($elm$core$List$cons, cluster, acc);
+							pos = $temp$pos;
+							acc = $temp$acc;
+							continue collectClusters;
+						}
+					}
+				}
+			});
+		return $elm$core$List$reverse(
+			A2(collectClusters, 0, _List_Nil));
+	});
+var $elm$core$String$toLower = _String_toLower;
+var $author$project$WordGeneration$syllableMatchesClusterPattern = F3(
+	function (phonology, pattern, syllable) {
+		var consonants = A2(
+			$elm$core$List$concatMap,
+			function ($) {
+				return $.$7;
+			},
+			A2(
+				$elm$core$List$filter,
+				function (cat) {
+					return (cat.c6 === 'C') || ($elm$core$String$toLower(cat.R) === 'consonants');
+				},
+				phonology.bY));
+		var clusters = A2($author$project$WordGeneration$extractConsonantClustersFromSyllable, consonants, syllable);
+		return A2(
+			$elm$core$List$all,
+			A2($author$project$WordGeneration$clusterMatchesPattern, phonology, pattern),
+			clusters);
+	});
+var $author$project$WordGeneration$checkLegalClusterPattern = F3(
+	function (phonology, pattern, syllables) {
+		return $elm$core$String$isEmpty(pattern) ? true : A2(
+			$elm$core$List$all,
+			A2($author$project$WordGeneration$syllableMatchesClusterPattern, phonology, pattern),
+			syllables);
+	});
 var $author$project$WordGeneration$parseSyllableStructure = F2(
 	function (vowels, syllable) {
 		var findVowelAt = function (pos) {
@@ -9924,7 +10269,6 @@ var $author$project$WordGeneration$parseSyllableStructure = F2(
 			az: A2($elm$core$String$left, firstVowelPos, syllable)
 		};
 	});
-var $elm$core$String$toLower = _String_toLower;
 var $author$project$WordGeneration$checkConstraint = F3(
 	function (phonology, word, constraint) {
 		var vowels = A2(
@@ -9946,6 +10290,17 @@ var $author$project$WordGeneration$checkConstraint = F3(
 			$elm$core$List$map,
 			$author$project$WordGeneration$parseSyllableStructure(vowels),
 			syllables);
+		var consonants = A2(
+			$elm$core$List$concatMap,
+			function ($) {
+				return $.$7;
+			},
+			A2(
+				$elm$core$List$filter,
+				function (cat) {
+					return (cat.c6 === 'C') || ($elm$core$String$toLower(cat.R) === 'consonants');
+				},
+				phonology.bY));
 		var _v0 = constraint.cQ;
 		switch (_v0) {
 			case 0:
@@ -9956,20 +10311,22 @@ var $author$project$WordGeneration$checkConstraint = F3(
 					},
 					syllables);
 			case 1:
+				return A3($author$project$WordGeneration$checkLegalClusterPattern, phonology, constraint.dn, syllables);
+			case 2:
 				return A2(
 					$elm$core$List$all,
 					function (syl) {
 						return !A2($elm$core$String$contains, constraint.dn, syl.az);
 					},
 					syllableStructures);
-			case 2:
+			case 3:
 				return A2(
 					$elm$core$List$all,
 					function (syl) {
 						return !A2($elm$core$String$contains, constraint.dn, syl.at);
 					},
 					syllableStructures);
-			case 3:
+			case 4:
 				var _v1 = $elm$core$List$head(syllableStructures);
 				if (!_v1.$) {
 					var firstSyl = _v1.a;
@@ -10510,13 +10867,14 @@ var $author$project$Main$update = F2(
 						$elm$core$String$uncons(
 							$elm$core$String$toUpper(
 								A2($elm$core$String$left, 1, categoryName)))));
+				var isReserved = (label === 'C') || (label === 'V');
 				var labelExists = A2(
 					$elm$core$List$any,
 					function (cat) {
 						return _Utils_eq(cat.c6, label);
 					},
 					phonology.bY);
-				var updatedPhonology = ($elm$core$String$isEmpty(categoryName) || labelExists) ? phonology : _Utils_update(
+				var updatedPhonology = ($elm$core$String$isEmpty(categoryName) || (labelExists || isReserved)) ? phonology : _Utils_update(
 					phonology,
 					{
 						bY: _Utils_ap(
@@ -13190,8 +13548,9 @@ var $author$project$Main$update = F2(
 					model.c_);
 				var language = model.a.cb;
 				var ipaForm = $elm$core$String$trim(word);
-				var orthographyForm = A3(
+				var orthographyForm = A4(
 					$author$project$MorphologyHelpers$applyOrthography,
+					language.dh,
 					language.dh.ci.b8,
 					language.dh.cT,
 					$author$project$Utilities$removeSyllableSeparators(ipaForm));
@@ -13232,8 +13591,9 @@ var $author$project$Main$update = F2(
 					$elm$core$List$map,
 					function (word) {
 						var ipaForm = word;
-						var orthographyForm = A3(
+						var orthographyForm = A4(
 							$author$project$MorphologyHelpers$applyOrthography,
+							language.dh,
 							language.dh.ci.b8,
 							language.dh.cT,
 							$author$project$Utilities$removeSyllableSeparators(ipaForm));
@@ -14075,7 +14435,7 @@ var $author$project$Main$update = F2(
 						$author$project$JsonCodec$encodeProject(newProject)));
 			case 210:
 				var input = msg.a;
-				var _v51 = A3($author$project$MorphologyHelpers$applyOrthographyWithTracking, model.a.cb.dh.ci.b8, model.a.cb.dh.cT, input);
+				var _v51 = A4($author$project$MorphologyHelpers$applyOrthographyWithTracking, model.a.cb.dh, model.a.cb.dh.ci.b8, model.a.cb.dh.cT, input);
 				var outputText = _v51.a;
 				var triggeredRules = _v51.b;
 				return _Utils_Tuple2(
@@ -14336,11 +14696,7 @@ var $author$project$ViewComponents$viewIPADropdown = F2(
 					return $elm$html$Html$text('');
 				} else {
 					var position = _v1.a;
-					var estimatedTriggerHeight = 35;
-					var estimatedContentHeight = 365;
-					var estimatedTotalHeight = (estimatedTriggerHeight + estimatedContentHeight) + 4;
-					var availableSpaceBelow = model.cG - position.bV;
-					var useTopPosition = _Utils_cmp(availableSpaceBelow, estimatedTotalHeight) < 0;
+					var useTopPosition = false;
 					return A2(
 						$elm$html$Html$div,
 						_List_fromArray(
@@ -15408,6 +15764,7 @@ var $author$project$ViewComponents$viewContextInputHelpers = F2(
 					return $elm$html$Html$text('');
 				} else {
 					var position = _v1.a;
+					var useTopPosition = false;
 					var phonology = model.a.cb.dh;
 					var vowels = A2(
 						$elm$core$List$concatMap,
@@ -15421,7 +15778,6 @@ var $author$project$ViewComponents$viewContextInputHelpers = F2(
 							return (!($author$project$ViewHelpers$isConsonantCategoryByLabel(cat.c6) || $author$project$ViewHelpers$isVowelCategoryByLabel(cat.c6))) ? cat.$7 : _List_Nil;
 						},
 						phonology.bY);
-					var estimatedDropdownHeight = 400;
 					var diphthongs = phonology.cT;
 					var consonants = A2(
 						$elm$core$List$concatMap,
@@ -15429,8 +15785,6 @@ var $author$project$ViewComponents$viewContextInputHelpers = F2(
 							return $author$project$ViewHelpers$isConsonantCategoryByLabel(cat.c6) ? cat.$7 : _List_Nil;
 						},
 						phonology.bY);
-					var availableSpaceBelow = model.cG - position.bV;
-					var useTopPosition = _Utils_cmp(availableSpaceBelow, estimatedDropdownHeight) < 0;
 					return A2(
 						$elm$html$Html$div,
 						_List_fromArray(
@@ -23227,10 +23581,12 @@ var $author$project$ViewHelpers$constraintTypeExplanation = function (constraint
 		case 0:
 			return 'Prohibits a sequence of sounds from appearing anywhere in a word (e.g., *tl, *sr)';
 		case 1:
-			return 'Prohibits a sound or sequence from appearing at the beginning of a syllable';
+			return 'Defines a pattern for allowed consonant clusters within syllables (e.g., CC allows 2-consonant clusters, CCC allows 3)';
 		case 2:
-			return 'Prohibits a sound or sequence from appearing at the end of a syllable';
+			return 'Prohibits a sound or sequence from appearing at the beginning of a syllable';
 		case 3:
+			return 'Prohibits a sound or sequence from appearing at the end of a syllable';
+		case 4:
 			return 'Prohibits a sound or sequence from appearing at the beginning of a word';
 		default:
 			return 'Prohibits a sound or sequence from appearing at the end of a word';
@@ -23240,14 +23596,16 @@ var $author$project$ViewHelpers$stringToConstraintType = function (str) {
 	switch (str) {
 		case 'IllegalCluster':
 			return 0;
-		case 'OnsetRestriction':
+		case 'LegalCluster':
 			return 1;
-		case 'CodaRestriction':
+		case 'OnsetRestriction':
 			return 2;
-		case 'NoWordInitial':
+		case 'CodaRestriction':
 			return 3;
-		case 'NoWordFinal':
+		case 'NoWordInitial':
 			return 4;
+		case 'NoWordFinal':
+			return 5;
 		default:
 			return 0;
 	}
@@ -23368,6 +23726,16 @@ var $author$project$ViewPhonology$viewConstraintsSection = function (model) {
 												$elm$html$Html$option,
 												_List_fromArray(
 													[
+														$elm$html$Html$Attributes$value('LegalCluster')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Legal Cluster')
+													])),
+												A2(
+												$elm$html$Html$option,
+												_List_fromArray(
+													[
 														$elm$html$Html$Attributes$value('OnsetRestriction')
 													]),
 												_List_fromArray(
@@ -23421,7 +23789,15 @@ var $author$project$ViewPhonology$viewConstraintsSection = function (model) {
 													[
 														$elm$html$Html$Attributes$type_('text'),
 														$elm$html$Html$Attributes$id('ipa-input-constraint'),
-														$elm$html$Html$Attributes$placeholder('Sequence (e.g., tl, ŋ, r)'),
+														$elm$html$Html$Attributes$placeholder(
+														function () {
+															var _v0 = model.cQ;
+															if (_v0 === 1) {
+																return 'Pattern (e.g., CC, CCC, C(C)C)';
+															} else {
+																return 'Sequence (e.g., tl, ŋ, r)';
+															}
+														}()),
 														$elm$html$Html$Attributes$value(model.a_),
 														$elm$html$Html$Events$onInput($author$project$Msg$UpdateConstraintInput),
 														$elm$html$Html$Events$onFocus(
@@ -25762,6 +26138,12 @@ var $author$project$ViewPhonology$viewStaticVowelChart = F2(
 			allRows);
 	});
 var $author$project$ViewPhonology$viewIPACharts = function (model) {
+	var customCategories = A2(
+		$elm$core$List$filter,
+		function (cat) {
+			return (cat.c6 !== 'C') && (cat.c6 !== 'V');
+		},
+		model.a.cb.dh.bY);
 	var allSounds = A2(
 		$elm$core$List$concatMap,
 		function ($) {
@@ -26022,7 +26404,7 @@ var $author$project$ViewPhonology$viewOrthographySection = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Define how IPA phonemes map to orthographic symbols. Words will display both IPA (with syllable separators) and orthography. You can specify contexts to make mappings conditional (e.g., \'e\' → \'e\' before r/t, but \'e\' → \'i\' elsewhere).')
+						$elm$html$Html$text('Define how IPA phonemes map to orthographic symbols. Words will display both IPA (with syllable separators) and orthography. You can specify contexts to make mappings conditional (e.g., \'e\' → \'e\' before r/t, but \'e\' → \'i\' elsewhere). Note: Context patterns support C (consonant), V (vowel), and V̆ (short vowel), but not custom categories.')
 					])),
 				A2(
 				$elm$html$Html$div,
@@ -26105,7 +26487,7 @@ var $author$project$ViewPhonology$viewOrthographySection = function (model) {
 										$elm$html$Html$text('→')
 									])),
 								function () {
-								var orthographyOutput = $elm$core$String$isEmpty(model.cj) ? '' : A3($author$project$MorphologyHelpers$applyOrthography, model.a.cb.dh.ci.b8, model.a.cb.dh.cT, model.cj);
+								var orthographyOutput = $elm$core$String$isEmpty(model.cj) ? '' : A4($author$project$MorphologyHelpers$applyOrthography, model.a.cb.dh, model.a.cb.dh.ci.b8, model.a.cb.dh.cT, model.cj);
 								return A2(
 									$elm$html$Html$div,
 									_List_fromArray(
@@ -26299,9 +26681,53 @@ var $author$project$ViewPhonology$viewOrthographySection = function (model) {
 					]))
 			]));
 };
+var $author$project$Msg$AddCategory = {$: 4};
 var $author$project$Msg$AddPattern = {$: 8};
+var $author$project$Msg$UpdateCategoryInput = function (a) {
+	return {$: 1, a: a};
+};
 var $author$project$Msg$UpdatePatternInput = function (a) {
 	return {$: 2, a: a};
+};
+var $author$project$ViewPhonology$getCategoryValidationError = function (model) {
+	var categoryName = $elm$core$String$trim(model.aX);
+	var label = A2(
+		$elm$core$Maybe$withDefault,
+		'X',
+		A2(
+			$elm$core$Maybe$map,
+			$elm$core$Tuple$first,
+			$elm$core$String$uncons(
+				$elm$core$String$toUpper(
+					A2($elm$core$String$left, 1, categoryName)))));
+	var isReserved = (label === 'C') || (label === 'V');
+	var labelExists = A2(
+		$elm$core$List$any,
+		function (cat) {
+			return _Utils_eq(cat.c6, label);
+		},
+		model.a.cb.dh.bY);
+	return isReserved ? ('Label \'' + ($elm$core$String$fromChar(label) + '\' is reserved for built-in categories. Please use a different name.')) : (labelExists ? ('Label \'' + ($elm$core$String$fromChar(label) + '\' is already in use. Each category must have a unique first letter.')) : '');
+};
+var $author$project$ViewPhonology$isValidCategoryName = function (model) {
+	var categoryName = $elm$core$String$trim(model.aX);
+	var label = A2(
+		$elm$core$Maybe$withDefault,
+		'X',
+		A2(
+			$elm$core$Maybe$map,
+			$elm$core$Tuple$first,
+			$elm$core$String$uncons(
+				$elm$core$String$toUpper(
+					A2($elm$core$String$left, 1, categoryName)))));
+	var isReserved = (label === 'C') || (label === 'V');
+	var labelExists = A2(
+		$elm$core$List$any,
+		function (cat) {
+			return _Utils_eq(cat.c6, label);
+		},
+		model.a.cb.dh.bY);
+	return (!$elm$core$String$isEmpty(categoryName)) && ((!isReserved) && (!labelExists));
 };
 var $author$project$Msg$RemovePattern = function (a) {
 	return {$: 9, a: a};
@@ -26353,7 +26779,504 @@ var $author$project$ViewPhonology$viewSavedPattern = F2(
 						]))
 				]));
 	});
+var $author$project$Msg$AddPhoneme = {$: 6};
+var $author$project$Msg$RemoveCategory = function (a) {
+	return {$: 5, a: a};
+};
+var $author$project$Msg$SelectCategory = function (a) {
+	return {$: 3, a: a};
+};
+var $author$project$IPAHelpers$isConsonantCategory = function (name) {
+	var lowerName = $elm$core$String$toLower(name);
+	return A2($elm$core$String$contains, 'consonant', lowerName) || (A2($elm$core$String$contains, 'plosive', lowerName) || (A2($elm$core$String$contains, 'stop', lowerName) || (A2($elm$core$String$contains, 'fricative', lowerName) || (A2($elm$core$String$contains, 'nasal', lowerName) || (A2($elm$core$String$contains, 'liquid', lowerName) || A2($elm$core$String$contains, 'approximant', lowerName))))));
+};
+var $author$project$IPAHelpers$isVowelCategory = function (name) {
+	var lowerName = $elm$core$String$toLower(name);
+	return A2($elm$core$String$contains, 'vowel', lowerName);
+};
+var $elm$core$List$repeatHelp = F3(
+	function (result, n, value) {
+		repeatHelp:
+		while (true) {
+			if (n <= 0) {
+				return result;
+			} else {
+				var $temp$result = A2($elm$core$List$cons, value, result),
+					$temp$n = n - 1,
+					$temp$value = value;
+				result = $temp$result;
+				n = $temp$n;
+				value = $temp$value;
+				continue repeatHelp;
+			}
+		}
+	});
+var $elm$core$List$repeat = F2(
+	function (n, value) {
+		return A3($elm$core$List$repeatHelp, _List_Nil, n, value);
+	});
+var $author$project$Msg$RemovePhoneme = F2(
+	function (a, b) {
+		return {$: 7, a: a, b: b};
+	});
+var $author$project$ViewPhonology$viewIPAPhoneme = F2(
+	function (categoryLabel, phoneme) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('ipa-phoneme')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text(phoneme),
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick(
+							A2($author$project$Msg$RemovePhoneme, categoryLabel, phoneme))
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('×')
+						]))
+				]));
+	});
+var $author$project$ViewPhonology$viewConsonantChart = F2(
+	function (categoryLabel, sounds) {
+		var places = _List_fromArray(
+			[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+		var otherPhonemes = A2(
+			$elm$core$List$filter,
+			function (phoneme) {
+				var classification = $author$project$IPAHelpers$classifyConsonant(phoneme);
+				return (classification.d === 11) || (classification.c === 8);
+			},
+			sounds);
+		var otherRow = function () {
+			if ($elm$core$List$isEmpty(otherPhonemes)) {
+				return _List_Nil;
+			} else {
+				var rowHeader = A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('ipa-row-header')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Other')
+						]));
+				var firstCell = A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('ipa-cell')
+						]),
+					A2(
+						$elm$core$List$map,
+						$author$project$ViewPhonology$viewIPAPhoneme(categoryLabel),
+						otherPhonemes));
+				var emptyCells = A2(
+					$elm$core$List$repeat,
+					$elm$core$List$length(places) - 1,
+					A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('ipa-cell')
+							]),
+						_List_Nil));
+				return A2(
+					$elm$core$List$cons,
+					rowHeader,
+					A2($elm$core$List$cons, firstCell, emptyCells));
+			}
+		}();
+		var manners = _List_fromArray(
+			[0, 1, 2, 3, 4, 6, 7]);
+		var headerRow = A2(
+			$elm$core$List$cons,
+			A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Manner \\ Place')
+					])),
+			A2(
+				$elm$core$List$map,
+				function (place) {
+					return A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('ipa-header-cell')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								$author$project$IPAHelpers$placeToString(place))
+							]));
+				},
+				places));
+		var grouped = A2(
+			$elm$core$List$map,
+			function (phoneme) {
+				var classification = $author$project$IPAHelpers$classifyConsonant(phoneme);
+				return _Utils_Tuple3(classification.d, classification.c, phoneme);
+			},
+			sounds);
+		var getPhonemesForCell = F2(
+			function (place, manner) {
+				return A2(
+					$elm$core$List$filterMap,
+					function (_v0) {
+						var p = _v0.a;
+						var m = _v0.b;
+						var phoneme = _v0.c;
+						return (_Utils_eq(p, place) && _Utils_eq(m, manner)) ? $elm$core$Maybe$Just(phoneme) : $elm$core$Maybe$Nothing;
+					},
+					grouped);
+			});
+		var mannerRows = A2(
+			$elm$core$List$concatMap,
+			function (manner) {
+				var rowHeader = A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('ipa-row-header')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							$author$project$IPAHelpers$mannerToString(manner))
+						]));
+				var cells = A2(
+					$elm$core$List$map,
+					function (place) {
+						var cellPhonemes = A2(getPhonemesForCell, place, manner);
+						return A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('ipa-cell')
+								]),
+							A2(
+								$elm$core$List$map,
+								$author$project$ViewPhonology$viewIPAPhoneme(categoryLabel),
+								cellPhonemes));
+					},
+					places);
+				return A2($elm$core$List$cons, rowHeader, cells);
+			},
+			manners);
+		var allRows = _Utils_ap(
+			headerRow,
+			_Utils_ap(mannerRows, otherRow));
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('ipa-grid consonant-grid')
+				]),
+			allRows);
+	});
+var $author$project$ViewPhonology$viewPhoneme = F2(
+	function (categoryLabel, phoneme) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('phoneme-tag')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text(phoneme),
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick(
+							A2($author$project$Msg$RemovePhoneme, categoryLabel, phoneme))
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('×')
+						]))
+				]));
+	});
+var $author$project$ViewPhonology$viewVowelChart = F2(
+	function (categoryLabel, sounds) {
+		var heights = _List_fromArray(
+			[0, 1, 2, 3, 4, 5, 6]);
+		var headerRow = _List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Height \\ Backness')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Front')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Central')
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('ipa-header-cell')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Back')
+					]))
+			]);
+		var grouped = A2(
+			$elm$core$List$map,
+			function (phoneme) {
+				var classification = $author$project$IPAHelpers$classifyVowel(phoneme);
+				return _Utils_Tuple3(classification.i, classification.h, phoneme);
+			},
+			sounds);
+		var getPhonemesForCell = F2(
+			function (height, backness) {
+				return A2(
+					$elm$core$List$filterMap,
+					function (_v0) {
+						var h = _v0.a;
+						var b = _v0.b;
+						var phoneme = _v0.c;
+						return (_Utils_eq(h, height) && _Utils_eq(b, backness)) ? $elm$core$Maybe$Just(phoneme) : $elm$core$Maybe$Nothing;
+					},
+					grouped);
+			});
+		var backnesses = _List_fromArray(
+			[0, 1, 2]);
+		var heightRows = A2(
+			$elm$core$List$concatMap,
+			function (height) {
+				var rowHeader = A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('ipa-row-header')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							$author$project$IPAHelpers$heightToString(height))
+						]));
+				var cells = A2(
+					$elm$core$List$map,
+					function (backness) {
+						var cellPhonemes = A2(getPhonemesForCell, height, backness);
+						return A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('ipa-cell')
+								]),
+							A2(
+								$elm$core$List$map,
+								$author$project$ViewPhonology$viewIPAPhoneme(categoryLabel),
+								cellPhonemes));
+					},
+					backnesses);
+				return A2($elm$core$List$cons, rowHeader, cells);
+			},
+			heights);
+		var allRows = _Utils_ap(headerRow, heightRows);
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('ipa-grid vowel-grid')
+				]),
+			allRows);
+	});
+var $author$project$ViewPhonology$viewSoundCategory = F2(
+	function (model, category) {
+		var labelStr = $elm$core$String$fromChar(category.c6);
+		var isVowel = $author$project$IPAHelpers$isVowelCategory(category.R);
+		var isSelected = _Utils_eq(model.bk, labelStr);
+		var isConsonant = $author$project$IPAHelpers$isConsonantCategory(category.R);
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('ipa-chart')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('ipa-chart-title')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$span,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text(category.R + (' (' + (labelStr + ')')))
+								])),
+							A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('danger small'),
+									$elm$html$Html$Events$onClick(
+									$author$project$Msg$RemoveCategory(labelStr))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Remove Category')
+								]))
+						])),
+					isConsonant ? A2($author$project$ViewPhonology$viewConsonantChart, labelStr, category.$7) : (isVowel ? A2($author$project$ViewPhonology$viewVowelChart, labelStr, category.$7) : A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('phoneme-list')
+						]),
+					A2(
+						$elm$core$List$map,
+						$author$project$ViewPhonology$viewPhoneme(labelStr),
+						category.$7))),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('ipa-add-section')
+						]),
+					_List_fromArray(
+						[
+							isSelected ? A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'position', 'relative')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('inline-form')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$div,
+											_List_fromArray(
+												[
+													A2($elm$html$Html$Attributes$style, 'position', 'relative'),
+													A2($elm$html$Html$Attributes$style, 'flex', '1'),
+													A2($elm$html$Html$Attributes$style, 'display', 'flex')
+												]),
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$input,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$type_('text'),
+															$elm$html$Html$Attributes$id('ipa-input-phoneme'),
+															$elm$html$Html$Attributes$placeholder('Add ' + (category.R + ' sound (IPA symbol)')),
+															$elm$html$Html$Attributes$value(model.bf),
+															$elm$html$Html$Events$onInput($author$project$Msg$UpdatePhonemeInput),
+															$elm$html$Html$Events$onFocus(
+															$author$project$Msg$FocusIPAField('phoneme')),
+															$elm$html$Html$Events$onBlur($author$project$Msg$BlurIPAField),
+															$author$project$UpdateHelpers$onEnter(
+															$author$project$UpdateHelpers$isNonEmpty(model.bf) ? $author$project$Msg$AddPhoneme : $author$project$Msg$NoOp),
+															$elm$html$Html$Attributes$classList(
+															_List_fromArray(
+																[
+																	_Utils_Tuple2(
+																	'error',
+																	(!$author$project$UpdateHelpers$isNonEmpty(model.bf)) && (model.bf !== ''))
+																]))
+														]),
+													_List_Nil),
+													A2($author$project$ViewComponents$viewIPADropdown, model, 'phoneme')
+												])),
+											A2(
+											$elm$html$Html$button,
+											_List_fromArray(
+												[
+													$elm$html$Html$Events$onClick($author$project$Msg$AddPhoneme),
+													$elm$html$Html$Attributes$class('plus-btn'),
+													$elm$html$Html$Attributes$disabled(
+													!$author$project$UpdateHelpers$isNonEmpty(model.bf))
+												]),
+											_List_fromArray(
+												[
+													$elm$html$Html$text('+')
+												]))
+										]))
+								])) : A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('secondary'),
+									$elm$html$Html$Events$onClick(
+									$author$project$Msg$SelectCategory(labelStr))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Add sounds to this category')
+								]))
+						]))
+				]));
+	});
 var $author$project$ViewPhonology$viewSyllablePatternsSection = function (model) {
+	var customCategories = A2(
+		$elm$core$List$filter,
+		function (cat) {
+			return (cat.c6 !== 'C') && (cat.c6 !== 'V');
+		},
+		model.a.cb.dh.bY);
+	var allLabels = A2(
+		$elm$core$String$join,
+		', ',
+		A2(
+			$elm$core$List$map,
+			function (cat) {
+				return $elm$core$String$fromChar(cat.c6);
+			},
+			model.a.cb.dh.bY));
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -26377,13 +27300,141 @@ var $author$project$ViewPhonology$viewSyllablePatternsSection = function (model)
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Define syllable structure templates used for word generation. Use category labels (e.g., C for consonant, V for vowel) and parentheses for optional elements.')
+						$elm$html$Html$text('Define syllable structure templates used for word generation. Use category labels and parentheses for optional elements.')
+					])),
+				(!$elm$core$List$isEmpty(customCategories)) ? A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'margin-top', '30px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h3,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Custom Sound Categories')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('help-text'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '20px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('User-defined sound categories that can be used in syllable patterns and constraints.')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						A2(
+							$elm$core$List$map,
+							$author$project$ViewPhonology$viewSoundCategory(model),
+							customCategories))
+					])) : $elm$html$Html$text(''),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'margin-top', '30px'),
+						$elm$html$Html$Attributes$class('form-group')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h3,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Create Custom Pattern')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('help-text'),
+								A2($elm$html$Html$Attributes$style, 'margin-bottom', '15px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Define custom sound categories with uppercase letter labels (e.g., \'T\' for Stops, \'F\' for Fricatives). These can be used in syllable patterns alongside C and V. Note: C and V are reserved for Consonants and Vowels.')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('inline-form')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$input,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$type_('text'),
+										$elm$html$Html$Attributes$placeholder('Category Name (e.g., Stops, Fricatives, Liquids)'),
+										$elm$html$Html$Attributes$value(model.aX),
+										$elm$html$Html$Events$onInput($author$project$Msg$UpdateCategoryInput),
+										$author$project$UpdateHelpers$onEnter(
+										$author$project$ViewPhonology$isValidCategoryName(model) ? $author$project$Msg$AddCategory : $author$project$Msg$NoOp),
+										$elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2(
+												'error',
+												(!$author$project$ViewPhonology$isValidCategoryName(model)) && (model.aX !== ''))
+											])),
+										A2($elm$html$Html$Attributes$style, 'flex', '1')
+									]),
+								_List_Nil),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Msg$AddCategory),
+										$elm$html$Html$Attributes$class('plus-btn'),
+										$elm$html$Html$Attributes$disabled(
+										!$author$project$ViewPhonology$isValidCategoryName(model))
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('+')
+									]))
+							])),
+						((!$elm$core$String$isEmpty(model.aX)) && (!$author$project$ViewPhonology$isValidCategoryName(model))) ? A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('help-text error-text'),
+								A2($elm$html$Html$Attributes$style, 'margin-top', '8px'),
+								A2($elm$html$Html$Attributes$style, 'color', '#ef4444')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								$author$project$ViewPhonology$getCategoryValidationError(model))
+							])) : A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('help-text'),
+								A2($elm$html$Html$Attributes$style, 'margin-top', '8px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('The first letter of the name will be used as the pattern label (e.g., \'Stops\' → \'S\'). Add sounds to the category after creating it.')
+							]))
 					])),
 				A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('form-group')
+						$elm$html$Html$Attributes$class('form-group'),
+						A2($elm$html$Html$Attributes$style, 'margin-top', '30px')
 					]),
 				_List_fromArray(
 					[
@@ -26453,7 +27504,7 @@ var $author$project$ViewPhonology$viewSyllablePatternsSection = function (model)
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Examples: CV (simple syllable), CVC (closed syllable), (C)V(C) (optional consonants), C(C)V (optional cluster)')
+								$elm$html$Html$text('Available labels: ' + (allLabels + '. Examples: CV (simple), CVC (closed), (C)V(C) (optional), C(C)V (cluster)'))
 							]))
 					]))
 			]));
@@ -26490,8 +27541,9 @@ var $author$project$Msg$AddGeneratedWordToLexicon = function (a) {
 };
 var $author$project$ViewPhonology$viewGeneratedWord = F2(
 	function (phonology, word) {
-		var orthographyForm = A3(
+		var orthographyForm = A4(
 			$author$project$MorphologyHelpers$applyOrthography,
+			phonology,
 			phonology.ci.b8,
 			phonology.cT,
 			$author$project$Utilities$removeSyllableSeparators(word));
