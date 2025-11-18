@@ -15391,27 +15391,48 @@ var $author$project$ViewComponents$viewIPADropdown = F2(
 					return $elm$html$Html$text('');
 				} else {
 					var position = _v1.a;
-					var useTopPosition = false;
+					var estimatedDropdownHeight = 360;
+					var availableSpaceBelow = model.cL - position.bZ;
+					var useTopPosition = _Utils_cmp(availableSpaceBelow, estimatedDropdownHeight) < 0;
+					var positionStyles = useTopPosition ? _List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'bottom',
+							$elm$core$String$fromFloat((model.cL - position.bZ) + position.c9) + 'px'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'left',
+							$elm$core$String$fromFloat(position.bY) + 'px')
+						]) : _List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'top',
+							$elm$core$String$fromFloat(position.bZ) + 'px'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'left',
+							$elm$core$String$fromFloat(position.bY) + 'px')
+						]);
 					return A2(
 						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('ipa-dropdown-container'),
-								A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'top',
-								$elm$core$String$fromFloat(position.bZ) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'left',
-								$elm$core$String$fromFloat(position.bY) + 'px'),
-								A2($elm$html$Html$Attributes$style, 'z-index', '9999'),
-								A2($elm$html$Html$Attributes$style, 'max-width', 'calc(100vw - 20px)'),
-								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-								A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
-								A2($elm$html$Html$Attributes$style, 'align-items', 'flex-start')
-							]),
+						_Utils_ap(
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('ipa-dropdown-container'),
+									A2($elm$html$Html$Attributes$style, 'z-index', '9999'),
+									A2($elm$html$Html$Attributes$style, 'max-width', 'calc(100vw - 20px)'),
+									A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+									A2(
+									$elm$html$Html$Attributes$style,
+									'flex-direction',
+									useTopPosition ? 'column-reverse' : 'column'),
+									A2($elm$html$Html$Attributes$style, 'align-items', 'flex-start')
+								]),
+							positionStyles),
 						_List_fromArray(
 							[
 								A2(
@@ -15458,7 +15479,10 @@ var $author$project$ViewComponents$viewIPADropdown = F2(
 										A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
 										A2($elm$html$Html$Attributes$style, 'box-shadow', '0 4px 12px rgba(0,0,0,0.15)'),
 										A2($elm$html$Html$Attributes$style, 'padding', '12px'),
-										A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
+										A2(
+										$elm$html$Html$Attributes$style,
+										useTopPosition ? 'margin-bottom' : 'margin-top',
+										'4px'),
 										A2($elm$html$Html$Attributes$style, 'max-height', '300px'),
 										A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto'),
 										A2($elm$html$Html$Attributes$style, 'min-width', '300px'),
@@ -16464,7 +16488,6 @@ var $author$project$ViewComponents$viewContextInputHelpers = F2(
 					return $elm$html$Html$text('');
 				} else {
 					var position = _v1.a;
-					var useTopPosition = false;
 					var phonology = model.a.cg.dm;
 					var vowels = A2(
 						$elm$core$List$concatMap,
@@ -16478,6 +16501,7 @@ var $author$project$ViewComponents$viewContextInputHelpers = F2(
 							return (!($author$project$ViewHelpers$isConsonantCategoryByLabel(cat.db) || $author$project$ViewHelpers$isVowelCategoryByLabel(cat.db))) ? cat.dt : _List_Nil;
 						},
 						phonology.b0);
+					var estimatedDropdownHeight = 380;
 					var diphthongs = phonology.cY;
 					var consonants = A2(
 						$elm$core$List$concatMap,
@@ -16485,26 +16509,47 @@ var $author$project$ViewComponents$viewContextInputHelpers = F2(
 							return $author$project$ViewHelpers$isConsonantCategoryByLabel(cat.db) ? cat.dt : _List_Nil;
 						},
 						phonology.b0);
+					var availableSpaceBelow = model.cL - position.bZ;
+					var useTopPosition = _Utils_cmp(availableSpaceBelow, estimatedDropdownHeight) < 0;
+					var positionStyles = useTopPosition ? _List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'bottom',
+							$elm$core$String$fromFloat((model.cL - position.bZ) + position.c9) + 'px'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'left',
+							$elm$core$String$fromFloat(position.bY) + 'px')
+						]) : _List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'top',
+							$elm$core$String$fromFloat(position.bZ) + 'px'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'left',
+							$elm$core$String$fromFloat(position.bY) + 'px')
+						]);
 					return A2(
 						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('ipa-helpers-container'),
-								A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'top',
-								$elm$core$String$fromFloat(position.bZ) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'left',
-								$elm$core$String$fromFloat(position.bY) + 'px'),
-								A2($elm$html$Html$Attributes$style, 'z-index', '9999'),
-								A2($elm$html$Html$Attributes$style, 'max-width', 'calc(100vw - 20px)'),
-								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-								A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
-								A2($elm$html$Html$Attributes$style, 'align-items', 'flex-start')
-							]),
+						_Utils_ap(
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('ipa-helpers-container'),
+									A2($elm$html$Html$Attributes$style, 'z-index', '9999'),
+									A2($elm$html$Html$Attributes$style, 'max-width', 'calc(100vw - 20px)'),
+									A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+									A2(
+									$elm$html$Html$Attributes$style,
+									'flex-direction',
+									useTopPosition ? 'column-reverse' : 'column'),
+									A2($elm$html$Html$Attributes$style, 'align-items', 'flex-start')
+								]),
+							positionStyles),
 						_List_fromArray(
 							[
 								A2(
@@ -16783,7 +16828,10 @@ var $author$project$ViewComponents$viewContextInputHelpers = F2(
 										A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
 										A2($elm$html$Html$Attributes$style, 'box-shadow', '0 4px 12px rgba(0,0,0,0.15)'),
 										A2($elm$html$Html$Attributes$style, 'padding', '12px'),
-										A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
+										A2(
+										$elm$html$Html$Attributes$style,
+										useTopPosition ? 'margin-bottom' : 'margin-top',
+										'4px'),
 										A2($elm$html$Html$Attributes$style, 'max-height', '300px'),
 										A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto'),
 										A2($elm$html$Html$Attributes$style, 'min-width', '300px'),
@@ -27815,6 +27863,109 @@ var $author$project$ViewPhonology$viewSyllablePatternsSection = function (model)
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
+						$elm$html$Html$Attributes$class('form-group'),
+						A2($elm$html$Html$Attributes$style, 'margin-top', '30px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$label,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Saved Syllable Patterns')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('pattern-list')
+							]),
+						A2(
+							$elm$core$List$map,
+							$author$project$ViewPhonology$viewSavedPattern(model.aN),
+							model.a.cg.dm.dk)),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'position', 'relative')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('inline-form')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												A2($elm$html$Html$Attributes$style, 'position', 'relative'),
+												A2($elm$html$Html$Attributes$style, 'flex', '1'),
+												A2($elm$html$Html$Attributes$style, 'display', 'flex')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('text'),
+														$elm$html$Html$Attributes$id('ipa-input-pattern'),
+														$elm$html$Html$Attributes$placeholder('Pattern (e.g., CV, C(C)V, (C)V(C))'),
+														$elm$html$Html$Attributes$value(model.bi),
+														$elm$html$Html$Events$onInput($author$project$Msg$UpdatePatternInput),
+														$elm$html$Html$Events$onFocus(
+														$author$project$Msg$FocusIPAField('pattern')),
+														$elm$html$Html$Events$onBlur($author$project$Msg$BlurIPAField),
+														$author$project$UpdateHelpers$onEnter(
+														$author$project$UpdateHelpers$isNonEmpty(model.bi) ? $author$project$Msg$AddPattern : $author$project$Msg$NoOp),
+														$elm$html$Html$Attributes$classList(
+														_List_fromArray(
+															[
+																_Utils_Tuple2(
+																'error',
+																(!$author$project$UpdateHelpers$isNonEmpty(model.bi)) && (model.bi !== ''))
+															]))
+													]),
+												_List_Nil),
+												A2($author$project$ViewComponents$viewIPADropdown, model, 'pattern')
+											])),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$Msg$AddPattern),
+												$elm$html$Html$Attributes$class('plus-btn'),
+												$elm$html$Html$Attributes$disabled(
+												!$author$project$UpdateHelpers$isNonEmpty(model.bi))
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('+')
+											]))
+									]))
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('help-text')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Available labels: ' + (allLabels + '. Examples: CV (simple), CVC (closed), (C)V(C) (optional), C(C)V (cluster)'))
+							]))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
 						A2($elm$html$Html$Attributes$style, 'margin-top', '30px')
 					]),
 				_List_fromArray(
@@ -27887,84 +28038,6 @@ var $author$project$ViewPhonology$viewSyllablePatternsSection = function (model)
 						_List_fromArray(
 							[
 								$elm$html$Html$text('No custom sound categories yet. Click \'Add Category\' to create one.')
-							]))
-					])),
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('form-group'),
-						A2($elm$html$Html$Attributes$style, 'margin-top', '30px')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$label,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Saved Syllable Patterns')
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('pattern-list')
-							]),
-						A2(
-							$elm$core$List$map,
-							$author$project$ViewPhonology$viewSavedPattern(model.aN),
-							model.a.cg.dm.dk)),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('inline-form')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$input,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$type_('text'),
-										$elm$html$Html$Attributes$placeholder('Pattern (e.g., CV, C(C)V, (C)V(C))'),
-										$elm$html$Html$Attributes$value(model.bi),
-										$elm$html$Html$Events$onInput($author$project$Msg$UpdatePatternInput),
-										$author$project$UpdateHelpers$onEnter(
-										$author$project$UpdateHelpers$isNonEmpty(model.bi) ? $author$project$Msg$AddPattern : $author$project$Msg$NoOp),
-										$elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2(
-												'error',
-												(!$author$project$UpdateHelpers$isNonEmpty(model.bi)) && (model.bi !== ''))
-											]))
-									]),
-								_List_Nil),
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										$elm$html$Html$Events$onClick($author$project$Msg$AddPattern),
-										$elm$html$Html$Attributes$class('plus-btn'),
-										$elm$html$Html$Attributes$disabled(
-										!$author$project$UpdateHelpers$isNonEmpty(model.bi))
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('+')
-									]))
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('help-text')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Available labels: ' + (allLabels + '. Examples: CV (simple), CVC (closed), (C)V(C) (optional), C(C)V (cluster)'))
 							]))
 					])),
 				model.bo ? $author$project$ViewPhonology$viewAddCategoryModal(model) : $elm$html$Html$text(''),
