@@ -1,7 +1,5 @@
-// Initialize the Elm application
-const app = Elm.Main.init({
-  node: document.getElementById('app')
-});
+// Initialize the Elm application after database is ready
+let app = null;
 
 // IndexedDB setup
 const DB_NAME = 'clctk-db';
@@ -358,42 +356,61 @@ function exportProjectToFile(exportData) {
   console.log('Project exported as JSON');
 }
 
-// Port subscriptions
-app.ports.saveToStorage.subscribe((data) => {
-  saveToIndexedDB(data);
-});
+// Port subscriptions setup function
+function setupPortSubscriptions() {
+  if (!app) {
+    console.error('App not initialized yet');
+    return;
+  }
 
-app.ports.exportProject.subscribe((data) => {
-  exportProjectToFile(data);
-});
+  // Helper function to safely subscribe to a port
+  function safeSubscribe(portName, callback) {
+    try {
+      if (app.ports && app.ports[portName] && app.ports[portName].subscribe) {
+        app.ports[portName].subscribe(callback);
+      } else {
+        console.warn(`Port ${portName} not available`);
+      }
+    } catch (error) {
+      console.error(`Error subscribing to port ${portName}:`, error);
+    }
+  }
 
-app.ports.getCurrentTime.subscribe(() => {
-  const timestamp = new Date().toISOString();
-  app.ports.receiveCurrentTime.send(timestamp);
-});
+  safeSubscribe('saveToStorage', (data) => {
+    saveToIndexedDB(data);
+  });
 
-app.ports.loadAllProjects.subscribe(() => {
-  loadAllProjects();
-});
+  safeSubscribe('exportProject', (data) => {
+    exportProjectToFile(data);
+  });
 
-app.ports.deleteProjectById.subscribe((projectId) => {
-  deleteProjectById(projectId);
-});
+  safeSubscribe('getCurrentTime', () => {
+    const timestamp = new Date().toISOString();
+    app.ports.receiveCurrentTime.send(timestamp);
+  });
 
-app.ports.duplicateProjectById.subscribe((projectId) => {
-  duplicateProjectById(projectId);
-});
+  safeSubscribe('loadAllProjects', () => {
+    loadAllProjects();
+  });
 
-app.ports.renameProjectById.subscribe((data) => {
-  renameProjectById(data.projectId, data.newName);
-});
+  safeSubscribe('deleteProjectById', (projectId) => {
+    deleteProjectById(projectId);
+  });
 
-app.ports.loadProjectById.subscribe((projectId) => {
-  loadProjectByIdInternal(projectId);
-});
+  safeSubscribe('duplicateProjectById', (projectId) => {
+    duplicateProjectById(projectId);
+  });
 
-// Handle import trigger
-app.ports.triggerImport.subscribe(() => {
+  safeSubscribe('renameProjectById', (data) => {
+    renameProjectById(data.projectId, data.newName);
+  });
+
+  safeSubscribe('loadProjectById', (projectId) => {
+    loadProjectByIdInternal(projectId);
+  });
+
+  // Handle import trigger
+  safeSubscribe('triggerImport', () => {
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = '.json';
@@ -430,10 +447,10 @@ app.ports.triggerImport.subscribe(() => {
   };
   
   input.click();
-});
+  });
 
-// Export lexicon as CSV
-app.ports.exportCSV.subscribe((csvContent) => {
+  // Export lexicon as CSV
+  safeSubscribe('exportCSV', (csvContent) => {
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   const url = URL.createObjectURL(blob);
@@ -445,10 +462,10 @@ app.ports.exportCSV.subscribe((csvContent) => {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-});
+  });
 
-// Import CSV file
-app.ports.triggerCSVImport.subscribe(() => {
+  // Import CSV file
+  safeSubscribe('triggerCSVImport', () => {
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = '.csv,text/csv';
@@ -470,7 +487,119 @@ app.ports.triggerCSVImport.subscribe(() => {
   };
   
   input.click();
-});
+  });
+
+  // Port subscriptions for templates
+  safeSubscribe('saveTemplateToStorage', (data) => {
+    saveTemplateToIndexedDB(data);
+  });
+
+  safeSubscribe('loadAllTemplates', () => {
+    // If database is not ready, wait a bit and try again
+    if (!db) {
+      setTimeout(() => {
+        loadAllTemplates();
+      }, 100);
+    } else {
+      loadAllTemplates();
+    }
+  });
+
+  safeSubscribe('deleteTemplateById', (templateId) => {
+    deleteTemplateById(templateId);
+  });
+
+  safeSubscribe('savePreference', (data) => {
+    savePreference(data);
+  });
+
+  safeSubscribe('loadPreferences', () => {
+    loadPreferences();
+  });
+
+  // Port subscriptions for language families
+  safeSubscribe('saveLanguageFamily', (data) => {
+    saveLanguageFamilyToIndexedDB(data);
+  });
+
+  safeSubscribe('loadAllLanguageFamilies', () => {
+    // If database is not ready, wait a bit and try again
+    if (!db) {
+      setTimeout(() => {
+        loadAllLanguageFamilies();
+      }, 100);
+    } else {
+      loadAllLanguageFamilies();
+    }
+  });
+
+  safeSubscribe('deleteLanguageFamilyById', (familyId) => {
+    deleteLanguageFamilyById(familyId);
+  });
+
+  // Port subscriptions for language projects
+  safeSubscribe('saveLanguageProject', (data) => {
+    saveLanguageProjectToIndexedDB(data);
+  });
+
+  safeSubscribe('loadAllLanguageProjects', () => {
+    // If database is not ready, wait a bit and try again
+    if (!db) {
+      setTimeout(() => {
+        loadAllLanguageProjects();
+      }, 100);
+    } else {
+      loadAllLanguageProjects();
+    }
+  });
+
+  safeSubscribe('deleteLanguageProjectByUuid', (projectUuid) => {
+    deleteLanguageProjectByUuid(projectUuid);
+  });
+
+  // Handle cursor position insertions
+  safeSubscribe('insertAtCursor', (data) => {
+    const element = document.getElementById(data.fieldId);
+    if (element) {
+      const start = element.selectionStart || 0;
+      const end = element.selectionEnd || 0;
+      const value = element.value;
+      
+      // Insert text at cursor position
+      const newValue = value.substring(0, start) + data.text + value.substring(end);
+      element.value = newValue;
+      
+      // Set cursor position after inserted text
+      const newCursorPos = start + data.text.length;
+      element.selectionStart = newCursorPos;
+      element.selectionEnd = newCursorPos;
+      
+      // Trigger input event to update Elm model
+      const event = new Event('input', { bubbles: true });
+      element.dispatchEvent(event);
+      
+      // Optionally refocus the element
+      element.focus();
+    }
+  });
+
+  // UUID generation
+  safeSubscribe('requestUUID', () => {
+    // Use crypto.randomUUID if available, otherwise fallback to a simple implementation
+    let uuid;
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      uuid = crypto.randomUUID();
+    } else {
+      // Fallback UUID v4 implementation
+      uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+    app.ports.receiveUUID.send(uuid);
+  });
+}
 
 // Save template to IndexedDB
 function saveTemplateToIndexedDB(templateData) {
@@ -550,26 +679,6 @@ function deleteTemplateById(templateId) {
   };
 }
 
-// Port subscriptions for templates
-app.ports.saveTemplateToStorage.subscribe((data) => {
-  saveTemplateToIndexedDB(data);
-});
-
-app.ports.loadAllTemplates.subscribe(() => {
-  // If database is not ready, wait a bit and try again
-  if (!db) {
-    setTimeout(() => {
-      loadAllTemplates();
-    }, 100);
-  } else {
-    loadAllTemplates();
-  }
-});
-
-app.ports.deleteTemplateById.subscribe((templateId) => {
-  deleteTemplateById(templateId);
-});
-
 // Preferences management using localStorage
 const PREFERENCES_KEY = 'clctk-preferences';
 
@@ -596,13 +705,7 @@ function loadPreferences() {
   }
 }
 
-app.ports.savePreference.subscribe((data) => {
-  savePreference(data);
-});
 
-app.ports.loadPreferences.subscribe(() => {
-  loadPreferences();
-});
 
 // Language Family Management Functions
 
@@ -684,25 +787,7 @@ function deleteLanguageFamilyById(familyId) {
   };
 }
 
-// Port subscriptions for language families
-app.ports.saveLanguageFamily.subscribe((data) => {
-  saveLanguageFamilyToIndexedDB(data);
-});
 
-app.ports.loadAllLanguageFamilies.subscribe(() => {
-  // If database is not ready, wait a bit and try again
-  if (!db) {
-    setTimeout(() => {
-      loadAllLanguageFamilies();
-    }, 100);
-  } else {
-    loadAllLanguageFamilies();
-  }
-});
-
-app.ports.deleteLanguageFamilyById.subscribe((familyId) => {
-  deleteLanguageFamilyById(familyId);
-});
 
 // Language Projects functions
 function saveLanguageProjectToIndexedDB(projectData) {
@@ -773,68 +858,7 @@ function deleteLanguageProjectByUuid(projectUuid) {
   };
 }
 
-// Port subscriptions for language projects
-app.ports.saveLanguageProject.subscribe((data) => {
-  saveLanguageProjectToIndexedDB(data);
-});
 
-app.ports.loadAllLanguageProjects.subscribe(() => {
-  // If database is not ready, wait a bit and try again
-  if (!db) {
-    setTimeout(() => {
-      loadAllLanguageProjects();
-    }, 100);
-  } else {
-    loadAllLanguageProjects();
-  }
-});
-
-app.ports.deleteLanguageProjectByUuid.subscribe((projectUuid) => {
-  deleteLanguageProjectByUuid(projectUuid);
-});
-
-// Handle cursor position insertions
-app.ports.insertAtCursor.subscribe((data) => {
-  const element = document.getElementById(data.fieldId);
-  if (element) {
-    const start = element.selectionStart || 0;
-    const end = element.selectionEnd || 0;
-    const value = element.value;
-    
-    // Insert text at cursor position
-    const newValue = value.substring(0, start) + data.text + value.substring(end);
-    element.value = newValue;
-    
-    // Set cursor position after inserted text
-    const newCursorPos = start + data.text.length;
-    element.selectionStart = newCursorPos;
-    element.selectionEnd = newCursorPos;
-    
-    // Trigger input event to update Elm model
-    const event = new Event('input', { bubbles: true });
-    element.dispatchEvent(event);
-    
-    // Optionally refocus the element
-    element.focus();
-  }
-});
-
-// UUID generation
-app.ports.requestUUID.subscribe(() => {
-  // Use crypto.randomUUID if available, otherwise fallback to a simple implementation
-  let uuid;
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    uuid = crypto.randomUUID();
-  } else {
-    // Fallback UUID v4 implementation
-    uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0;
-      const v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }
-  app.ports.receiveUUID.send(uuid);
-});
 
 // Migration function for IPA chart redesign
 function migrateToIPAChart() {
@@ -878,6 +902,23 @@ function migrateToIPAChart() {
   }
 }
 
+// Show loading message while initializing
+const appContainer = document.getElementById('app');
+appContainer.innerHTML = `
+  <div style="display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;">
+    <div style="text-align: center;">
+      <div style="font-size: 24px; font-weight: bold; color: #4a5568; margin-bottom: 16px;">CLCTK - Comprehensive Language Construction Tool Kit</div>
+      <div style="font-size: 16px; color: #718096; margin-bottom: 24px;">Initializing database...</div>
+      <div style="width: 48px; height: 48px; border: 4px solid #e2e8f0; border-top-color: #805ad5; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+    </div>
+  </div>
+  <style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+`;
+
 // Initialize database and load existing data
 openDatabase()
   .then(() => {
@@ -886,13 +927,37 @@ openDatabase()
     return migrateToIPAChart();
   })
   .then(() => {
+    console.log('Initializing Elm application...');
+    // Initialize the Elm application after database is ready
+    app = Elm.Main.init({
+      node: document.getElementById('app')
+    });
+    
+    // Set up port subscriptions after app is initialized
+    setupPortSubscriptions();
+    
+    // Load initial data
     loadFromIndexedDB();
     loadAllTemplates();
     loadPreferences();
   })
   .catch((error) => {
     console.error('Database initialization or migration failed:', error);
-    // Still try to load what we can
-    loadAllTemplates();
-    loadPreferences();
+    // Show error message
+    appContainer.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;">
+        <div style="text-align: center; max-width: 600px; padding: 20px;">
+          <div style="font-size: 24px; font-weight: bold; color: #c53030; margin-bottom: 16px;">⚠️ Database Initialization Failed</div>
+          <div style="font-size: 16px; color: #718096; margin-bottom: 24px;">
+            The application failed to initialize the database. This may be due to browser restrictions or storage issues.
+          </div>
+          <div style="background: #fff5f5; border: 1px solid #fc8181; color: #742a2a; padding: 12px; border-radius: 4px; font-size: 14px; text-align: left; font-family: monospace;">
+            ${error.message || 'Unknown error'}
+          </div>
+          <button onclick="location.reload()" style="margin-top: 24px; background: #805ad5; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">
+            Try Again
+          </button>
+        </div>
+      </div>
+    `;
   });
