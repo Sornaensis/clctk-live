@@ -5,10 +5,11 @@ const app = Elm.Main.init({
 
 // IndexedDB setup
 const DB_NAME = 'clctk-db';
-const DB_VERSION = 5;  // Increment version for language families
+const DB_VERSION = 6;  // Increment version for language projects
 const STORE_NAME = 'projects';
 const TEMPLATE_STORE_NAME = 'templates';
 const FAMILY_STORE_NAME = 'language-families';
+const PROJECT_STORE_NAME = 'language-projects';
 const APP_VERSION = '2.0.0';  // IPA chart redesign version
 
 let db = null;
@@ -44,7 +45,21 @@ function openDatabase() {
       if (!database.objectStoreNames.contains(FAMILY_STORE_NAME)) {
         database.createObjectStore(FAMILY_STORE_NAME, { keyPath: 'id', autoIncrement: true });
       }
+      
+      // Create language projects store
+      if (!database.objectStoreNames.contains(PROJECT_STORE_NAME)) {
+        database.createObjectStore(PROJECT_STORE_NAME, { keyPath: 'uuid' });
+      }
     };
+  });
+}
+
+// Generate a UUID v4
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
   });
 }
 
@@ -689,6 +704,95 @@ app.ports.deleteLanguageFamilyById.subscribe((familyId) => {
   deleteLanguageFamilyById(familyId);
 });
 
+// Language Projects functions
+function saveLanguageProjectToIndexedDB(projectData) {
+  if (!db) {
+    console.error('Database not initialized');
+    return;
+  }
+
+  // Generate UUID if not present
+  if (!projectData.uuid || projectData.uuid === '') {
+    projectData.uuid = generateUUID();
+  }
+
+  const transaction = db.transaction([PROJECT_STORE_NAME], 'readwrite');
+  const store = transaction.objectStore(PROJECT_STORE_NAME);
+  
+  const request = store.put(projectData);
+  request.onsuccess = () => {
+    console.log('Language project saved:', projectData.uuid);
+    // Reload language projects
+    loadAllLanguageProjects();
+  };
+  request.onerror = () => {
+    console.error('Failed to save language project to IndexedDB');
+  };
+}
+
+// Load all language projects
+function loadAllLanguageProjects() {
+  if (!db) {
+    console.error('Database not initialized');
+    return;
+  }
+
+  const transaction = db.transaction([PROJECT_STORE_NAME], 'readonly');
+  const store = transaction.objectStore(PROJECT_STORE_NAME);
+  const request = store.getAll();
+
+  request.onsuccess = () => {
+    console.log('All language projects loaded:', request.result.length);
+    app.ports.receiveAllLanguageProjects.send(request.result);
+  };
+
+  request.onerror = () => {
+    console.error('Failed to load all language projects');
+  };
+}
+
+// Delete a language project by UUID
+function deleteLanguageProjectByUuid(projectUuid) {
+  if (!db) {
+    console.error('Database not initialized');
+    return;
+  }
+
+  const transaction = db.transaction([PROJECT_STORE_NAME], 'readwrite');
+  const store = transaction.objectStore(PROJECT_STORE_NAME);
+  const request = store.delete(projectUuid);
+
+  request.onsuccess = () => {
+    console.log('Language project deleted:', projectUuid);
+    // Reload the project list
+    loadAllLanguageProjects();
+  };
+
+  request.onerror = () => {
+    console.error('Failed to delete language project');
+  };
+}
+
+// Port subscriptions for language projects
+app.ports.saveLanguageProject.subscribe((data) => {
+  saveLanguageProjectToIndexedDB(data);
+});
+
+app.ports.loadAllLanguageProjects.subscribe(() => {
+  // If database is not ready, wait a bit and try again
+  if (!db) {
+    setTimeout(() => {
+      loadAllLanguageProjects();
+    }, 100);
+  } else {
+    loadAllLanguageProjects();
+  }
+});
+
+app.ports.deleteLanguageProjectByUuid.subscribe((projectUuid) => {
+  deleteLanguageProjectByUuid(projectUuid);
+});
+
 // Handle cursor position insertions
 app.ports.insertAtCursor.subscribe((data) => {
   const element = document.getElementById(data.fieldId);
@@ -713,6 +817,23 @@ app.ports.insertAtCursor.subscribe((data) => {
     // Optionally refocus the element
     element.focus();
   }
+});
+
+// UUID generation
+app.ports.requestUUID.subscribe(() => {
+  // Use crypto.randomUUID if available, otherwise fallback to a simple implementation
+  let uuid;
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    uuid = crypto.randomUUID();
+  } else {
+    // Fallback UUID v4 implementation
+    uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+  app.ports.receiveUUID.send(uuid);
 });
 
 // Migration function for IPA chart redesign
