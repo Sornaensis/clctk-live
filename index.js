@@ -3,7 +3,7 @@ let app = null;
 
 // IndexedDB setup
 const DB_NAME = 'clctk-db';
-const DB_VERSION = 6;  // Increment version for language projects
+const DB_VERSION = 7;  // Increment version for UUID migration (language families now use UUID as key)
 const STORE_NAME = 'projects';
 const TEMPLATE_STORE_NAME = 'templates';
 const FAMILY_STORE_NAME = 'language-families';
@@ -41,7 +41,16 @@ function openDatabase() {
       
       // Create language families store
       if (!database.objectStoreNames.contains(FAMILY_STORE_NAME)) {
-        database.createObjectStore(FAMILY_STORE_NAME, { keyPath: 'id', autoIncrement: true });
+        database.createObjectStore(FAMILY_STORE_NAME, { keyPath: 'uuid' });
+      } else {
+        // Migrate existing store from id to uuid if needed
+        const transaction = event.target.transaction;
+        if (transaction.objectStoreNames.contains(FAMILY_STORE_NAME)) {
+          const familyStore = transaction.objectStore(FAMILY_STORE_NAME);
+          // Delete old store and recreate with UUID key
+          database.deleteObjectStore(FAMILY_STORE_NAME);
+          database.createObjectStore(FAMILY_STORE_NAME, { keyPath: 'uuid' });
+        }
       }
       
       // Create language projects store
@@ -716,32 +725,23 @@ function saveLanguageFamilyToIndexedDB(familyData) {
     return;
   }
 
+  // Generate UUID if not present
+  if (!familyData.uuid || familyData.uuid === '') {
+    familyData.uuid = generateUUID();
+  }
+
   const transaction = db.transaction([FAMILY_STORE_NAME], 'readwrite');
   const store = transaction.objectStore(FAMILY_STORE_NAME);
-
-  // If id is 0 or not set, let IndexedDB auto-assign
-  if (!familyData.id || familyData.id === 0) {
-    delete familyData.id;
-    const request = store.add(familyData);
-    request.onsuccess = () => {
-      console.log('New language family created with ID:', request.result);
-      // Reload language families
-      loadAllLanguageFamilies();
-    };
-    request.onerror = () => {
-      console.error('Failed to save new language family to IndexedDB');
-    };
-  } else {
-    // Update existing family
-    const request = store.put(familyData);
-    request.onsuccess = () => {
-      console.log('Language family updated in IndexedDB');
-      loadAllLanguageFamilies();
-    };
-    request.onerror = () => {
-      console.error('Failed to update language family in IndexedDB');
-    };
-  }
+  
+  const request = store.put(familyData);
+  request.onsuccess = () => {
+    console.log('Language family saved:', familyData.uuid);
+    // Reload language families
+    loadAllLanguageFamilies();
+  };
+  request.onerror = () => {
+    console.error('Failed to save language family to IndexedDB');
+  };
 }
 
 // Load all language families
@@ -765,8 +765,8 @@ function loadAllLanguageFamilies() {
   };
 }
 
-// Delete a language family by ID
-function deleteLanguageFamilyById(familyId) {
+// Delete a language family by UUID
+function deleteLanguageFamilyById(familyUuid) {
   if (!db) {
     console.error('Database not initialized');
     return;
@@ -774,10 +774,10 @@ function deleteLanguageFamilyById(familyId) {
 
   const transaction = db.transaction([FAMILY_STORE_NAME], 'readwrite');
   const store = transaction.objectStore(FAMILY_STORE_NAME);
-  const request = store.delete(familyId);
+  const request = store.delete(familyUuid);
 
   request.onsuccess = () => {
-    console.log('Language family deleted:', familyId);
+    console.log('Language family deleted:', familyUuid);
     // Reload the family list
     loadAllLanguageFamilies();
   };
