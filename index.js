@@ -3,8 +3,8 @@ let app = null;
 
 // IndexedDB setup
 const DB_NAME = 'clctk-db';
-const DB_VERSION = 7;  // Increment version for UUID migration (language families now use UUID as key)
-const STORE_NAME = 'projects';
+const DB_VERSION = 9;  // Increment version for UUID migration of 'languages' table
+const STORE_NAME = 'languages';
 const TEMPLATE_STORE_NAME = 'templates';
 const FAMILY_STORE_NAME = 'language-families';
 const PROJECT_STORE_NAME = 'language-projects';
@@ -28,10 +28,69 @@ function openDatabase() {
 
     request.onupgradeneeded = (event) => {
       const database = event.target.result;
+      const transaction = event.target.transaction;
+      const oldVersion = event.oldVersion;
       
-      // Create or update the object store for projects
+      // Migrate from 'projects' to 'languages' table (version 7 -> 8)
+      if (oldVersion < 8 && database.objectStoreNames.contains('projects')) {
+        // Read all data from old 'projects' store
+        const oldStore = transaction.objectStore('projects');
+        const getAllRequest = oldStore.getAll();
+        
+        getAllRequest.onsuccess = () => {
+          const allData = getAllRequest.result;
+          
+          // Delete old store
+          database.deleteObjectStore('projects');
+          
+          // Create new 'languages' store
+          const newStore = database.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+          
+          // Copy data to new store (this will happen in the same transaction)
+          allData.forEach(item => {
+            newStore.add(item);
+          });
+          
+          console.log('Migrated', allData.length, 'items from projects to languages table');
+        };
+      }
+      
+      // Migrate from id-based to uuid-based keyPath (version 8 -> 9)
+      if (oldVersion < 9 && database.objectStoreNames.contains(STORE_NAME)) {
+        // Read all data from current 'languages' store
+        const oldStore = transaction.objectStore(STORE_NAME);
+        const getAllRequest = oldStore.getAll();
+        
+        getAllRequest.onsuccess = () => {
+          const allData = getAllRequest.result;
+          
+          // Generate UUIDs for records that don't have them
+          allData.forEach(item => {
+            if (!item.uuid || item.uuid === '') {
+              item.uuid = generateUUID();
+            }
+            // Remove the old id field as it's no longer needed
+            delete item.id;
+          });
+          
+          // Delete old store
+          database.deleteObjectStore(STORE_NAME);
+          
+          // Create new 'languages' store with uuid as keyPath
+          const newStore = database.createObjectStore(STORE_NAME, { keyPath: 'uuid' });
+          
+          // Copy data to new store with UUIDs
+          allData.forEach(item => {
+            newStore.add(item);
+          });
+          
+          console.log('Migrated', allData.length, 'languages from id-based to uuid-based keyPath');
+        };
+      }
+      
+      // Create or update the object store for languages
       if (!database.objectStoreNames.contains(STORE_NAME)) {
-        database.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+        database.createObjectStore(STORE_NAME, { keyPath: 'uuid' });
       }
       
       // Create templates store
@@ -44,7 +103,6 @@ function openDatabase() {
         database.createObjectStore(FAMILY_STORE_NAME, { keyPath: 'uuid' });
       } else {
         // Migrate existing store from id to uuid if needed
-        const transaction = event.target.transaction;
         if (transaction.objectStoreNames.contains(FAMILY_STORE_NAME)) {
           const familyStore = transaction.objectStore(FAMILY_STORE_NAME);
           // Delete old store and recreate with UUID key
@@ -70,8 +128,8 @@ function generateUUID() {
   });
 }
 
-// Save project to IndexedDB
-function saveToIndexedDB(projectData) {
+// Save language to IndexedDB
+function saveToIndexedDB(languageData) {
   if (!db) {
     console.error('Database not initialized');
     return;
@@ -82,35 +140,35 @@ function saveToIndexedDB(projectData) {
 
   // Add timestamp if not present
   const dataToStore = {
-    ...projectData,
-    lastModified: projectData.lastModified || new Date().toISOString()
+    ...languageData,
+    lastModified: languageData.lastModified || new Date().toISOString()
   };
 
-  // If id is 0 or not set, let IndexedDB auto-assign
-  if (!dataToStore.id || dataToStore.id === 0) {
-    delete dataToStore.id;
+  // If uuid is empty or not set, generate one
+  if (!dataToStore.uuid || dataToStore.uuid === '') {
+    dataToStore.uuid = generateUUID();
     const request = store.add(dataToStore);
     request.onsuccess = () => {
-      console.log('New project created with ID:', request.result);
-      // Load the newly created project back
-      loadProjectByIdInternal(request.result);
+      console.log('New language created with UUID:', dataToStore.uuid);
+      // Load the newly created language back
+      loadProjectByIdInternal(dataToStore.uuid);
     };
     request.onerror = () => {
-      console.error('Failed to save new project to IndexedDB');
+      console.error('Failed to save new language to IndexedDB');
     };
   } else {
-    // Update existing project
+    // Update existing language
     const request = store.put(dataToStore);
     request.onsuccess = () => {
-      console.log('Project updated in IndexedDB');
+      console.log('Language updated in IndexedDB');
     };
     request.onerror = () => {
-      console.error('Failed to update project in IndexedDB');
+      console.error('Failed to update language in IndexedDB');
     };
   }
 }
 
-// Load the first project or a specific project from IndexedDB
+// Load the first language or a specific language from IndexedDB
 function loadFromIndexedDB() {
   if (!db) {
     console.error('Database not initialized');
@@ -120,34 +178,24 @@ function loadFromIndexedDB() {
   const transaction = db.transaction([STORE_NAME], 'readonly');
   const store = transaction.objectStore(STORE_NAME);
   
-  // Try to get a project - first try ID 1, then get the first one
-  const request = store.get(1);
-
-  request.onsuccess = () => {
-    if (request.result) {
-      console.log('Project loaded from IndexedDB');
-      app.ports.loadFromStorage.send(request.result);
+  // Try to get the first language
+  const cursorRequest = store.openCursor();
+  cursorRequest.onsuccess = (event) => {
+    const cursor = event.target.result;
+    if (cursor) {
+      console.log('First language loaded from IndexedDB');
+      app.ports.loadFromStorage.send(cursor.value);
     } else {
-      // If no project with ID 1, try to get the first project
-      const cursorRequest = store.openCursor();
-      cursorRequest.onsuccess = (event) => {
-        const cursor = event.target.result;
-        if (cursor) {
-          console.log('First project loaded from IndexedDB');
-          app.ports.loadFromStorage.send(cursor.value);
-        } else {
-          console.log('No projects found in IndexedDB');
-        }
-      };
+      console.log('No languages found in IndexedDB');
     }
   };
 
-  request.onerror = () => {
-    console.error('Failed to load project from IndexedDB');
+  cursorRequest.onerror = () => {
+    console.error('Failed to load language from IndexedDB');
   };
 }
 
-// Load all projects (metadata only)
+// Load all languages (metadata only)
 function loadAllProjects() {
   if (!db) {
     console.error('Database not initialized');
@@ -159,23 +207,23 @@ function loadAllProjects() {
   const request = store.getAll();
 
   request.onsuccess = () => {
-    const projects = request.result.map(p => ({
-      id: p.id,
-      name: p.name,
-      created: p.created || '',
-      lastModified: p.lastModified || ''
+    const languages = request.result.map(lang => ({
+      uuid: lang.uuid,
+      name: lang.name,
+      created: lang.created || '',
+      lastModified: lang.lastModified || ''
     }));
-    console.log('All projects loaded:', projects.length);
-    app.ports.receiveAllProjects.send(projects);
+    console.log('All languages loaded:', languages.length);
+    app.ports.receiveAllProjects.send(languages);
   };
 
   request.onerror = () => {
-    console.error('Failed to load all projects');
+    console.error('Failed to load all languages');
   };
 }
 
-// Load a specific project by ID
-function loadProjectByIdInternal(projectId) {
+// Load a specific language by UUID
+function loadProjectByIdInternal(languageUuid) {
   if (!db) {
     console.error('Database not initialized');
     return;
@@ -183,24 +231,24 @@ function loadProjectByIdInternal(projectId) {
 
   const transaction = db.transaction([STORE_NAME], 'readonly');
   const store = transaction.objectStore(STORE_NAME);
-  const request = store.get(projectId);
+  const request = store.get(languageUuid);
 
   request.onsuccess = () => {
     if (request.result) {
-      console.log('Project loaded by ID:', projectId);
+      console.log('Language loaded by UUID:', languageUuid);
       app.ports.receiveProject.send(request.result);
     } else {
-      console.error('Project not found with ID:', projectId);
+      console.error('Language not found with UUID:', languageUuid);
     }
   };
 
   request.onerror = () => {
-    console.error('Failed to load project by ID');
+    console.error('Failed to load language by UUID');
   };
 }
 
-// Delete a project by ID
-function deleteProjectById(projectId) {
+// Delete a language by UUID
+function deleteProjectById(languageUuid) {
   if (!db) {
     console.error('Database not initialized');
     return;
@@ -208,41 +256,41 @@ function deleteProjectById(projectId) {
 
   const transaction = db.transaction([STORE_NAME], 'readwrite');
   const store = transaction.objectStore(STORE_NAME);
-  const request = store.delete(projectId);
+  const request = store.delete(languageUuid);
 
   request.onsuccess = () => {
-    console.log('Project deleted:', projectId);
-    // Reload the project list
+    console.log('Language deleted:', languageUuid);
+    // Reload the language list
     loadAllProjects();
   };
 
   request.onerror = () => {
-    console.error('Failed to delete project');
+    console.error('Failed to delete language');
   };
 }
 
-// Duplicate a project by ID
-function duplicateProjectById(projectId) {
+// Duplicate a language by UUID
+function duplicateProjectById(languageUuid) {
   if (!db) {
     console.error('Database not initialized');
     return;
   }
 
-  // First, load the project to duplicate
+  // First, load the language to duplicate
   const readTransaction = db.transaction([STORE_NAME], 'readonly');
   const readStore = readTransaction.objectStore(STORE_NAME);
-  const getRequest = readStore.get(projectId);
+  const getRequest = readStore.get(languageUuid);
 
   getRequest.onsuccess = () => {
     if (!getRequest.result) {
-      console.error('Project not found with ID:', projectId);
+      console.error('Language not found with UUID:', languageUuid);
       return;
     }
 
-    const originalProject = getRequest.result;
+    const originalLanguage = getRequest.result;
     
     // Smart naming: avoid "Copy (Copy)" by using numbering
-    let baseName = originalProject.name;
+    let baseName = originalLanguage.name;
     if (baseName.endsWith(' (Copy)')) {
       baseName = baseName.substring(0, baseName.length - 7);
     } else if (baseName.match(/ \(Copy \d+\)$/)) {
@@ -250,15 +298,15 @@ function duplicateProjectById(projectId) {
       baseName = baseName.replace(/ \(Copy \d+\)$/, '');
     }
     
-    // Load all projects to find existing copies
-    const allProjectsRequest = readStore.getAll();
+    // Load all languages to find existing copies
+    const allLanguagesRequest = readStore.getAll();
     
-    allProjectsRequest.onsuccess = () => {
-      const allProjects = allProjectsRequest.result;
+    allLanguagesRequest.onsuccess = () => {
+      const allLanguages = allLanguagesRequest.result;
       
-      // Count how many projects start with the base name
-      const existingCopies = allProjects.filter(p => 
-        p.name.startsWith(baseName)
+      // Count how many languages start with the base name
+      const existingCopies = allLanguages.filter(lang => 
+        lang.name.startsWith(baseName)
       ).length;
       
       // Generate the new name
@@ -269,45 +317,43 @@ function duplicateProjectById(projectId) {
         newName = baseName + ' (Copy ' + existingCopies + ')';
       }
       
-      // Create a duplicate with the new name and timestamps
-      const duplicateProject = {
-        ...originalProject,
+      // Create a duplicate with the new name, new UUID, and timestamps
+      const duplicateLanguage = {
+        ...originalLanguage,
+        uuid: generateUUID(),
         name: newName,
         created: new Date().toISOString(),
         lastModified: new Date().toISOString()
       };
-      
-      // Remove the ID so IndexedDB will auto-assign a new one
-      delete duplicateProject.id;
 
       // Save the duplicate
       const writeTransaction = db.transaction([STORE_NAME], 'readwrite');
       const writeStore = writeTransaction.objectStore(STORE_NAME);
-      const addRequest = writeStore.add(duplicateProject);
+      const addRequest = writeStore.add(duplicateLanguage);
 
       addRequest.onsuccess = () => {
-        console.log('Project duplicated with new ID:', addRequest.result);
-        // Reload the project list to show the new duplicate
+        console.log('Language duplicated with new UUID:', duplicateLanguage.uuid);
+        // Reload the language list to show the new duplicate
         loadAllProjects();
       };
 
       addRequest.onerror = () => {
-        console.error('Failed to duplicate project');
+        console.error('Failed to duplicate language');
       };
     };
     
-    allProjectsRequest.onerror = () => {
-      console.error('Failed to load all projects for duplication');
+    allLanguagesRequest.onerror = () => {
+      console.error('Failed to load all languages for duplication');
     };
   };
 
   getRequest.onerror = () => {
-    console.error('Failed to load project for duplication');
+    console.error('Failed to load language for duplication');
   };
 }
 
-// Rename a project by ID
-function renameProjectById(projectId, newName) {
+// Rename a language by UUID
+function renameProjectById(languageUuid, newName) {
   if (!db) {
     console.error('Database not initialized');
     return;
@@ -315,35 +361,35 @@ function renameProjectById(projectId, newName) {
 
   const transaction = db.transaction([STORE_NAME], 'readwrite');
   const store = transaction.objectStore(STORE_NAME);
-  const getRequest = store.get(projectId);
+  const getRequest = store.get(languageUuid);
 
   getRequest.onsuccess = () => {
     if (!getRequest.result) {
-      console.error('Project not found with ID:', projectId);
+      console.error('Language not found with UUID:', languageUuid);
       return;
     }
 
-    const project = getRequest.result;
-    project.name = newName;
-    project.lastModified = new Date().toISOString();
+    const language = getRequest.result;
+    language.name = newName;
+    language.lastModified = new Date().toISOString();
 
-    const updateRequest = store.put(project);
+    const updateRequest = store.put(language);
 
     updateRequest.onsuccess = () => {
-      console.log('Project renamed successfully');
-      // Reload the project list to show the updated name
+      console.log('Language renamed successfully');
+      // Reload the language list to show the updated name
       loadAllProjects();
-      // If this is the current project, also reload it to update the UI
-      loadProjectByIdInternal(projectId);
+      // If this is the current language, also reload it to update the UI
+      loadProjectByIdInternal(languageUuid);
     };
 
     updateRequest.onerror = () => {
-      console.error('Failed to rename project');
+      console.error('Failed to rename language');
     };
   };
 
   getRequest.onerror = () => {
-    console.error('Failed to load project for renaming');
+    console.error('Failed to load language for renaming');
   };
 }
 
