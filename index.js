@@ -3,120 +3,110 @@ let app = null;
 
 // IndexedDB setup
 const DB_NAME = 'clctk-db';
-const DB_VERSION = 9;  // Increment version for UUID migration of 'languages' table
+// Note: Version reset from 9 to 1 to start fresh with simplified schema.
+// Complex migration logic was removed in favor of clean slate approach.
+// Users upgrading from older versions will have their database recreated.
+// Version 2: Updated templates to use UUID instead of auto-increment ID
+const DB_VERSION = 2;
 const STORE_NAME = 'languages';
 const TEMPLATE_STORE_NAME = 'templates';
 const FAMILY_STORE_NAME = 'language-families';
 const PROJECT_STORE_NAME = 'language-projects';
-const APP_VERSION = '2.0.0';  // IPA chart redesign version
+const APP_VERSION = '1.0.0';  // Reset to 1.0 with simplified database
 
 let db = null;
 
 // Open IndexedDB
 function openDatabase() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-    request.onerror = () => {
-      reject(new Error('Failed to open database'));
+    console.log('Opening database...');
+    
+    // Try to open the database first to check its version
+    const checkRequest = indexedDB.open(DB_NAME);
+    
+    checkRequest.onsuccess = (event) => {
+      const existingDb = event.target.result;
+      const currentVersion = existingDb.version;
+      existingDb.close();
+      
+      console.log(`Found existing database with version ${currentVersion}`);
+      
+      // If database exists with a different version (and not a brand new db), delete and recreate
+      if (currentVersion > 0 && currentVersion !== DB_VERSION) {
+        console.log(`Database version mismatch (current: ${currentVersion}, expected: ${DB_VERSION}). Deleting old database...`);
+        
+        const deleteRequest = indexedDB.deleteDatabase(DB_NAME);
+        
+        deleteRequest.onsuccess = () => {
+          console.log('Old database deleted successfully');
+          openDatabaseInternal(resolve, reject);
+        };
+        
+        deleteRequest.onerror = (event) => {
+          console.error('Failed to delete old database:', event);
+          reject(new Error('Failed to delete incompatible database version'));
+        };
+        
+        deleteRequest.onblocked = () => {
+          console.error('Database deletion blocked - please close all other tabs with this app');
+          reject(new Error('Cannot upgrade database - other tabs are using it. Please close all other tabs and try again.'));
+        };
+      } else {
+        // Database is compatible or new, open it normally
+        console.log(`Database version ${currentVersion === DB_VERSION ? 'matches' : 'will be initialized to'} ${DB_VERSION}, opening...`);
+        openDatabaseInternal(resolve, reject);
+      }
     };
-
-    request.onsuccess = () => {
-      db = request.result;
-      resolve(db);
+    
+    checkRequest.onerror = (event) => {
+      // Could be that database doesn't exist, or there's a permission/storage issue
+      console.log('Database check failed, attempting to create new database...');
+      console.log('If this fails, check browser permissions and storage quota');
+      openDatabaseInternal(resolve, reject);
     };
+  });
+}
+
+function openDatabaseInternal(resolve, reject) {
+  const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+  request.onerror = () => {
+    reject(new Error('Failed to open database'));
+  };
+
+  request.onsuccess = () => {
+    db = request.result;
+    resolve(db);
+  };
 
     request.onupgradeneeded = (event) => {
       const database = event.target.result;
-      const transaction = event.target.transaction;
       const oldVersion = event.oldVersion;
       
-      // Migrate from 'projects' to 'languages' table (version 7 -> 8)
-      if (oldVersion < 8 && database.objectStoreNames.contains('projects')) {
-        // Read all data from old 'projects' store
-        const oldStore = transaction.objectStore('projects');
-        const getAllRequest = oldStore.getAll();
-        
-        getAllRequest.onsuccess = () => {
-          const allData = getAllRequest.result;
-          
-          // Delete old store
-          database.deleteObjectStore('projects');
-          
-          // Create new 'languages' store
-          const newStore = database.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-          
-          // Copy data to new store (this will happen in the same transaction)
-          allData.forEach(item => {
-            newStore.add(item);
-          });
-          
-          console.log('Migrated', allData.length, 'items from projects to languages table');
-        };
-      }
+      console.log(`Database upgrade: version ${oldVersion} -> ${DB_VERSION}`);
       
-      // Migrate from id-based to uuid-based keyPath (version 8 -> 9)
-      if (oldVersion < 9 && database.objectStoreNames.contains(STORE_NAME)) {
-        // Read all data from current 'languages' store
-        const oldStore = transaction.objectStore(STORE_NAME);
-        const getAllRequest = oldStore.getAll();
-        
-        getAllRequest.onsuccess = () => {
-          const allData = getAllRequest.result;
-          
-          // Generate UUIDs for records that don't have them
-          allData.forEach(item => {
-            if (!item.uuid || item.uuid === '') {
-              item.uuid = generateUUID();
-            }
-            // Remove the old id field as it's no longer needed
-            delete item.id;
-          });
-          
-          // Delete old store
-          database.deleteObjectStore(STORE_NAME);
-          
-          // Create new 'languages' store with uuid as keyPath
-          const newStore = database.createObjectStore(STORE_NAME, { keyPath: 'uuid' });
-          
-          // Copy data to new store with UUIDs
-          allData.forEach(item => {
-            newStore.add(item);
-          });
-          
-          console.log('Migrated', allData.length, 'languages from id-based to uuid-based keyPath');
-        };
-      }
+      // Clear any existing object stores (clean slate approach)
+      const storeNames = Array.from(database.objectStoreNames);
+      storeNames.forEach(storeName => {
+        console.log(`Removing old object store: ${storeName}`);
+        database.deleteObjectStore(storeName);
+      });
       
-      // Create or update the object store for languages
-      if (!database.objectStoreNames.contains(STORE_NAME)) {
-        database.createObjectStore(STORE_NAME, { keyPath: 'uuid' });
-      }
+      // Create all object stores fresh
+      console.log('Creating languages store with uuid keyPath');
+      database.createObjectStore(STORE_NAME, { keyPath: 'uuid' });
       
-      // Create templates store
-      if (!database.objectStoreNames.contains(TEMPLATE_STORE_NAME)) {
-        database.createObjectStore(TEMPLATE_STORE_NAME, { keyPath: 'id', autoIncrement: true });
-      }
+      console.log('Creating templates store with uuid keyPath');
+      database.createObjectStore(TEMPLATE_STORE_NAME, { keyPath: 'uuid' });
       
-      // Create language families store
-      if (!database.objectStoreNames.contains(FAMILY_STORE_NAME)) {
-        database.createObjectStore(FAMILY_STORE_NAME, { keyPath: 'uuid' });
-      } else {
-        // Migrate existing store from id to uuid if needed
-        if (transaction.objectStoreNames.contains(FAMILY_STORE_NAME)) {
-          const familyStore = transaction.objectStore(FAMILY_STORE_NAME);
-          // Delete old store and recreate with UUID key
-          database.deleteObjectStore(FAMILY_STORE_NAME);
-          database.createObjectStore(FAMILY_STORE_NAME, { keyPath: 'uuid' });
-        }
-      }
+      console.log('Creating language-families store with uuid keyPath');
+      database.createObjectStore(FAMILY_STORE_NAME, { keyPath: 'uuid' });
       
-      // Create language projects store
-      if (!database.objectStoreNames.contains(PROJECT_STORE_NAME)) {
-        database.createObjectStore(PROJECT_STORE_NAME, { keyPath: 'uuid' });
-      }
+      console.log('Creating language-projects store with uuid keyPath');
+      database.createObjectStore(PROJECT_STORE_NAME, { keyPath: 'uuid' });
+      
+      console.log('Database schema created successfully');
     };
-  });
 }
 
 // Generate a UUID v4
@@ -666,29 +656,20 @@ function saveTemplateToIndexedDB(templateData) {
   const transaction = db.transaction([TEMPLATE_STORE_NAME], 'readwrite');
   const store = transaction.objectStore(TEMPLATE_STORE_NAME);
 
-  // If id is 0 or not set, let IndexedDB auto-assign
-  if (!templateData.id || templateData.id === 0) {
-    delete templateData.id;
-    const request = store.add(templateData);
-    request.onsuccess = () => {
-      console.log('New template created with ID:', request.result);
-      // Reload templates
-      loadAllTemplates();
-    };
-    request.onerror = () => {
-      console.error('Failed to save new template to IndexedDB');
-    };
-  } else {
-    // Update existing template
-    const request = store.put(templateData);
-    request.onsuccess = () => {
-      console.log('Template updated in IndexedDB');
-      loadAllTemplates();
-    };
-    request.onerror = () => {
-      console.error('Failed to update template in IndexedDB');
-    };
+  // Generate UUID if not present
+  if (!templateData.uuid || templateData.uuid === '') {
+    templateData.uuid = generateUUID();
   }
+  
+  const request = store.put(templateData);
+  request.onsuccess = () => {
+    console.log('Template saved with UUID:', templateData.uuid);
+    // Reload templates
+    loadAllTemplates();
+  };
+  request.onerror = () => {
+    console.error('Failed to save template to IndexedDB');
+  };
 }
 
 // Load all templates
@@ -906,44 +887,20 @@ function deleteLanguageProjectByUuid(projectUuid) {
 
 
 
-// Migration function for IPA chart redesign
-function migrateToIPAChart() {
+// Save app version to preferences
+function initializeAppVersion() {
   try {
     const preferences = JSON.parse(localStorage.getItem(PREFERENCES_KEY) || '{}');
     
-    // Check if migration has already been done
-    if (preferences.appVersion === APP_VERSION) {
-      console.log('Already migrated to version', APP_VERSION);
-      return Promise.resolve();
+    // Set or update app version
+    if (preferences.appVersion !== APP_VERSION) {
+      console.log('Initializing app version', APP_VERSION);
+      savePreference({ appVersion: APP_VERSION, initialized: new Date().toISOString() });
     }
     
-    console.log('Starting migration to IPA chart version', APP_VERSION);
-    
-    return new Promise((resolve, reject) => {
-      if (!db) {
-        reject(new Error('Database not initialized'));
-        return;
-      }
-      
-      // Clear all projects as they use the old category system
-      const transaction = db.transaction([STORE_NAME], 'readwrite');
-      const store = transaction.objectStore(STORE_NAME);
-      const clearRequest = store.clear();
-      
-      clearRequest.onsuccess = () => {
-        console.log('Old projects cleared during migration');
-        // Mark migration as complete
-        savePreference({ appVersion: APP_VERSION, migrationDate: new Date().toISOString() });
-        resolve();
-      };
-      
-      clearRequest.onerror = () => {
-        console.error('Failed to clear old projects during migration');
-        reject(new Error('Migration failed'));
-      };
-    });
+    return Promise.resolve();
   } catch (error) {
-    console.error('Migration error:', error);
+    console.error('Version initialization error:', error);
     return Promise.reject(error);
   }
 }
@@ -968,9 +925,9 @@ appContainer.innerHTML = `
 // Initialize database and load existing data
 openDatabase()
   .then(() => {
-    console.log('Database initialized');
-    // Run migration before loading projects
-    return migrateToIPAChart();
+    console.log('Database initialized successfully');
+    // Initialize app version
+    return initializeAppVersion();
   })
   .then(() => {
     console.log('Initializing Elm application...');
@@ -988,7 +945,7 @@ openDatabase()
     loadPreferences();
   })
   .catch((error) => {
-    console.error('Database initialization or migration failed:', error);
+    console.error('Database initialization failed:', error);
     // Show error message
     appContainer.innerHTML = `
       <div style="display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;">
