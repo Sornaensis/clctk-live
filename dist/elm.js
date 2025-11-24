@@ -7342,11 +7342,12 @@ var $elm$core$Task$attempt = F2(
 var $author$project$Types$Circumfix = 3;
 var $author$project$Types$CodaRestriction = 3;
 var $author$project$Types$Dissimilation = 1;
+var $author$project$Types$LegalCluster = 1;
 var $author$project$Types$NoWordInitial = 4;
 var $author$project$Types$OnsetRestriction = 2;
 var $author$project$Types$Prefix = 0;
 var $author$project$Templates$englishTemplate = {
-	ad: 'A template based on English phonology with common Germanic patterns',
+	ad: 'A template based on English phonology with accurate phonotactic constraints using legal cluster whitelist',
 	cF: true,
 	aQ: $elm$core$Dict$empty,
 	aU: {
@@ -7519,14 +7520,89 @@ var $author$project$Templates$englishTemplate = {
 				dQ: _List_fromArray(
 					['aɪ', 'aʊ', 'ɔɪ', 'eɪ', 'oʊ']),
 				t: ''
+			},
+				{
+				dx: 'O',
+				x: 'OnsetCluster',
+				dQ: _List_fromArray(
+					['pl', 'pr', 'bl', 'br', 'tr', 'dr', 'kl', 'kr', 'gl', 'gr', 'fl', 'fr', 'θr', 'sl', 'tw', 'dw', 'kw', 'gw', 'sw', 'sp', 'st', 'sk', 'sm', 'sn', 'ʃr']),
+				t: ''
+			},
+				{
+				dx: 'W',
+				x: 'TripleOnset',
+				dQ: _List_fromArray(
+					['str', 'spl', 'spr', 'skr', 'skw']),
+				t: ''
+			},
+				{
+				dx: 'X',
+				x: 'CodaCluster',
+				dQ: _List_fromArray(
+					['mp', 'nt', 'nd', 'nk', 'ŋk', 'lp', 'lt', 'ld', 'lk', 'lf', 'lm', 'ln', 'rp', 'rt', 'rd', 'rk', 'rf', 'rm', 'rn', 'ps', 'ts', 'ks', 'ft', 'sk', 'sp', 'st', 'pt', 'kt']),
+				t: ''
 			}
 			]),
 		dk: _List_fromArray(
 			[
-				{dj: 0, ad: 'Illegal cluster: *tl', dP: 'tl'},
-				{dj: 0, ad: 'Illegal cluster: *dl', dP: 'dl'},
-				{dj: 0, ad: 'Illegal cluster: *bn', dP: 'bn'},
-				{dj: 0, ad: 'Illegal cluster: *pn (word-initially)', dP: 'pn'},
+				{dj: 1, ad: 'Legal onset: pl (play)', dP: 'pl'},
+				{dj: 1, ad: 'Legal onset: pr (pray)', dP: 'pr'},
+				{dj: 1, ad: 'Legal onset: bl (blue)', dP: 'bl'},
+				{dj: 1, ad: 'Legal onset: br (brown)', dP: 'br'},
+				{dj: 1, ad: 'Legal onset: tr (tree)', dP: 'tr'},
+				{dj: 1, ad: 'Legal onset: dr (drive)', dP: 'dr'},
+				{dj: 1, ad: 'Legal onset: kl (clean)', dP: 'kl'},
+				{dj: 1, ad: 'Legal onset: kr (cream)', dP: 'kr'},
+				{dj: 1, ad: 'Legal onset: gl (glass)', dP: 'gl'},
+				{dj: 1, ad: 'Legal onset: gr (green)', dP: 'gr'},
+				{dj: 1, ad: 'Legal onset: fl (fly)', dP: 'fl'},
+				{dj: 1, ad: 'Legal onset: fr (free)', dP: 'fr'},
+				{dj: 1, ad: 'Legal onset: θr (three)', dP: 'θr'},
+				{dj: 1, ad: 'Legal onset: ʃr (shrimp)', dP: 'ʃr'},
+				{dj: 1, ad: 'Legal onset: sl (sleep)', dP: 'sl'},
+				{dj: 1, ad: 'Legal onset: tw (twin)', dP: 'tw'},
+				{dj: 1, ad: 'Legal onset: dw (dwell)', dP: 'dw'},
+				{dj: 1, ad: 'Legal onset: kw (quick)', dP: 'kw'},
+				{dj: 1, ad: 'Legal onset: gw (Gwen)', dP: 'gw'},
+				{dj: 1, ad: 'Legal onset: sw (swim)', dP: 'sw'},
+				{dj: 1, ad: 'Legal onset: sp (spin)', dP: 'sp'},
+				{dj: 1, ad: 'Legal onset: st (stop)', dP: 'st'},
+				{dj: 1, ad: 'Legal onset: sk (skip)', dP: 'sk'},
+				{dj: 1, ad: 'Legal onset: sm (small)', dP: 'sm'},
+				{dj: 1, ad: 'Legal onset: sn (snow)', dP: 'sn'},
+				{dj: 1, ad: 'Legal onset: str (street)', dP: 'str'},
+				{dj: 1, ad: 'Legal onset: spl (split)', dP: 'spl'},
+				{dj: 1, ad: 'Legal onset: spr (spring)', dP: 'spr'},
+				{dj: 1, ad: 'Legal onset: skr (scream)', dP: 'skr'},
+				{dj: 1, ad: 'Legal onset: skw (square)', dP: 'skw'},
+				{dj: 1, ad: 'Legal coda: mp (lamp)', dP: 'mp'},
+				{dj: 1, ad: 'Legal coda: nt (bent)', dP: 'nt'},
+				{dj: 1, ad: 'Legal coda: nd (band)', dP: 'nd'},
+				{dj: 1, ad: 'Legal coda: nk (bank)', dP: 'nk'},
+				{dj: 1, ad: 'Legal coda: ŋk (think)', dP: 'ŋk'},
+				{dj: 1, ad: 'Legal coda: lp (help)', dP: 'lp'},
+				{dj: 1, ad: 'Legal coda: lt (belt)', dP: 'lt'},
+				{dj: 1, ad: 'Legal coda: ld (held)', dP: 'ld'},
+				{dj: 1, ad: 'Legal coda: lk (milk)', dP: 'lk'},
+				{dj: 1, ad: 'Legal coda: lf (self)', dP: 'lf'},
+				{dj: 1, ad: 'Legal coda: lm (film)', dP: 'lm'},
+				{dj: 1, ad: 'Legal coda: ln (kiln)', dP: 'ln'},
+				{dj: 1, ad: 'Legal coda: rp (harp)', dP: 'rp'},
+				{dj: 1, ad: 'Legal coda: rt (cart)', dP: 'rt'},
+				{dj: 1, ad: 'Legal coda: rd (hard)', dP: 'rd'},
+				{dj: 1, ad: 'Legal coda: rk (dark)', dP: 'rk'},
+				{dj: 1, ad: 'Legal coda: rf (scarf)', dP: 'rf'},
+				{dj: 1, ad: 'Legal coda: rm (farm)', dP: 'rm'},
+				{dj: 1, ad: 'Legal coda: rn (barn)', dP: 'rn'},
+				{dj: 1, ad: 'Legal coda: ps (caps)', dP: 'ps'},
+				{dj: 1, ad: 'Legal coda: ts (cats)', dP: 'ts'},
+				{dj: 1, ad: 'Legal coda: ks (lacks)', dP: 'ks'},
+				{dj: 1, ad: 'Legal coda: ft (left)', dP: 'ft'},
+				{dj: 1, ad: 'Legal coda: sk (mask)', dP: 'sk'},
+				{dj: 1, ad: 'Legal coda: sp (wasp)', dP: 'sp'},
+				{dj: 1, ad: 'Legal coda: st (fast)', dP: 'st'},
+				{dj: 1, ad: 'Legal coda: pt (kept)', dP: 'pt'},
+				{dj: 1, ad: 'Legal coda: kt (act)', dP: 'kt'},
 				{dj: 2, ad: 'ŋ not allowed in syllable onset', dP: 'ŋ'},
 				{dj: 3, ad: 'h not allowed in syllable coda', dP: 'h'},
 				{dj: 3, ad: 'w not allowed in syllable coda', dP: 'w'},
@@ -7592,23 +7668,19 @@ var $author$project$Templates$englishTemplate = {
 		},
 		dF: _List_fromArray(
 			[
-				{x: 'M', cQ: 'M'},
-				{x: 'D', cQ: 'D'},
-				{x: 'MC', cQ: 'MC'},
-				{x: 'DC', cQ: 'DC'},
-				{x: 'CM', cQ: 'CM'},
-				{x: 'CD', cQ: 'CD'},
-				{x: 'CMC', cQ: 'CMC'},
-				{x: 'CDC', cQ: 'CDC'},
-				{x: 'CMCC', cQ: 'CMCC'},
-				{x: 'MCC', cQ: 'MCC'},
-				{x: 'CCM', cQ: 'CCM'},
-				{x: 'CCMC', cQ: 'CCMC'},
-				{x: 'CCMCC', cQ: 'CCMCC'},
-				{x: 'CCCMC', cQ: 'CCCMC'}
+				{x: 'V', cQ: 'V'},
+				{x: 'CV', cQ: 'CV'},
+				{x: 'VC', cQ: 'VC'},
+				{x: 'CVC', cQ: 'CVC'},
+				{x: 'OV', cQ: 'OV'},
+				{x: 'OVC', cQ: 'OVC'},
+				{x: 'CVX', cQ: 'CVX'},
+				{x: 'OVX', cQ: 'OVX'},
+				{x: 'WV', cQ: 'WV'},
+				{x: 'WVC', cQ: 'WVC'}
 			]),
 		dN: _List_fromArray(
-			['M', 'D', 'MC', 'DC', 'CM', 'CD', 'CMC', 'CDC', 'CMCC', 'MCC', 'CCM', 'CCMC', 'CCMCC', 'CCCMC'])
+			['V', 'CV', 'VC', 'CVC', 'OV', 'OVC', 'CVX', 'OVX', 'WV', 'WVC'])
 	},
 	t: 'template-english'
 };
@@ -8318,57 +8390,120 @@ var $author$project$Templates$russianTemplate = {
 				dQ: _List_fromArray(
 					['j']),
 				t: ''
+			},
+				{
+				dx: 'O',
+				x: 'Obstruents',
+				dQ: _List_fromArray(
+					['p', 'b', 't', 'd', 'k', 'g', 'f', 'v', 's', 'z', 'ts', 'tʃ', 'ʃ', 'ʒ', 'x']),
+				t: ''
+			},
+				{
+				dx: 'S',
+				x: 'Sonorants',
+				dQ: _List_fromArray(
+					['m', 'n', 'l', 'r', 'j']),
+				t: ''
+			},
+				{
+				dx: 'X',
+				x: 'ObstruentLiquid',
+				dQ: _List_fromArray(
+					['pl', 'bl', 'pr', 'br', 'tr', 'dr', 'kl', 'gl', 'kr', 'gr', 'fl', 'vl', 'fr', 'vr']),
+				t: ''
+			},
+				{
+				dx: 'Y',
+				x: 'SibilantSonorant',
+				dQ: _List_fromArray(
+					['sl', 'zl', 'sm', 'zm', 'sn', 'zn']),
+				t: ''
+			},
+				{
+				dx: 'Z',
+				x: 'SibilantStop',
+				dQ: _List_fromArray(
+					['sp', 'st', 'sk', 'zb', 'zd', 'zg']),
+				t: ''
+			},
+				{
+				dx: 'W',
+				x: 'TripleOnset',
+				dQ: _List_fromArray(
+					['str', 'skr', 'spr', 'skl', 'spl']),
+				t: ''
 			}
 			]),
 		dk: _List_fromArray(
 			[
+				{dj: 1, ad: 'Legal cluster: pl', dP: 'pl'},
+				{dj: 1, ad: 'Legal cluster: bl', dP: 'bl'},
+				{dj: 1, ad: 'Legal cluster: pr', dP: 'pr'},
+				{dj: 1, ad: 'Legal cluster: br', dP: 'br'},
+				{dj: 1, ad: 'Legal cluster: tr', dP: 'tr'},
+				{dj: 1, ad: 'Legal cluster: dr', dP: 'dr'},
+				{dj: 1, ad: 'Legal cluster: kl', dP: 'kl'},
+				{dj: 1, ad: 'Legal cluster: gl', dP: 'gl'},
+				{dj: 1, ad: 'Legal cluster: kr', dP: 'kr'},
+				{dj: 1, ad: 'Legal cluster: gr', dP: 'gr'},
+				{dj: 1, ad: 'Legal cluster: fl', dP: 'fl'},
+				{dj: 1, ad: 'Legal cluster: vl', dP: 'vl'},
+				{dj: 1, ad: 'Legal cluster: fr', dP: 'fr'},
+				{dj: 1, ad: 'Legal cluster: vr', dP: 'vr'},
+				{dj: 1, ad: 'Legal cluster: sp', dP: 'sp'},
+				{dj: 1, ad: 'Legal cluster: st', dP: 'st'},
+				{dj: 1, ad: 'Legal cluster: sk', dP: 'sk'},
+				{dj: 1, ad: 'Legal cluster: zb', dP: 'zb'},
+				{dj: 1, ad: 'Legal cluster: zd', dP: 'zd'},
+				{dj: 1, ad: 'Legal cluster: zg', dP: 'zg'},
+				{dj: 1, ad: 'Legal cluster: str', dP: 'str'},
+				{dj: 1, ad: 'Legal cluster: skr', dP: 'skr'},
+				{dj: 1, ad: 'Legal cluster: spr', dP: 'spr'},
+				{dj: 1, ad: 'Legal cluster: skl', dP: 'skl'},
+				{dj: 1, ad: 'Legal cluster: spl', dP: 'spl'},
+				{dj: 1, ad: 'Legal cluster: rt', dP: 'rt'},
+				{dj: 1, ad: 'Legal cluster: rd', dP: 'rd'},
+				{dj: 1, ad: 'Legal cluster: rk', dP: 'rk'},
+				{dj: 1, ad: 'Legal cluster: rg', dP: 'rg'},
+				{dj: 1, ad: 'Legal cluster: lt', dP: 'lt'},
+				{dj: 1, ad: 'Legal cluster: ld', dP: 'ld'},
+				{dj: 1, ad: 'Legal cluster: lk', dP: 'lk'},
+				{dj: 1, ad: 'Legal cluster: lg', dP: 'lg'},
+				{dj: 1, ad: 'Legal cluster: nt', dP: 'nt'},
+				{dj: 1, ad: 'Legal cluster: nd', dP: 'nd'},
+				{dj: 1, ad: 'Legal cluster: nk', dP: 'nk'},
+				{dj: 1, ad: 'Legal cluster: ng', dP: 'ng'},
+				{dj: 1, ad: 'Legal cluster: mp', dP: 'mp'},
+				{dj: 1, ad: 'Legal cluster: mb', dP: 'mb'},
+				{dj: 1, ad: 'Legal cluster: pt', dP: 'pt'},
+				{dj: 1, ad: 'Legal cluster: kt', dP: 'kt'},
+				{dj: 1, ad: 'Legal cluster: fs', dP: 'fs'},
+				{dj: 1, ad: 'Legal cluster: ks', dP: 'ks'},
+				{dj: 1, ad: 'Legal cluster: ps', dP: 'ps'},
+				{dj: 1, ad: 'Legal cluster: ts', dP: 'ts'},
+				{dj: 1, ad: 'Legal cluster: bd', dP: 'bd'},
+				{dj: 1, ad: 'Legal cluster: gd', dP: 'gd'},
+				{dj: 1, ad: 'Legal cluster: vz', dP: 'vz'},
 				{dj: 0, ad: 'Illegal cluster: *tl', dP: 'tl'},
 				{dj: 0, ad: 'Illegal cluster: *dl', dP: 'dl'},
-				{dj: 0, ad: 'Illegal cluster: *pb', dP: 'pb'},
-				{dj: 0, ad: 'Illegal cluster: *bp', dP: 'bp'},
-				{dj: 0, ad: 'Illegal cluster: *td', dP: 'td'},
-				{dj: 0, ad: 'Illegal cluster: *dt', dP: 'dt'},
-				{dj: 0, ad: 'Illegal cluster: *kg', dP: 'kg'},
-				{dj: 0, ad: 'Illegal cluster: *gk', dP: 'gk'},
-				{dj: 0, ad: 'Illegal cluster: *fv', dP: 'fv'},
-				{dj: 0, ad: 'Illegal cluster: *vf', dP: 'vf'},
-				{dj: 0, ad: 'Illegal cluster: *sz', dP: 'sz'},
-				{dj: 0, ad: 'Illegal cluster: *zs', dP: 'zs'},
-				{dj: 0, ad: 'Illegal cluster: *ʃʒ', dP: 'ʃʒ'},
-				{dj: 0, ad: 'Illegal cluster: *ʒʃ', dP: 'ʒʃ'},
-				{dj: 0, ad: 'Illegal cluster: *tʃʒ', dP: 'tʃʒ'},
-				{dj: 0, ad: 'Illegal cluster: *nm', dP: 'nm'},
-				{dj: 0, ad: 'Illegal cluster: *mn', dP: 'mn'},
-				{dj: 0, ad: 'Illegal cluster: *lr', dP: 'lr'},
-				{dj: 0, ad: 'Illegal cluster: *rl', dP: 'rl'},
-				{dj: 0, ad: 'Illegal cluster: *fm', dP: 'fm'},
-				{dj: 0, ad: 'Illegal cluster: *vm', dP: 'vm'},
-				{dj: 0, ad: 'Illegal cluster: *xm', dP: 'xm'},
-				{dj: 0, ad: 'Illegal cluster: *xn', dP: 'xn'},
-				{dj: 0, ad: 'Illegal cluster: *fn', dP: 'fn'},
-				{dj: 0, ad: 'Illegal cluster: *vn', dP: 'vn'},
-				{dj: 0, ad: 'Illegal cluster: *ʃm', dP: 'ʃm'},
-				{dj: 0, ad: 'Illegal cluster: *ʃn', dP: 'ʃn'},
-				{dj: 0, ad: 'Illegal cluster: *ʒm', dP: 'ʒm'},
-				{dj: 0, ad: 'Illegal cluster: *ʒn', dP: 'ʒn'},
-				{dj: 0, ad: 'Illegal cluster: *tʃm', dP: 'tʃm'},
-				{dj: 0, ad: 'Illegal cluster: *tʃn', dP: 'tʃn'},
-				{dj: 0, ad: 'Illegal cluster: *xl', dP: 'xl'},
-				{dj: 0, ad: 'Illegal cluster: *xr', dP: 'xr'},
-				{dj: 0, ad: 'Illegal cluster: *ʃl', dP: 'ʃl'},
-				{dj: 0, ad: 'Illegal cluster: *ʒl', dP: 'ʒl'},
-				{dj: 0, ad: 'Illegal cluster: *tʃl', dP: 'tʃl'},
-				{dj: 0, ad: 'Illegal cluster: *fl', dP: 'fl'},
-				{dj: 0, ad: 'Illegal cluster: *vl', dP: 'vl'},
-				{dj: 0, ad: 'Illegal cluster: *ŋk', dP: 'ŋk'},
-				{dj: 0, ad: 'Illegal cluster: *ŋg', dP: 'ŋg'},
-				{dj: 2, ad: 'ŋ not allowed in syllable onset', dP: 'ŋ'},
-				{dj: 2, ad: 'ts restricted in certain onset positions', dP: 'ts'},
-				{dj: 3, ad: 'h not allowed in syllable coda', dP: 'h'},
-				{dj: 3, ad: 'x restricted in certain coda positions', dP: 'x'},
-				{dj: 4, ad: 'ŋ not allowed word-initially', dP: 'ŋ'},
-				{dj: 4, ad: 'r rare word-initially in Russian', dP: 'r'},
-				{dj: 5, ad: 'j not allowed word-finally', dP: 'j'}
+				{dj: 0, ad: 'Illegal cluster: *pb (voicing disagreement)', dP: 'pb'},
+				{dj: 0, ad: 'Illegal cluster: *td (same place of articulation)', dP: 'td'},
+				{dj: 0, ad: 'Illegal cluster: *kg (voicing disagreement)', dP: 'kg'},
+				{dj: 0, ad: 'Illegal cluster: *sz (voicing disagreement)', dP: 'sz'},
+				{dj: 0, ad: 'Illegal cluster: *lr (two liquids)', dP: 'lr'},
+				{dj: 0, ad: 'Illegal cluster: *rl (two liquids)', dP: 'rl'},
+				{dj: 0, ad: 'Illegal cluster: *nm (two nasals)', dP: 'nm'},
+				{dj: 0, ad: 'Illegal cluster: *mn (two nasals)', dP: 'mn'},
+				{dj: 1, ad: 'Legal cluster: pʲr', dP: 'pʲr'},
+				{dj: 1, ad: 'Legal cluster: bʲr', dP: 'bʲr'},
+				{dj: 1, ad: 'Legal cluster: tʲr', dP: 'tʲr'},
+				{dj: 1, ad: 'Legal cluster: dʲr', dP: 'dʲr'},
+				{dj: 1, ad: 'Legal cluster: kʲr', dP: 'kʲr'},
+				{dj: 1, ad: 'Legal cluster: gʲr', dP: 'gʲr'},
+				{dj: 1, ad: 'Legal cluster: fʲr', dP: 'fʲr'},
+				{dj: 1, ad: 'Legal cluster: vʲr', dP: 'vʲr'},
+				{dj: 5, ad: 'j not allowed word-finally', dP: 'j'},
+				{dj: 3, ad: 'h not allowed in syllable coda', dP: 'h'}
 			]),
 		dm: _List_Nil,
 		cN: {
@@ -8421,20 +8556,21 @@ var $author$project$Templates$russianTemplate = {
 			[
 				{x: 'V', cQ: 'V'},
 				{x: 'CV', cQ: 'CV'},
-				{x: 'PV', cQ: 'PV'},
 				{x: 'CVC', cQ: 'CVC'},
-				{x: 'PVC', cQ: 'PVC'},
-				{x: 'CVCC', cQ: 'CVCC'},
-				{x: 'CCV', cQ: 'CCV'},
-				{x: 'CCVC', cQ: 'CCVC'},
-				{x: 'CCVCC', cQ: 'CCVCC'},
 				{x: 'VC', cQ: 'VC'},
+				{x: 'CVCC', cQ: 'CVCC'},
 				{x: 'VCC', cQ: 'VCC'},
-				{x: 'LV', cQ: 'LV'},
-				{x: 'NV', cQ: 'NV'}
+				{x: 'XV', cQ: 'XV'},
+				{x: 'XVC', cQ: 'XVC'},
+				{x: 'YV', cQ: 'YV'},
+				{x: 'YVC', cQ: 'YVC'},
+				{x: 'ZV', cQ: 'ZV'},
+				{x: 'ZVC', cQ: 'ZVC'},
+				{x: 'WV', cQ: 'WV'},
+				{x: 'WVC', cQ: 'WVC'}
 			]),
 		dN: _List_fromArray(
-			['V', 'CV', 'PV', 'CVC', 'PVC', 'CVCC', 'CCV', 'CCVC', 'CCVCC', 'VC', 'VCC', 'LV', 'NV'])
+			['V', 'CV', 'CVC', 'VC', 'CVCC', 'VCC', 'XV', 'XVC', 'YV', 'YVC', 'ZV', 'ZVC', 'WV', 'WVC'])
 	},
 	t: 'template-russian'
 };
@@ -8896,7 +9032,6 @@ var $author$project$Types$PhonotacticConstraint = F3(
 	function (constraintType, sequence, description) {
 		return {dj: constraintType, ad: description, dP: sequence};
 	});
-var $author$project$Types$LegalCluster = 1;
 var $author$project$JsonCodec$constraintTypeDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	function (str) {
@@ -11266,6 +11401,27 @@ var $author$project$WordGeneration$generateMultiSyllableWord = function (model) 
 		},
 		syllableCountGenerator);
 };
+var $author$project$WordGeneration$generateWordWithRetries = F3(
+	function (maxAttempts, wordGenerator, isValid) {
+		var attemptGeneration = function (attemptsLeft) {
+			return (attemptsLeft <= 0) ? $elm$random$Random$constant($elm$core$Maybe$Nothing) : A2(
+				$elm$random$Random$andThen,
+				function (word) {
+					return isValid(word) ? $elm$random$Random$constant(
+						$elm$core$Maybe$Just(word)) : attemptGeneration(attemptsLeft - 1);
+				},
+				wordGenerator);
+		};
+		return attemptGeneration(maxAttempts);
+	});
+var $author$project$WordGeneration$generateWordsWithRetries = F4(
+	function (count, maxAttempts, wordGenerator, isValid) {
+		var generateOne = A3($author$project$WordGeneration$generateWordWithRetries, maxAttempts, wordGenerator, isValid);
+		return A2(
+			$elm$random$Random$map,
+			$elm$core$List$filterMap($elm$core$Basics$identity),
+			A2($elm$random$Random$list, count, generateOne));
+	});
 var $elm$core$List$all = F2(
 	function (isOkay, list) {
 		return !A2(
@@ -12115,28 +12271,24 @@ var $author$project$WordGeneration$isValidWord = F3(
 			A2($author$project$WordGeneration$checkConstraint, phonology, word),
 			constraints) && A2($author$project$WordGeneration$hasValidDiphthongs, phonology, word);
 	});
+var $author$project$WordGeneration$maxWordGenerationAttempts = 50;
 var $author$project$PhonologyHelpers$syllabifyIPA = F2(
 	function (phonology, word) {
 		return word;
 	});
 var $author$project$WordGeneration$generateWordsTemplate = function (model) {
 	var phonology = model.a.a_;
-	var candidateCount = $elm$core$List$isEmpty(phonology.dk) ? model.da : (model.da * 5);
+	var validator = A2($author$project$WordGeneration$isValidWord, phonology, phonology.dk);
 	return A2(
 		$elm$random$Random$map,
 		$elm$core$List$map(
 			$author$project$PhonologyHelpers$syllabifyIPA(phonology)),
-		A2(
-			$elm$random$Random$map,
-			$elm$core$List$take(model.da),
-			A2(
-				$elm$random$Random$map,
-				$elm$core$List$filter(
-					A2($author$project$WordGeneration$isValidWord, phonology, phonology.dk)),
-				A2(
-					$elm$random$Random$list,
-					candidateCount,
-					$author$project$WordGeneration$generateMultiSyllableWord(model)))));
+		A4(
+			$author$project$WordGeneration$generateWordsWithRetries,
+			model.da,
+			$author$project$WordGeneration$maxWordGenerationAttempts,
+			$author$project$WordGeneration$generateMultiSyllableWord(model),
+			validator));
 };
 var $elm$core$Dict$isEmpty = function (dict) {
 	if (dict.$ === -2) {
@@ -12176,6 +12328,9 @@ var $elm$core$Dict$values = function (dict) {
 };
 var $author$project$WordGeneration$generateWordsMarkov = function (model) {
 	var phonology = model.a.a_;
+	var validator = function (word) {
+		return A3($author$project$WordGeneration$isValidWord, phonology, phonology.dk, word) && A3($author$project$WordGeneration$isValidWordLength, model.b4, model.cI, word);
+	};
 	var lexicon = A2(
 		$elm$core$List$map,
 		$author$project$Utilities$removeSyllableSeparators,
@@ -12186,26 +12341,16 @@ var $author$project$WordGeneration$generateWordsMarkov = function (model) {
 			},
 			$elm$core$Dict$values(model.a.aQ)));
 	var ngramModel = A2($author$project$WordGeneration$buildNgramModel, model.cJ, lexicon);
-	var candidateCount = $elm$core$List$isEmpty(phonology.dk) ? model.da : (model.da * 5);
 	return $elm$core$Dict$isEmpty(ngramModel) ? $author$project$WordGeneration$generateWordsTemplate(model) : A2(
 		$elm$random$Random$map,
 		$elm$core$List$map(
 			$author$project$PhonologyHelpers$syllabifyIPA(phonology)),
-		A2(
-			$elm$random$Random$map,
-			$elm$core$List$take(model.da),
-			A2(
-				$elm$random$Random$map,
-				$elm$core$List$filter(
-					A2($author$project$WordGeneration$isValidWordLength, model.b4, model.cI)),
-				A2(
-					$elm$random$Random$map,
-					$elm$core$List$filter(
-						A2($author$project$WordGeneration$isValidWord, phonology, phonology.dk)),
-					A2(
-						$elm$random$Random$list,
-						candidateCount,
-						A2($author$project$WordGeneration$generateMarkovWord, model, ngramModel))))));
+		A4(
+			$author$project$WordGeneration$generateWordsWithRetries,
+			model.da,
+			$author$project$WordGeneration$maxWordGenerationAttempts,
+			A2($author$project$WordGeneration$generateMarkovWord, model, ngramModel),
+			validator));
 };
 var $author$project$WordGeneration$generateWordsCmd = function (model) {
 	var _v0 = model.cA;
@@ -17904,16 +18049,16 @@ var $author$project$ViewApp$viewAddMorphemeModal = function (model) {
 	var glossesValid = !$elm$core$List$isEmpty(model.r);
 	var formValid = $author$project$MorphologyHelpers$isValidMorphemeForm(model.G);
 	var allGlosses = A2(
-		$elm$core$List$map,
-		function (fv) {
-			return _Utils_Tuple2(fv.cB, fv.c7);
+		$elm$core$List$concatMap,
+		function (feature) {
+			return A2(
+				$elm$core$List$map,
+				function (fv) {
+					return _Utils_Tuple3(fv.cB, feature.x, fv.c7);
+				},
+				feature.dU);
 		},
-		A2(
-			$elm$core$List$concatMap,
-			function ($) {
-				return $.dU;
-			},
-			model.a.aU.aN));
+		model.a.aU.aN);
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -18109,7 +18254,8 @@ var $author$project$ViewApp$viewAddMorphemeModal = function (model) {
 									$elm$core$List$map,
 									function (_v0) {
 										var gloss = _v0.a;
-										var value = _v0.b;
+										var featureName = _v0.b;
+										var value = _v0.c;
 										return A2(
 											$elm$html$Html$div,
 											_List_fromArray(
@@ -18142,7 +18288,7 @@ var $author$project$ViewApp$viewAddMorphemeModal = function (model) {
 													_List_Nil,
 													_List_fromArray(
 														[
-															$elm$html$Html$text(gloss + (' (' + (value + ')')))
+															$elm$html$Html$text(gloss + (' (' + (featureName + ('=' + (value + ')')))))
 														]))
 												]));
 									},
@@ -20603,16 +20749,16 @@ var $author$project$ViewApp$viewEditMorphemeModal = function (model) {
 	var glossesValid = !$elm$core$List$isEmpty(model.r);
 	var formValid = $author$project$MorphologyHelpers$isValidMorphemeForm(model.G);
 	var allGlosses = A2(
-		$elm$core$List$map,
-		function (fv) {
-			return _Utils_Tuple2(fv.cB, fv.c7);
+		$elm$core$List$concatMap,
+		function (feature) {
+			return A2(
+				$elm$core$List$map,
+				function (fv) {
+					return _Utils_Tuple3(fv.cB, feature.x, fv.c7);
+				},
+				feature.dU);
 		},
-		A2(
-			$elm$core$List$concatMap,
-			function ($) {
-				return $.dU;
-			},
-			model.a.aU.aN));
+		model.a.aU.aN);
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -20808,7 +20954,8 @@ var $author$project$ViewApp$viewEditMorphemeModal = function (model) {
 									$elm$core$List$map,
 									function (_v0) {
 										var gloss = _v0.a;
-										var value = _v0.b;
+										var featureName = _v0.b;
+										var value = _v0.c;
 										return A2(
 											$elm$html$Html$div,
 											_List_fromArray(
@@ -20841,7 +20988,7 @@ var $author$project$ViewApp$viewEditMorphemeModal = function (model) {
 													_List_Nil,
 													_List_fromArray(
 														[
-															$elm$html$Html$text(gloss + (' (' + (value + ')')))
+															$elm$html$Html$text(gloss + (' (' + (featureName + ('=' + (value + ')')))))
 														]))
 												]));
 									},
@@ -25321,9 +25468,34 @@ var $author$project$Msg$ApplyMorphemeToWord = F2(
 	function (a, b) {
 		return {$: 33, a: a, b: b};
 	});
+var $author$project$ViewHelpers$formatGlossWithFeature = F2(
+	function (gloss, features) {
+		var maybeFeatureInfo = $elm$core$List$head(
+			A2(
+				$elm$core$List$concatMap,
+				function (feature) {
+					return A2(
+						$elm$core$List$filterMap,
+						function (fv) {
+							return _Utils_eq(fv.cB, gloss) ? $elm$core$Maybe$Just(
+								_Utils_Tuple2(feature.x, fv.c7)) : $elm$core$Maybe$Nothing;
+						},
+						feature.dU);
+				},
+				features));
+		if (!maybeFeatureInfo.$) {
+			var _v1 = maybeFeatureInfo.a;
+			var featureName = _v1.a;
+			var featureValue = _v1.b;
+			return gloss + (' (' + (featureName + ('=' + (featureValue + ')'))));
+		} else {
+			return gloss;
+		}
+	});
 var $author$project$ViewLexicon$viewApplicableMorpheme = F5(
 	function (model, wordUuid, lexeme, morphemeIndex, morpheme) {
 		var rules = model.a.aU.bG;
+		var plainGlosses = A2($elm$core$String$join, '.', morpheme.cC);
 		var formWithMorpheme = A2($author$project$MorphologyHelpers$applyMorpheme, morpheme, lexeme.cN);
 		var previewForm = A2($author$project$MorphologyHelpers$applyMorphophonemicRules, rules, formWithMorpheme);
 		var wordExists = A2(
@@ -25333,7 +25505,26 @@ var $author$project$ViewLexicon$viewApplicableMorpheme = F5(
 			},
 			$elm$core$Dict$values(model.a.aQ));
 		var textColor = wordExists ? '#9ca3af' : '#1f2937';
-		var tooltipText = wordExists ? ('Word already exists: ' + previewForm) : ((!$elm$core$List$isEmpty(morpheme.cC)) ? ('Glosses: ' + A2($elm$core$String$join, '.', morpheme.cC)) : ('Create new word: ' + previewForm));
+		var tooltipText = function () {
+			if (wordExists) {
+				return 'Word already exists: ' + previewForm;
+			} else {
+				if (!$elm$core$List$isEmpty(morpheme.cC)) {
+					var formattedGlosses = A2(
+						$elm$core$String$join,
+						'.',
+						A2(
+							$elm$core$List$map,
+							function (gloss) {
+								return A2($author$project$ViewHelpers$formatGlossWithFeature, gloss, model.a.aU.aN);
+							},
+							morpheme.cC));
+					return 'Glosses: ' + formattedGlosses;
+				} else {
+					return 'Create new word: ' + previewForm;
+				}
+			}
+		}();
 		var cursorStyle = wordExists ? 'not-allowed' : 'pointer';
 		var borderColor = wordExists ? '#cbd5e0' : '#d1d5db';
 		var bgColor = wordExists ? '#e2e8f0' : '#f3f4f6';
@@ -25367,8 +25558,7 @@ var $author$project$ViewLexicon$viewApplicableMorpheme = F5(
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(
-							previewForm + (' (' + (A2($elm$core$String$join, '.', morpheme.cC) + ')')))
+							$elm$html$Html$text(previewForm + (' (' + (plainGlosses + ')')))
 						]))
 				]));
 	});
@@ -27049,6 +27239,15 @@ var $author$project$Msg$RemoveMorpheme = function (a) {
 };
 var $author$project$ViewMorphology$viewMorpheme = F3(
 	function (model, index, morpheme) {
+		var formattedGlosses = $elm$core$List$isEmpty(morpheme.cC) ? '(no glosses)' : A2(
+			$elm$core$String$join,
+			'.',
+			A2(
+				$elm$core$List$map,
+				function (gloss) {
+					return A2($author$project$ViewHelpers$formatGlossWithFeature, gloss, model.a.aU.aN);
+				},
+				morpheme.cC));
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -27083,8 +27282,7 @@ var $author$project$ViewMorphology$viewMorpheme = F3(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(
-									'- ' + ($elm$core$List$isEmpty(morpheme.cC) ? '(no glosses)' : A2($elm$core$String$join, '.', morpheme.cC)))
+									$elm$html$Html$text('- ' + formattedGlosses)
 								])),
 							A2(
 							$elm$html$Html$span,
