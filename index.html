@@ -179,12 +179,12 @@
         .phoneme-tag {
             background: #e6fffa;
             color: #234e52;
-            padding: 4px 12px;
-            border-radius: 16px;
-            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 15px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         
         .phoneme-tag button {
@@ -194,7 +194,7 @@
             margin: 0;
             border: none;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             line-height: 1;
         }
         
@@ -700,9 +700,9 @@
             transform: translateY(-1px);
         }
 
-        /* Style for not included phonemes - hidden by default */
+        /* Style for not included phonemes - hidden by default but still taking up space */
         .ipa-phoneme-not-included {
-            display: none; /* Hidden by default */
+            visibility: hidden; /* Hidden by default but preserves layout space */
             background: white;
             color: #a0aec0; /* Gray color to indicate not included */
             padding: 4px 8px;
@@ -715,7 +715,7 @@
 
         /* When any part of the IPA grid is hovered, show ALL unused phonemes chart-wide */
         .ipa-grid:hover .ipa-phoneme-not-included {
-            display: inline-flex; /* Show on hover */
+            visibility: visible; /* Show on hover */
             background: white;
             color: #a0aec0; /* Keep gray color */
         }
