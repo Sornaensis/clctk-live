@@ -1023,6 +1023,15 @@ let espeakInstance = null;
 let espeakReady = false;
 let audioContext = null;
 
+// Track ongoing synthesis to prevent overlapping sounds
+let synthesisInProgress = false;
+let synthesisTimeoutId = null;
+
+// Constants for eSpeak synthesis
+const ESPEAK_EVENT_END = 'end';
+const ESPEAK_EVENT_MSG_TERMINATED = 'msg_terminated';
+const SYNTHESIS_TIMEOUT_MS = 2000;
+
 // Initialize eSpeak TTS
 function initEspeak() {
   return new Promise((resolve, reject) => {
@@ -1039,7 +1048,8 @@ function initEspeak() {
         return;
       }
       
-      // Initialize audio context
+      // Initialize audio context eagerly - skip suspend/resume checks
+      // as they don't work reliably with the eSpeak worker
       if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
       }
@@ -1067,15 +1077,15 @@ function initEspeak() {
 }
 
 // Play audio samples from eSpeak
+// The eSpeak worker returns stereo interleaved data that needs to be
+// converted to mono for playback
 function playAudioSamples(samples) {
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
   
-  // Resume audio context if suspended
-  if (audioContext.state === 'suspended') {
-    audioContext.resume();
-  }
+  // Skip the suspend/resume check - it doesn't work reliably with the
+  // eSpeak worker and can cause audio issues
   
   // eSpeak worker returns an ArrayBuffer from a Float32Array that's already
   // been converted from Int16 and interleaved for stereo (each sample duplicated).
@@ -1107,8 +1117,23 @@ function playAudioSamples(samples) {
   source.start();
 }
 
+// Helper function to clear synthesis state
+function clearSynthesisState() {
+  synthesisInProgress = false;
+  if (synthesisTimeoutId !== null) {
+    clearTimeout(synthesisTimeoutId);
+    synthesisTimeoutId = null;
+  }
+}
+
 // Speak a phoneme using eSpeak
 function speakPhonemeWithEspeak(ipaPhoneme) {
+  // If synthesis is already in progress, ignore the request
+  // This prevents overlapping sounds from multiple rapid clicks
+  if (synthesisInProgress) {
+    return;
+  }
+  
   initEspeak().then(espeak => {
     // Convert IPA to eSpeak phoneme format
     const espeakPhoneme = ipaToEspeak(ipaPhoneme);
@@ -1118,13 +1143,41 @@ function speakPhonemeWithEspeak(ipaPhoneme) {
     
     console.log(`Speaking phoneme: ${ipaPhoneme} -> ${espeakPhoneme}`);
     
+    synthesisInProgress = true;
+    
+    // Track whether we've already played audio to prevent duplicates
+    let hasPlayedAudio = false;
+    
     espeak.synthesize(phonemeInput, function(samples, events) {
-      // eSpeak returns an ArrayBuffer, so check byteLength instead of length
-      if (samples && samples.byteLength > 0) {
+      // Only process the first callback with audio data
+      // The eSpeak callback may fire multiple times, but we only want to
+      // play the audio once to prevent distorted/doubled sounds
+      if (!hasPlayedAudio && samples && samples.byteLength > 0) {
+        hasPlayedAudio = true;
         playAudioSamples(samples);
       }
+      
+      // Check if synthesis is complete by looking for 'end' event
+      const hasEndEvent = events && events.some(e => 
+        e.type === ESPEAK_EVENT_END || e.type === ESPEAK_EVENT_MSG_TERMINATED
+      );
+      
+      if (hasEndEvent) {
+        clearSynthesisState();
+      }
+      
+      // Return false to stop receiving more callbacks - this prevents
+      // duplicate audio chunks from being generated
+      return false;
     });
+    
+    // Set a timeout to reset the synthesis flag in case the end event
+    // doesn't fire (fallback safety mechanism)
+    synthesisTimeoutId = setTimeout(() => {
+      clearSynthesisState();
+    }, SYNTHESIS_TIMEOUT_MS);
   }).catch(error => {
+    clearSynthesisState();
     console.warn('eSpeak TTS not available:', error);
   });
 }
