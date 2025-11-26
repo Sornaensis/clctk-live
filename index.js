@@ -1118,12 +1118,12 @@ function initEspeak() {
 }
 
 // Play audio samples from eSpeak
-// The eSpeak worker returns stereo interleaved data that needs to be
-// converted to mono for playback
+// The eSpeak worker returns stereo interleaved Float32Array data.
+// The data format is: [L0, R0, L1, R1, ...] where L=R for each sample.
+// This function accepts either an ArrayBuffer or Float32Array.
 async function playAudioSamples(samples) {
   console.log('[eSpeak Audio] playAudioSamples called');
   console.log('[eSpeak Audio] Samples type:', typeof samples, 'Constructor:', samples?.constructor?.name);
-  console.log('[eSpeak Audio] Samples byteLength:', samples?.byteLength);
   
   // Validate samples input
   if (!samples) {
@@ -1131,8 +1131,25 @@ async function playAudioSamples(samples) {
     return;
   }
   
-  if (samples.byteLength === 0) {
-    console.warn('[eSpeak Audio] Empty samples buffer (byteLength === 0)');
+  // Handle both ArrayBuffer and Float32Array inputs
+  let float32Samples;
+  if (samples instanceof Float32Array) {
+    float32Samples = samples;
+    console.log('[eSpeak Audio] Samples length (Float32Array):', float32Samples.length);
+  } else if (samples instanceof ArrayBuffer) {
+    console.log('[eSpeak Audio] Samples byteLength:', samples.byteLength);
+    if (samples.byteLength === 0) {
+      console.warn('[eSpeak Audio] Empty samples buffer (byteLength === 0)');
+      return;
+    }
+    float32Samples = new Float32Array(samples);
+  } else {
+    console.error('[eSpeak Audio] Invalid samples type');
+    return;
+  }
+  
+  if (float32Samples.length === 0) {
+    console.warn('[eSpeak Audio] Empty Float32Array');
     return;
   }
   
@@ -1172,25 +1189,7 @@ async function playAudioSamples(samples) {
       }
     }
     
-    // Debug: Check the raw bytes first
-    const rawBytes = new Uint8Array(samples);
-    const nonZeroBytes = rawBytes.filter(b => b !== 0).length;
-    console.log('[eSpeak Audio] Raw bytes analysis: total=' + rawBytes.length + ', non-zero=' + nonZeroBytes);
-    if (rawBytes.length > 0) {
-      console.log('[eSpeak Audio] First 20 raw bytes:', Array.from(rawBytes.slice(0, 20)));
-    }
-    
-    // eSpeak worker returns an ArrayBuffer from a Float32Array that's already
-    // been converted from Int16 and interleaved for stereo (each sample duplicated).
-    // The data format is: [L0, R0, L1, R1, ...] where L=R for each sample.
-    const float32Samples = new Float32Array(samples);
-    
     console.log('[eSpeak Audio] Float32 samples length:', float32Samples.length);
-    
-    if (float32Samples.length === 0) {
-      console.warn('[eSpeak Audio] Empty Float32Array after conversion');
-      return;
-    }
     
     // Log first few samples for debugging
     if (float32Samples.length > 0) {
@@ -1294,24 +1293,31 @@ function speakPhonemeWithEspeak(ipaPhoneme) {
     
     synthesisInProgress = true;
     
-    // Track whether we've already played audio to prevent duplicates
-    let hasPlayedAudio = false;
+    // Accumulate all audio sample chunks before playing
+    // The eSpeak worker calls the callback multiple times with chunks of audio data
+    const accumulatedSamples = [];
     
     espeak.synthesize(synthInput, function(samples, events) {
       console.log('[eSpeak Callback] Received callback');
       console.log('[eSpeak Callback] samples byteLength:', samples?.byteLength);
       
       if (samples && samples.byteLength > 0) {
-        const rawBytes = new Uint8Array(samples);
-        const nonZeroCount = rawBytes.filter(b => b !== 0).length;
-        console.log('[eSpeak Audio] Raw bytes: total=' + rawBytes.length + ', non-zero=' + nonZeroCount);
+        // Convert ArrayBuffer to Float32Array and accumulate
+        const float32Chunk = new Float32Array(samples);
+        // Count non-zero samples efficiently without creating intermediate array
+        let nonZeroCount = 0;
+        for (let i = 0; i < float32Chunk.length; i++) {
+          if (Math.abs(float32Chunk[i]) > 0.0001) {
+            nonZeroCount++;
+          }
+        }
+        console.log('[eSpeak Audio] Chunk: total=' + float32Chunk.length + ', non-zero=' + nonZeroCount);
         
-        if (!hasPlayedAudio && nonZeroCount > 0) {
-          console.log('[eSpeak Callback] Playing audio...');
-          hasPlayedAudio = true;
-          playAudioSamples(samples);
-        } else if (nonZeroCount === 0) {
-          console.warn('[eSpeak Callback] WARNING: Received all-zero samples');
+        if (nonZeroCount > 0) {
+          accumulatedSamples.push(float32Chunk);
+          console.log('[eSpeak Callback] Accumulated chunk, total chunks:', accumulatedSamples.length);
+        } else {
+          console.warn('[eSpeak Callback] WARNING: Received all-zero samples chunk');
         }
       }
       
@@ -1321,6 +1327,23 @@ function speakPhonemeWithEspeak(ipaPhoneme) {
       );
       
       if (hasEndEvent) {
+        console.log('[eSpeak Callback] End event received, playing accumulated audio');
+        
+        // Combine all accumulated chunks into a single Float32Array
+        if (accumulatedSamples.length > 0) {
+          const totalLength = accumulatedSamples.reduce((sum, chunk) => sum + chunk.length, 0);
+          const combinedSamples = new Float32Array(totalLength);
+          let offset = 0;
+          for (const chunk of accumulatedSamples) {
+            combinedSamples.set(chunk, offset);
+            offset += chunk.length;
+          }
+          console.log('[eSpeak Callback] Combined', accumulatedSamples.length, 'chunks into', totalLength, 'samples');
+          playAudioSamples(combinedSamples);
+        } else {
+          console.warn('[eSpeak Callback] No audio samples accumulated');
+        }
+        
         clearSynthesisState();
       }
       
