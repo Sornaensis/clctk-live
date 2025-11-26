@@ -922,92 +922,94 @@ function initializeAppVersion() {
 // ============================================
 
 // IPA to eSpeak phoneme mapping
-// eSpeak uses Kirshenbaum-based ASCII phonemes internally
+// eSpeak-ng uses X-SAMPA phoneme notation
+// Reference: https://github.com/espeak-ng/espeak-ng/blob/master/docs/phonemes/xsampa.md
+// Reference: https://github.com/espeak-ng/espeak-ng/blob/master/docs/phonemes/kirshenbaum.md
 const ipaToEspeakMap = {
   // Plosives
   'p': 'p', 'b': 'b', 't': 't', 'd': 'd',
-  'ʈ': 't', 'ɖ': 'd',  // Retroflex (approximated)
-  'c': 'c', 'ɟ': 'J',  // Palatal
+  'ʈ': 't`', 'ɖ': 'd`',  // Retroflex stops (X-SAMPA)
+  'c': 'c', 'ɟ': 'J\\',  // Palatal stops (X-SAMPA: J\ for voiced palatal plosive)
   'k': 'k', 'g': 'g', 
-  'q': 'q', 'ɢ': 'Q',  // Uvular
+  'q': 'q', 'ɢ': 'G\\',  // Uvular stops (X-SAMPA: G\ for voiced uvular plosive)
   'ʔ': '?',
   
   // Nasals
-  'm': 'm', 'ɱ': 'M', 'n': 'n', 'ɳ': 'n',
-  'ɲ': 'n^', 'ŋ': 'N', 'ɴ': 'N',
+  'm': 'm', 'ɱ': 'F', 'n': 'n', 'ɳ': 'n`',  // X-SAMPA: F for labiodental nasal
+  'ɲ': 'J', 'ŋ': 'N', 'ɴ': 'N\\',  // X-SAMPA: J for palatal nasal, N\ for uvular nasal
   
   // Trills
-  'ʙ': 'B', 'r': 'r', 'ʀ': 'R',
+  'ʙ': 'B\\', 'r': 'r', 'ʀ': 'R\\',  // X-SAMPA: B\ for bilabial trill, R\ for uvular trill
   
   // Taps/Flaps
-  'ⱱ': 'v', 'ɾ': '*', 'ɽ': '*',
+  'ⱱ': 'v\\', 'ɾ': '4', 'ɽ': 'r`',  // X-SAMPA: 4 for alveolar tap, r` for retroflex flap
   
   // Fricatives
-  'ɸ': 'F', 'β': 'B',
+  'ɸ': 'p\\', 'β': 'B',  // X-SAMPA: p\ for voiceless bilabial fricative
   'f': 'f', 'v': 'v',
   'θ': 'T', 'ð': 'D',
   's': 's', 'z': 'z',
   'ʃ': 'S', 'ʒ': 'Z',
-  'ʂ': 'S', 'ʐ': 'Z',  // Retroflex (approximated)
-  'ç': 'C', 'ʝ': 'J',
-  'x': 'x', 'ɣ': 'Q',
-  'χ': 'X', 'ʁ': 'R',
-  'ħ': 'H', 'ʕ': '?',
-  'h': 'h', 'ɦ': 'h',
+  'ʂ': 's`', 'ʐ': 'z`',  // Retroflex fricatives (X-SAMPA)
+  'ç': 'C', 'ʝ': 'j\\',  // X-SAMPA: j\ for voiced palatal fricative
+  'x': 'x', 'ɣ': 'G',    // X-SAMPA: G for voiced velar fricative
+  'χ': 'X', 'ʁ': 'R',    // X-SAMPA: R for voiced uvular fricative
+  'ħ': 'X\\', 'ʕ': '?\\',  // X-SAMPA: X\ for voiceless pharyngeal fricative, ?\ for voiced
+  'h': 'h', 'ɦ': 'h\\',  // X-SAMPA: h\ for voiced glottal fricative
   
   // Lateral fricatives
-  'ɬ': 'K', 'ɮ': 'L',
+  'ɬ': 'K', 'ɮ': 'K\\',  // X-SAMPA: K for voiceless, K\ for voiced lateral fricative
   
   // Approximants
-  'ʋ': 'v', 'ɹ': 'r', 'ɻ': 'r',
-  'j': 'j', 'ɰ': 'w',
-  'l': 'l', 'ɭ': 'l', 'ʎ': 'L', 'ʟ': 'L',
+  'ʋ': 'v\\', 'ɹ': 'r\\', 'ɻ': 'r\\`',  // X-SAMPA: v\ for labiodental, r\ for alveolar approximant
+  'j': 'j', 'ɰ': 'M\\',  // X-SAMPA: M\ for velar approximant
+  'l': 'l', 'ɭ': 'l`', 'ʎ': 'L', 'ʟ': 'L\\',  // X-SAMPA: L for palatal, L\ for velar lateral
   
   // Other consonants
-  'w': 'w', 'ʍ': 'W', 'ɥ': 'H', 'ɥ̊': 'H',
+  'w': 'w', 'ʍ': 'W', 'ɥ': 'H', 'ɥ̊': 'H',  // X-SAMPA: W for voiceless labial-velar, H for labial-palatal
   
-  // Affricates
+  // Affricates (using tie bar notation)
   'ts': 'ts', 'dz': 'dz',
   'tʃ': 'tS', 'dʒ': 'dZ',
-  'tɕ': 'tS', 'dʑ': 'dZ',
-  'tʂ': 'ts', 'dʐ': 'dz',
+  'tɕ': 'ts\\', 'dʑ': 'dz\\',  // Alveolo-palatal affricates
+  'tʂ': 't`s`', 'dʐ': 'd`z`',  // Retroflex affricates
   
   // Close vowels
-  'i': 'i', 'y': 'y', 'ɨ': 'i', 'ʉ': 'u',
-  'ɯ': 'u', 'u': 'u',
+  'i': 'i', 'y': 'y', 'ɨ': '1', 'ʉ': '}',  // X-SAMPA: 1 for close central unrounded, } for rounded
+  'ɯ': 'M', 'u': 'u',  // X-SAMPA: M for close back unrounded
   
   // Near-close vowels
   'ɪ': 'I', 'ʏ': 'Y', 'ʊ': 'U',
   
   // Close-mid vowels
-  'e': 'e', 'ø': 'Y', 'ɘ': '@', 'ɵ': '8',
+  'e': 'e', 'ø': '2', 'ɘ': '@\\', 'ɵ': '8',  // X-SAMPA: 2 for front rounded, @\ for central unrounded
   'ɤ': '7', 'o': 'o',
   
   // Mid vowels
   'ə': '@',
   
   // Open-mid vowels
-  'ɛ': 'E', 'œ': 'W', 'ɜ': '3', 'ɞ': '3',
+  'ɛ': 'E', 'œ': '9', 'ɜ': '3', 'ɞ': '3\\',  // X-SAMPA: 9 for front rounded, 3\ for central rounded
   'ʌ': 'V', 'ɔ': 'O',
   
   // Near-open vowels
-  'æ': '&', 'ɐ': '6',
+  'æ': '{', 'ɐ': '6',  // X-SAMPA: { for near-open front unrounded
   
   // Open vowels
   'a': 'a', 'ɶ': '&', 'ä': 'a', 'ɑ': 'A', 'ɒ': 'Q',
   
-  // Palatalized consonants (using base sounds)
-  'pʲ': 'p', 'bʲ': 'b', 'tʲ': 't', 'dʲ': 'd',
-  'kʲ': 'k', 'gʲ': 'g',
-  'mʲ': 'm', 'nʲ': 'n', 'ŋʲ': 'N',
-  'fʲ': 'f', 'vʲ': 'v', 'sʲ': 's', 'zʲ': 'z',
-  'ʃʲ': 'S', 'ʒʲ': 'Z', 'xʲ': 'x', 'ɣʲ': 'Q',
-  'hʲ': 'h', 'lʲ': 'l', 'rʲ': 'r', 'ɾʲ': '*', 'wʲ': 'w',
+  // Palatalized consonants (X-SAMPA uses _j suffix)
+  'pʲ': "p'", 'bʲ': "b'", 'tʲ': "t'", 'dʲ': "d'",
+  'kʲ': "k'", 'gʲ': "g'",
+  'mʲ': "m'", 'nʲ': "n'", 'ŋʲ': "N'",
+  'fʲ': "f'", 'vʲ': "v'", 'sʲ': "s'", 'zʲ': "z'",
+  'ʃʲ': "S'", 'ʒʲ': "Z'", 'xʲ': "x'", 'ɣʲ': "G'",
+  'hʲ': "h'", 'lʲ': "l'", 'rʲ': "r'", 'ɾʲ': "4'", 'wʲ': "w'",
   
-  // Aspirated consonants (using base sounds)
-  'pʰ': 'p', 'tʰ': 't', 'kʰ': 'k', 'qʰ': 'q',
-  'ʈʰ': 't', 'cʰ': 'c',
-  'tsʰ': 'ts', 'tʃʰ': 'tS', 'tɕʰ': 'tS', 'tʂʰ': 'ts'
+  // Aspirated consonants (X-SAMPA uses _h suffix)
+  'pʰ': 'p_h', 'tʰ': 't_h', 'kʰ': 'k_h', 'qʰ': 'q_h',
+  'ʈʰ': 't`_h', 'cʰ': 'c_h',
+  'tsʰ': 'ts_h', 'tʃʰ': 'tS_h', 'tɕʰ': 'ts\\_h', 'tʂʰ': 't`s`_h'
 };
 
 // Convert IPA phoneme to eSpeak format
@@ -1272,23 +1274,23 @@ function speakPhonemeWithEspeak(ipaPhoneme) {
   console.log('[eSpeak] Starting synthesis process...');
   
   initEspeak().then(espeak => {
-    // Build input for eSpeak
-    // The [[...]] phoneme notation doesn't seem to work with this eSpeak-ng build.
-    // Instead, we pass the IPA character as text, optionally with a vowel
-    // to help articulate consonants.
+    // Convert IPA to eSpeak phoneme notation using the mapping
+    const espeakPhoneme = ipaToEspeakMap[ipaPhoneme] || ipaPhoneme;
     
-    // Try just the character as text - eSpeak will try to pronounce it
-    // This works because eSpeak interprets single letters as sounds
-    let synthInput = ipaPhoneme;
-    
-    // For some sounds, add a vowel to make them pronounceable
-    // Consonants often need a vowel to be articulated clearly
+    // Build input for eSpeak using phoneme notation [[...]]
+    // This tells eSpeak to interpret the input as phonemes, not text
+    // For consonants, we add schwa (@) to make them audible
+    let synthInput;
     if (isConsonantLike(ipaPhoneme)) {
-      // Add schwa after consonant: "p" -> "pə"  
-      synthInput = ipaPhoneme + 'ə';
+      // Add schwa after consonant for articulation: "p" -> "[[p@]]"
+      synthInput = '[[' + espeakPhoneme + '@]]';
+    } else {
+      // For vowels and other sounds, just use the phoneme directly
+      synthInput = '[[' + espeakPhoneme + ']]';
     }
     
     console.log('[eSpeak] Speaking phoneme:', ipaPhoneme);
+    console.log('[eSpeak] eSpeak phoneme:', espeakPhoneme);
     console.log('[eSpeak] Synth input:', synthInput);
     
     synthesisInProgress = true;
