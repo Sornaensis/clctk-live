@@ -644,6 +644,15 @@ function setupPortSubscriptions() {
     }
     app.ports.receiveUUID.send(uuid);
   });
+
+  // eSpeak TTS port subscriptions
+  safeSubscribe('speakPhoneme', (phoneme) => {
+    speakPhonemeWithEspeak(phoneme);
+  });
+
+  safeSubscribe('stopSpeaking', () => {
+    stopCurrentSpeech();
+  });
 }
 
 // Save template to IndexedDB
@@ -903,6 +912,214 @@ function initializeAppVersion() {
     console.error('Version initialization error:', error);
     return Promise.reject(error);
   }
+}
+
+
+// ============================================
+// eSpeak-ng TTS Integration
+// ============================================
+
+// IPA to eSpeak phoneme mapping
+// eSpeak uses Kirshenbaum-based ASCII phonemes internally
+const ipaToEspeakMap = {
+  // Plosives
+  'p': 'p', 'b': 'b', 't': 't', 'd': 'd',
+  'ʈ': 't', 'ɖ': 'd',  // Retroflex (approximated)
+  'c': 'c', 'ɟ': 'J',  // Palatal
+  'k': 'k', 'g': 'g', 
+  'q': 'q', 'ɢ': 'Q',  // Uvular
+  'ʔ': '?',
+  
+  // Nasals
+  'm': 'm', 'ɱ': 'M', 'n': 'n', 'ɳ': 'n',
+  'ɲ': 'n^', 'ŋ': 'N', 'ɴ': 'N',
+  
+  // Trills
+  'ʙ': 'B', 'r': 'r', 'ʀ': 'R',
+  
+  // Taps/Flaps
+  'ⱱ': 'v', 'ɾ': '*', 'ɽ': '*',
+  
+  // Fricatives
+  'ɸ': 'F', 'β': 'B',
+  'f': 'f', 'v': 'v',
+  'θ': 'T', 'ð': 'D',
+  's': 's', 'z': 'z',
+  'ʃ': 'S', 'ʒ': 'Z',
+  'ʂ': 'S', 'ʐ': 'Z',  // Retroflex (approximated)
+  'ç': 'C', 'ʝ': 'J',
+  'x': 'x', 'ɣ': 'Q',
+  'χ': 'X', 'ʁ': 'R',
+  'ħ': 'H', 'ʕ': '?',
+  'h': 'h', 'ɦ': 'h',
+  
+  // Lateral fricatives
+  'ɬ': 'K', 'ɮ': 'L',
+  
+  // Approximants
+  'ʋ': 'v', 'ɹ': 'r', 'ɻ': 'r',
+  'j': 'j', 'ɰ': 'w',
+  'l': 'l', 'ɭ': 'l', 'ʎ': 'L', 'ʟ': 'L',
+  
+  // Other consonants
+  'w': 'w', 'ʍ': 'W', 'ɥ': 'H', 'ɥ̊': 'H',
+  
+  // Affricates
+  'ts': 'ts', 'dz': 'dz',
+  'tʃ': 'tS', 'dʒ': 'dZ',
+  'tɕ': 'tS', 'dʑ': 'dZ',
+  'tʂ': 'ts', 'dʐ': 'dz',
+  
+  // Close vowels
+  'i': 'i', 'y': 'y', 'ɨ': 'i', 'ʉ': 'u',
+  'ɯ': 'u', 'u': 'u',
+  
+  // Near-close vowels
+  'ɪ': 'I', 'ʏ': 'Y', 'ʊ': 'U',
+  
+  // Close-mid vowels
+  'e': 'e', 'ø': 'Y', 'ɘ': '@', 'ɵ': '8',
+  'ɤ': '7', 'o': 'o',
+  
+  // Mid vowels
+  'ə': '@',
+  
+  // Open-mid vowels
+  'ɛ': 'E', 'œ': 'W', 'ɜ': '3', 'ɞ': '3',
+  'ʌ': 'V', 'ɔ': 'O',
+  
+  // Near-open vowels
+  'æ': '&', 'ɐ': '6',
+  
+  // Open vowels
+  'a': 'a', 'ɶ': '&', 'ä': 'a', 'ɑ': 'A', 'ɒ': 'Q',
+  
+  // Palatalized consonants (using base sounds)
+  'pʲ': 'p', 'bʲ': 'b', 'tʲ': 't', 'dʲ': 'd',
+  'kʲ': 'k', 'gʲ': 'g',
+  'mʲ': 'm', 'nʲ': 'n', 'ŋʲ': 'N',
+  'fʲ': 'f', 'vʲ': 'v', 'sʲ': 's', 'zʲ': 'z',
+  'ʃʲ': 'S', 'ʒʲ': 'Z', 'xʲ': 'x', 'ɣʲ': 'Q',
+  'hʲ': 'h', 'lʲ': 'l', 'rʲ': 'r', 'ɾʲ': '*', 'wʲ': 'w',
+  
+  // Aspirated consonants (using base sounds)
+  'pʰ': 'p', 'tʰ': 't', 'kʰ': 'k', 'qʰ': 'q',
+  'ʈʰ': 't', 'cʰ': 'c',
+  'tsʰ': 'ts', 'tʃʰ': 'tS', 'tɕʰ': 'tS', 'tʂʰ': 'ts'
+};
+
+// Convert IPA phoneme to eSpeak format
+function ipaToEspeak(ipa) {
+  // Check exact match first
+  if (ipaToEspeakMap[ipa]) {
+    return ipaToEspeakMap[ipa];
+  }
+  // For unmapped phonemes, return as-is and let eSpeak try
+  return ipa;
+}
+
+// eSpeak TTS instance
+let espeakInstance = null;
+let espeakReady = false;
+let audioContext = null;
+
+// Initialize eSpeak TTS
+function initEspeak() {
+  return new Promise((resolve, reject) => {
+    if (espeakReady && espeakInstance) {
+      resolve(espeakInstance);
+      return;
+    }
+    
+    try {
+      // Check if eSpeakNG is available
+      if (typeof eSpeakNG === 'undefined') {
+        console.warn('eSpeakNG not loaded - TTS will be unavailable');
+        reject(new Error('eSpeakNG not loaded'));
+        return;
+      }
+      
+      // Initialize audio context
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      
+      // Determine worker path based on current page location
+      // This handles deployment in subdirectories or different base URLs
+      const basePath = window.location.pathname.replace(/\/[^\/]*$/, '');
+      const workerPath = basePath + '/public/espeak-ng/espeakng.worker.js';
+      
+      espeakInstance = new eSpeakNG(workerPath, function() {
+        espeakReady = true;
+        console.log('eSpeak-ng TTS initialized');
+        
+        // Set default voice rate and pitch for clearer pronunciation
+        espeakInstance.set_rate(130);  // Slower for individual phonemes
+        espeakInstance.set_pitch(50);
+        
+        resolve(espeakInstance);
+      });
+    } catch (error) {
+      console.error('Failed to initialize eSpeak:', error);
+      reject(error);
+    }
+  });
+}
+
+// Play audio samples from eSpeak
+function playAudioSamples(samples) {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  
+  // Resume audio context if suspended
+  if (audioContext.state === 'suspended') {
+    audioContext.resume();
+  }
+  
+  // Convert samples to Float32Array if needed
+  const float32Samples = new Float32Array(samples.length);
+  for (let i = 0; i < samples.length; i++) {
+    float32Samples[i] = samples[i] / 32768.0;  // Convert from Int16 to Float32
+  }
+  
+  // Create audio buffer
+  const buffer = audioContext.createBuffer(1, float32Samples.length, 22050);
+  buffer.getChannelData(0).set(float32Samples);
+  
+  // Create source and play
+  const source = audioContext.createBufferSource();
+  source.buffer = buffer;
+  source.connect(audioContext.destination);
+  source.start();
+}
+
+// Speak a phoneme using eSpeak
+function speakPhonemeWithEspeak(ipaPhoneme) {
+  initEspeak().then(espeak => {
+    // Convert IPA to eSpeak phoneme format
+    const espeakPhoneme = ipaToEspeak(ipaPhoneme);
+    
+    // Use [[...]] notation for phoneme input
+    const phonemeInput = `[[${espeakPhoneme}]]`;
+    
+    console.log(`Speaking phoneme: ${ipaPhoneme} -> ${espeakPhoneme}`);
+    
+    espeak.synthesize(phonemeInput, function(samples, events) {
+      if (samples && samples.length > 0) {
+        playAudioSamples(samples);
+      }
+    });
+  }).catch(error => {
+    console.warn('eSpeak TTS not available:', error);
+  });
+}
+
+// Stop any current speech (note: eSpeak.js doesn't have a stop method, 
+// so we just don't do anything)
+function stopCurrentSpeech() {
+  // eSpeak.js synthesis is fire-and-forget, can't be stopped mid-way
+  // This is a no-op but included for API completeness
 }
 
 // Show loading message while initializing
