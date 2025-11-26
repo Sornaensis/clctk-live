@@ -1077,10 +1077,13 @@ function playAudioSamples(samples) {
     audioContext.resume();
   }
   
-  // Convert samples to Float32Array if needed
-  const float32Samples = new Float32Array(samples.length);
-  for (let i = 0; i < samples.length; i++) {
-    float32Samples[i] = samples[i] / 32768.0;  // Convert from Int16 to Float32
+  // eSpeak returns an ArrayBuffer, convert to Int16Array first
+  const int16Samples = new Int16Array(samples);
+  
+  // Convert samples to Float32Array
+  const float32Samples = new Float32Array(int16Samples.length);
+  for (let i = 0; i < int16Samples.length; i++) {
+    float32Samples[i] = int16Samples[i] / 32768.0;  // Convert from Int16 to Float32
   }
   
   // Create audio buffer
@@ -1106,7 +1109,8 @@ function speakPhonemeWithEspeak(ipaPhoneme) {
     console.log(`Speaking phoneme: ${ipaPhoneme} -> ${espeakPhoneme}`);
     
     espeak.synthesize(phonemeInput, function(samples, events) {
-      if (samples && samples.length > 0) {
+      // eSpeak returns an ArrayBuffer, so check byteLength instead of length
+      if (samples && samples.byteLength > 0) {
         playAudioSamples(samples);
       }
     });
