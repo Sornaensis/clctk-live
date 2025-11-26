@@ -647,10 +647,12 @@ function setupPortSubscriptions() {
 
   // eSpeak TTS port subscriptions
   safeSubscribe('speakPhoneme', (phoneme) => {
+    console.log('[Port] speakPhoneme received:', phoneme);
     speakPhonemeWithEspeak(phoneme);
   });
 
   safeSubscribe('stopSpeaking', () => {
+    console.log('[Port] stopSpeaking received');
     stopCurrentSpeech();
   });
 }
@@ -1028,14 +1030,31 @@ let synthesisInProgress = false;
 let synthesisTimeoutId = null;
 
 // Constants for eSpeak synthesis
+// Note: Event types are strings because the worker converts numeric types to strings
+// via eventTypes array: ["list_terminated","word","sentence","mark","play","end","msg_terminated","phoneme","samplerate"]
 const ESPEAK_EVENT_END = 'end';
 const ESPEAK_EVENT_MSG_TERMINATED = 'msg_terminated';
 const SYNTHESIS_TIMEOUT_MS = 2000;
 
+// Consonant phonemes that need a vowel (schwa) appended for clearer articulation
+// This is a module-level constant to avoid recreating the array on each function call
+const CONSONANT_PHONEMES = new Set([
+  'p', 'b', 't', 'd', 'k', 'g', 'q', 'ʔ',  // plosives
+  'm', 'n', 'ŋ', 'ɲ', 'ɴ',                   // nasals
+  'r', 'ʀ', 'ɾ', 'ʙ',                        // trills/taps
+  'f', 'v', 's', 'z', 'ʃ', 'ʒ', 'θ', 'ð', 'x', 'ɣ', 'h', 'ç', 'χ', 'ħ', 'ʕ', 'ɬ', // fricatives
+  'l', 'ʎ', 'ɭ',                             // laterals
+  'w', 'j', 'ɥ', 'ʋ', 'ɹ',                   // approximants
+  'c', 'ɟ', 'ʈ', 'ɖ', 'ɳ', 'ɻ'               // other consonants
+]);
+
 // Initialize eSpeak TTS
 function initEspeak() {
   return new Promise((resolve, reject) => {
+    console.log('[eSpeak] initEspeak called, ready:', espeakReady, 'instance:', !!espeakInstance);
+    
     if (espeakReady && espeakInstance) {
+      console.log('[eSpeak] Already initialized, reusing instance');
       resolve(espeakInstance);
       return;
     }
@@ -1043,33 +1062,56 @@ function initEspeak() {
     try {
       // Check if eSpeakNG is available
       if (typeof eSpeakNG === 'undefined') {
-        console.warn('eSpeakNG not loaded - TTS will be unavailable');
+        console.error('[eSpeak] eSpeakNG constructor not found - check if espeakng.min.js is loaded');
         reject(new Error('eSpeakNG not loaded'));
         return;
       }
       
-      // Create AudioContext lazily (deferred until playAudioSamples)
-      // This is called from user gesture context (click), so it's allowed
-      // But we don't need to create it here - playAudioSamples will handle it
+      console.log('[eSpeak] eSpeakNG constructor found:', typeof eSpeakNG);
       
       // Determine worker path based on current page location
       // This handles deployment in subdirectories or different base URLs
       const basePath = window.location.pathname.replace(/\/[^\/]*$/, '');
       const workerPath = basePath + '/public/espeak-ng/espeakng.worker.js';
       
+      console.log('[eSpeak] Worker path:', workerPath);
+      console.log('[eSpeak] Base path:', basePath);
+      console.log('[eSpeak] Creating new eSpeakNG instance...');
+      
       espeakInstance = new eSpeakNG(workerPath, function() {
         espeakReady = true;
-        console.log('eSpeak-ng TTS initialized');
+        console.log('[eSpeak] Worker ready callback fired');
+        console.log('[eSpeak] eSpeak-ng TTS initialized successfully');
+        
+        // List available voices for debugging
+        console.log('[eSpeak] Listing available voices...');
+        espeakInstance.list_voices(function(voices) {
+          console.log('[eSpeak] Available voices:', voices.length, 'voices');
+          if (voices.length > 0) {
+            console.log('[eSpeak] First voice:', voices[0]);
+            console.log('[eSpeak] All voice names:', voices.map(v => v.name).join(', '));
+          } else {
+            console.warn('[eSpeak] WARNING: No voices available - synthesis will likely fail');
+          }
+        });
         
         // Set voice rate to ~30 wpm for clearer individual phoneme pronunciation
         // This slower rate helps reduce distortion when playing short phoneme clips
+        console.log('[eSpeak] Setting rate to 30 and pitch to 50');
         espeakInstance.set_rate(30);
         espeakInstance.set_pitch(50);
         
+        // Try setting a default voice
+        console.log('[eSpeak] Setting default voice to "en"...');
+        espeakInstance.set_voice('en');
+        
         resolve(espeakInstance);
       });
+      
+      console.log('[eSpeak] eSpeakNG instance created, waiting for ready callback...');
     } catch (error) {
-      console.error('Failed to initialize eSpeak:', error);
+      console.error('[eSpeak] Failed to initialize eSpeak:', error);
+      console.error('[eSpeak] Error stack:', error.stack);
       reject(error);
     }
   });
@@ -1079,55 +1121,139 @@ function initEspeak() {
 // The eSpeak worker returns stereo interleaved data that needs to be
 // converted to mono for playback
 async function playAudioSamples(samples) {
-  if (!audioContext) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  }
+  console.log('[eSpeak Audio] playAudioSamples called');
+  console.log('[eSpeak Audio] Samples type:', typeof samples, 'Constructor:', samples?.constructor?.name);
+  console.log('[eSpeak Audio] Samples byteLength:', samples?.byteLength);
   
-  // Resume AudioContext if suspended (required by browser autoplay policy)
-  // This must be called in response to a user gesture (click/tap)
-  if (audioContext.state === 'suspended') {
-    try {
-      await audioContext.resume();
-    } catch (e) {
-      console.warn('Failed to resume AudioContext:', e);
-      return;
-    }
-  }
-  
-  // eSpeak worker returns an ArrayBuffer from a Float32Array that's already
-  // been converted from Int16 and interleaved for stereo (each sample duplicated).
-  // The data format is: [L0, R0, L1, R1, ...] where L=R for each sample.
-  const float32Samples = new Float32Array(samples);
-  
-  if (float32Samples.length === 0) {
+  // Validate samples input
+  if (!samples) {
+    console.error('[eSpeak Audio] No samples provided');
     return;
   }
   
-  // The worker doubles the sample count for stereo interleaving,
-  // so the actual mono sample count is half the array length.
-  // Use floor to handle any edge case of odd-length data.
-  const monoSampleCount = Math.floor(float32Samples.length / 2);
-  
-  // Create a mono audio buffer and extract only the left channel samples
-  const buffer = audioContext.createBuffer(1, monoSampleCount, 22050);
-  const channelData = buffer.getChannelData(0);
-  
-  // Extract mono samples from interleaved stereo data (take every other sample)
-  for (let i = 0; i < monoSampleCount; i++) {
-    channelData[i] = float32Samples[i * 2];
+  if (samples.byteLength === 0) {
+    console.warn('[eSpeak Audio] Empty samples buffer (byteLength === 0)');
+    return;
   }
   
-  // Create source and play
-  const source = audioContext.createBufferSource();
-  source.buffer = buffer;
-  source.connect(audioContext.destination);
-  source.start();
+  try {
+    // Create AudioContext if not exists
+    if (!audioContext) {
+      console.log('[eSpeak Audio] Creating new AudioContext...');
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) {
+        console.error('[eSpeak Audio] AudioContext not supported in this browser');
+        return;
+      }
+      audioContext = new AudioContextClass();
+      console.log('[eSpeak Audio] AudioContext created, state:', audioContext.state);
+    } else {
+      console.log('[eSpeak Audio] Reusing existing AudioContext, state:', audioContext.state);
+    }
+    
+    // Handle AudioContext state
+    if (audioContext.state === 'closed') {
+      console.log('[eSpeak Audio] AudioContext is closed, creating new one...');
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      audioContext = new AudioContextClass();
+      console.log('[eSpeak Audio] New AudioContext created, state:', audioContext.state);
+    }
+    
+    // Resume AudioContext if suspended (required by browser autoplay policy)
+    // This must be called in response to a user gesture (click/tap)
+    if (audioContext.state === 'suspended') {
+      console.log('[eSpeak Audio] AudioContext suspended, attempting to resume...');
+      try {
+        await audioContext.resume();
+        console.log('[eSpeak Audio] AudioContext resumed successfully, new state:', audioContext.state);
+      } catch (e) {
+        console.error('[eSpeak Audio] Failed to resume AudioContext:', e);
+        return;
+      }
+    }
+    
+    // Debug: Check the raw bytes first
+    const rawBytes = new Uint8Array(samples);
+    const nonZeroBytes = rawBytes.filter(b => b !== 0).length;
+    console.log('[eSpeak Audio] Raw bytes analysis: total=' + rawBytes.length + ', non-zero=' + nonZeroBytes);
+    if (rawBytes.length > 0) {
+      console.log('[eSpeak Audio] First 20 raw bytes:', Array.from(rawBytes.slice(0, 20)));
+    }
+    
+    // eSpeak worker returns an ArrayBuffer from a Float32Array that's already
+    // been converted from Int16 and interleaved for stereo (each sample duplicated).
+    // The data format is: [L0, R0, L1, R1, ...] where L=R for each sample.
+    const float32Samples = new Float32Array(samples);
+    
+    console.log('[eSpeak Audio] Float32 samples length:', float32Samples.length);
+    
+    if (float32Samples.length === 0) {
+      console.warn('[eSpeak Audio] Empty Float32Array after conversion');
+      return;
+    }
+    
+    // Log first few samples for debugging
+    if (float32Samples.length > 0) {
+      const samplePreview = Array.from(float32Samples.slice(0, 10)).map(v => v.toFixed(4));
+      console.log('[eSpeak Audio] First 10 samples:', samplePreview);
+      
+      // Check if all samples are zero (silence)
+      const hasNonZero = float32Samples.some(v => Math.abs(v) > 0.0001);
+      if (!hasNonZero) {
+        console.warn('[eSpeak Audio] WARNING: All samples appear to be zero/silence');
+      }
+    }
+    
+    // The worker doubles the sample count for stereo interleaving,
+    // so the actual mono sample count is half the array length.
+    // Use floor to handle any edge case of odd-length data.
+    const monoSampleCount = Math.floor(float32Samples.length / 2);
+    
+    console.log('[eSpeak Audio] Creating audio buffer with', monoSampleCount, 'mono samples at 22050 Hz');
+    
+    if (monoSampleCount === 0) {
+      console.warn('[eSpeak Audio] No mono samples to play');
+      return;
+    }
+    
+    // Create a mono audio buffer and extract only the left channel samples
+    const buffer = audioContext.createBuffer(1, monoSampleCount, 22050);
+    const channelData = buffer.getChannelData(0);
+    
+    // Extract mono samples from interleaved stereo data (take every other sample)
+    for (let i = 0; i < monoSampleCount; i++) {
+      channelData[i] = float32Samples[i * 2];
+    }
+    
+    // Log channel data stats
+    let minVal = Infinity, maxVal = -Infinity;
+    for (let i = 0; i < channelData.length; i++) {
+      if (channelData[i] < minVal) minVal = channelData[i];
+      if (channelData[i] > maxVal) maxVal = channelData[i];
+    }
+    console.log('[eSpeak Audio] Channel data range: min=', minVal.toFixed(4), 'max=', maxVal.toFixed(4));
+    
+    // Create source and play
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioContext.destination);
+    
+    console.log('[eSpeak Audio] Starting audio playback...');
+    source.start();
+    console.log('[eSpeak Audio] Audio playback started successfully');
+    
+  } catch (error) {
+    console.error('[eSpeak Audio] Error during audio playback:', error);
+    console.error('[eSpeak Audio] Error stack:', error.stack);
+  }
 }
 
 // Helper function to clear synthesis state
 function clearSynthesisState() {
+  console.log('[eSpeak] clearSynthesisState called, synthesisInProgress was:', synthesisInProgress);
   synthesisInProgress = false;
   if (synthesisTimeoutId !== null) {
+    console.log('[eSpeak] Clearing timeout');
     clearTimeout(synthesisTimeoutId);
     synthesisTimeoutId = null;
   }
@@ -1135,36 +1261,61 @@ function clearSynthesisState() {
 
 // Speak a phoneme using eSpeak
 function speakPhonemeWithEspeak(ipaPhoneme) {
+  console.log('[eSpeak] speakPhonemeWithEspeak called with phoneme:', ipaPhoneme);
+  
   // If synthesis is already in progress, ignore the request
   // This prevents overlapping sounds from multiple rapid clicks
   if (synthesisInProgress) {
+    console.log('[eSpeak] Synthesis already in progress, ignoring request');
     return;
   }
   
+  console.log('[eSpeak] Starting synthesis process...');
+  
   initEspeak().then(espeak => {
-    // Convert IPA to eSpeak phoneme format
-    const espeakPhoneme = ipaToEspeak(ipaPhoneme);
+    // Build input for eSpeak
+    // The [[...]] phoneme notation doesn't seem to work with this eSpeak-ng build.
+    // Instead, we pass the IPA character as text, optionally with a vowel
+    // to help articulate consonants.
     
-    // Use [[...]] notation for phoneme input
-    const phonemeInput = `[[${espeakPhoneme}]]`;
+    // Try just the character as text - eSpeak will try to pronounce it
+    // This works because eSpeak interprets single letters as sounds
+    let synthInput = ipaPhoneme;
     
-    console.log(`Speaking phoneme: ${ipaPhoneme} -> ${espeakPhoneme}`);
+    // For some sounds, add a vowel to make them pronounceable
+    // Consonants often need a vowel to be articulated clearly
+    if (isConsonantLike(ipaPhoneme)) {
+      // Add schwa after consonant: "p" -> "pə"  
+      synthInput = ipaPhoneme + 'ə';
+    }
+    
+    console.log('[eSpeak] Speaking phoneme:', ipaPhoneme);
+    console.log('[eSpeak] Synth input:', synthInput);
     
     synthesisInProgress = true;
     
     // Track whether we've already played audio to prevent duplicates
     let hasPlayedAudio = false;
     
-    espeak.synthesize(phonemeInput, function(samples, events) {
-      // Only process the first callback with audio data
-      // The eSpeak callback may fire multiple times, but we only want to
-      // play the audio once to prevent distorted/doubled sounds
-      if (!hasPlayedAudio && samples && samples.byteLength > 0) {
-        hasPlayedAudio = true;
-        playAudioSamples(samples);
+    espeak.synthesize(synthInput, function(samples, events) {
+      console.log('[eSpeak Callback] Received callback');
+      console.log('[eSpeak Callback] samples byteLength:', samples?.byteLength);
+      
+      if (samples && samples.byteLength > 0) {
+        const rawBytes = new Uint8Array(samples);
+        const nonZeroCount = rawBytes.filter(b => b !== 0).length;
+        console.log('[eSpeak Audio] Raw bytes: total=' + rawBytes.length + ', non-zero=' + nonZeroCount);
+        
+        if (!hasPlayedAudio && nonZeroCount > 0) {
+          console.log('[eSpeak Callback] Playing audio...');
+          hasPlayedAudio = true;
+          playAudioSamples(samples);
+        } else if (nonZeroCount === 0) {
+          console.warn('[eSpeak Callback] WARNING: Received all-zero samples');
+        }
       }
       
-      // Check if synthesis is complete by looking for 'end' event
+      // Check if synthesis is complete
       const hasEndEvent = events && events.some(e => 
         e.type === ESPEAK_EVENT_END || e.type === ESPEAK_EVENT_MSG_TERMINATED
       );
@@ -1173,25 +1324,36 @@ function speakPhonemeWithEspeak(ipaPhoneme) {
         clearSynthesisState();
       }
       
-      // Return false to stop receiving more callbacks - this prevents
-      // duplicate audio chunks from being generated
       return false;
     });
     
-    // Set a timeout to reset the synthesis flag in case the end event
-    // doesn't fire (fallback safety mechanism)
+    // Set a timeout to reset the synthesis flag
     synthesisTimeoutId = setTimeout(() => {
+      console.log('[eSpeak] Synthesis timeout reached, clearing state');
       clearSynthesisState();
     }, SYNTHESIS_TIMEOUT_MS);
   }).catch(error => {
     clearSynthesisState();
-    console.warn('eSpeak TTS not available:', error);
+    console.error('[eSpeak] eSpeak TTS not available:', error);
+    console.error('[eSpeak] Error stack:', error.stack);
   });
+}
+
+// Helper function to check if a phoneme is consonant-like
+// (needs a vowel to be articulated clearly)
+function isConsonantLike(phoneme) {
+  // Check if the first character is a consonant
+  // This handles simple phonemes like 'p' and complex ones like 'pʰ'
+  if (phoneme.length === 0) return false;
+  
+  const firstChar = phoneme.charAt(0);
+  return CONSONANT_PHONEMES.has(firstChar);
 }
 
 // Stop any current speech (note: eSpeak.js doesn't have a stop method, 
 // so we just don't do anything)
 function stopCurrentSpeech() {
+  console.log('[eSpeak] stopCurrentSpeech called');
   // eSpeak.js synthesis is fire-and-forget, can't be stopped mid-way
   // This is a no-op but included for API completeness
 }
