@@ -1077,18 +1077,28 @@ function playAudioSamples(samples) {
     audioContext.resume();
   }
   
-  // eSpeak returns an ArrayBuffer, convert to Int16Array first
-  const int16Samples = new Int16Array(samples);
+  // eSpeak worker returns an ArrayBuffer from a Float32Array that's already
+  // been converted from Int16 and interleaved for stereo (each sample duplicated).
+  // The data format is: [L0, R0, L1, R1, ...] where L=R for each sample.
+  const float32Samples = new Float32Array(samples);
   
-  // Convert samples to Float32Array
-  const float32Samples = new Float32Array(int16Samples.length);
-  for (let i = 0; i < int16Samples.length; i++) {
-    float32Samples[i] = int16Samples[i] / 32768.0;  // Convert from Int16 to Float32
+  if (float32Samples.length === 0) {
+    return;
   }
   
-  // Create audio buffer
-  const buffer = audioContext.createBuffer(1, float32Samples.length, 22050);
-  buffer.getChannelData(0).set(float32Samples);
+  // The worker doubles the sample count for stereo interleaving,
+  // so the actual mono sample count is half the array length.
+  // Use floor to handle any edge case of odd-length data.
+  const monoSampleCount = Math.floor(float32Samples.length / 2);
+  
+  // Create a mono audio buffer and extract only the left channel samples
+  const buffer = audioContext.createBuffer(1, monoSampleCount, 22050);
+  const channelData = buffer.getChannelData(0);
+  
+  // Extract mono samples from interleaved stereo data (take every other sample)
+  for (let i = 0; i < monoSampleCount; i++) {
+    channelData[i] = float32Samples[i * 2];
+  }
   
   // Create source and play
   const source = audioContext.createBufferSource();
