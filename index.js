@@ -1048,11 +1048,9 @@ function initEspeak() {
         return;
       }
       
-      // Initialize audio context eagerly - skip suspend/resume checks
-      // as they don't work reliably with the eSpeak worker
-      if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      }
+      // Create AudioContext lazily (deferred until playAudioSamples)
+      // This is called from user gesture context (click), so it's allowed
+      // But we don't need to create it here - playAudioSamples will handle it
       
       // Determine worker path based on current page location
       // This handles deployment in subdirectories or different base URLs
@@ -1063,8 +1061,9 @@ function initEspeak() {
         espeakReady = true;
         console.log('eSpeak-ng TTS initialized');
         
-        // Set default voice rate and pitch for clearer pronunciation
-        espeakInstance.set_rate(130);  // Slower for individual phonemes
+        // Set voice rate to ~30 wpm for clearer individual phoneme pronunciation
+        // This slower rate helps reduce distortion when playing short phoneme clips
+        espeakInstance.set_rate(30);
         espeakInstance.set_pitch(50);
         
         resolve(espeakInstance);
@@ -1079,13 +1078,21 @@ function initEspeak() {
 // Play audio samples from eSpeak
 // The eSpeak worker returns stereo interleaved data that needs to be
 // converted to mono for playback
-function playAudioSamples(samples) {
+async function playAudioSamples(samples) {
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
   
-  // Skip the suspend/resume check - it doesn't work reliably with the
-  // eSpeak worker and can cause audio issues
+  // Resume AudioContext if suspended (required by browser autoplay policy)
+  // This must be called in response to a user gesture (click/tap)
+  if (audioContext.state === 'suspended') {
+    try {
+      await audioContext.resume();
+    } catch (e) {
+      console.warn('Failed to resume AudioContext:', e);
+      return;
+    }
+  }
   
   // eSpeak worker returns an ArrayBuffer from a Float32Array that's already
   // been converted from Int16 and interleaved for stereo (each sample duplicated).
