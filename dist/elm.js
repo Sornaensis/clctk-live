@@ -27180,6 +27180,9 @@ var $author$project$Msg$ConfirmDeleteWord = function (a) {
 var $author$project$Msg$EditWord = function (a) {
 	return {$: 26, a: a};
 };
+var $author$project$Msg$SpeakPhoneme = function (a) {
+	return {$: 277, a: a};
+};
 var $author$project$Msg$ToggleWordSelection = function (a) {
 	return {$: 105, a: a};
 };
@@ -27422,6 +27425,7 @@ var $author$project$ViewLexicon$viewSemanticLinks = function (links) {
 };
 var $author$project$ViewLexicon$viewLexeme = F3(
 	function (model, uuid, lexeme) {
+		var speechForm = $author$project$Utilities$removeSyllableSeparators(lexeme.bM);
 		return A2(
 			$elm$html$Html$li,
 			_List_fromArray(
@@ -27482,11 +27486,35 @@ var $author$project$ViewLexicon$viewLexeme = F3(
 											$elm$html$Html$div,
 											_List_fromArray(
 												[
-													$elm$html$Html$Attributes$class('word-ipa')
+													$elm$html$Html$Attributes$class('word-ipa'),
+													A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+													A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+													A2($elm$html$Html$Attributes$style, 'gap', '6px')
 												]),
 											_List_fromArray(
 												[
-													$elm$html$Html$text(lexeme.bM)
+													$elm$html$Html$text(lexeme.bM),
+													A2(
+													$elm$html$Html$button,
+													_List_fromArray(
+														[
+															$elm$html$Html$Attributes$class('speak-btn'),
+															$elm$html$Html$Events$onClick(
+															$author$project$Msg$SpeakPhoneme(speechForm)),
+															$elm$html$Html$Attributes$title('Play pronunciation'),
+															A2($elm$html$Html$Attributes$style, 'padding', '2px 6px'),
+															A2($elm$html$Html$Attributes$style, 'font-size', '12px'),
+															A2($elm$html$Html$Attributes$style, 'background', '#e0f2fe'),
+															A2($elm$html$Html$Attributes$style, 'border', '1px solid #0284c7'),
+															A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+															A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+															A2($elm$html$Html$Attributes$style, 'color', '#0369a1'),
+															A2($elm$html$Html$Attributes$style, 'line-height', '1')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('🔊')
+														]))
 												]))
 										])),
 									A2(
@@ -27845,6 +27873,7 @@ var $author$project$ViewLexicon$viewMorphemeModal = function (model) {
 	}
 };
 var $author$project$ViewLexicon$viewReferenceLexeme = function (lexeme) {
+	var speechForm = $author$project$Utilities$removeSyllableSeparators(lexeme.bM);
 	return A2(
 		$elm$html$Html$li,
 		_List_fromArray(
@@ -27875,11 +27904,35 @@ var $author$project$ViewLexicon$viewReferenceLexeme = function (lexeme) {
 								$elm$html$Html$span,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('word-form')
+										$elm$html$Html$Attributes$class('word-form'),
+										A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+										A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+										A2($elm$html$Html$Attributes$style, 'gap', '6px')
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(lexeme.bM)
+										$elm$html$Html$text(lexeme.bM),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('speak-btn'),
+												$elm$html$Html$Events$onClick(
+												$author$project$Msg$SpeakPhoneme(speechForm)),
+												$elm$html$Html$Attributes$title('Play pronunciation'),
+												A2($elm$html$Html$Attributes$style, 'padding', '2px 6px'),
+												A2($elm$html$Html$Attributes$style, 'font-size', '12px'),
+												A2($elm$html$Html$Attributes$style, 'background', '#e0f2fe'),
+												A2($elm$html$Html$Attributes$style, 'border', '1px solid #0284c7'),
+												A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+												A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+												A2($elm$html$Html$Attributes$style, 'color', '#0369a1'),
+												A2($elm$html$Html$Attributes$style, 'line-height', '1')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('🔊')
+											]))
 									])),
 								A2(
 								$elm$html$Html$span,
@@ -35357,12 +35410,8 @@ var $author$project$Msg$AddGeneratedWordToLexicon = function (a) {
 };
 var $author$project$ViewPhonology$viewGeneratedWord = F2(
 	function (phonology, word) {
-		var orthographyForm = A4(
-			$author$project$MorphologyHelpers$applyOrthography,
-			phonology,
-			phonology.c5.cV,
-			phonology.dJ,
-			$author$project$Utilities$removeSyllableSeparators(word));
+		var wordWithoutSeparators = $author$project$Utilities$removeSyllableSeparators(word);
+		var orthographyForm = A4($author$project$MorphologyHelpers$applyOrthography, phonology, phonology.c5.cV, phonology.dJ, wordWithoutSeparators);
 		var ipaForm = word;
 		return A2(
 			$elm$html$Html$div,
@@ -35384,11 +35433,35 @@ var $author$project$ViewPhonology$viewGeneratedWord = F2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('generated-word-ipa')
+									$elm$html$Html$Attributes$class('generated-word-ipa'),
+									A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+									A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+									A2($elm$html$Html$Attributes$style, 'gap', '6px')
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(ipaForm)
+									$elm$html$Html$text(ipaForm),
+									A2(
+									$elm$html$Html$button,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('speak-btn'),
+											$elm$html$Html$Events$onClick(
+											$author$project$Msg$SpeakPhoneme(wordWithoutSeparators)),
+											$elm$html$Html$Attributes$title('Play pronunciation'),
+											A2($elm$html$Html$Attributes$style, 'padding', '2px 6px'),
+											A2($elm$html$Html$Attributes$style, 'font-size', '12px'),
+											A2($elm$html$Html$Attributes$style, 'background', '#e0f2fe'),
+											A2($elm$html$Html$Attributes$style, 'border', '1px solid #0284c7'),
+											A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+											A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+											A2($elm$html$Html$Attributes$style, 'color', '#0369a1'),
+											A2($elm$html$Html$Attributes$style, 'line-height', '1')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('🔊')
+										]))
 								])),
 							A2(
 							$elm$html$Html$div,
