@@ -929,20 +929,21 @@ function initializeAppVersion() {
 // Key change in espeakng_glue.cpp:
 //   espeak_Synth(aText, 0, 0, POS_CHARACTER, 0, espeakCHARS_UTF8 | espeakSSML | espeakPHONEMES, NULL, NULL);
 //
+// CONLANG VOICE: For conlang synthesis, we use the "default" voice to access
+// the broadest possible phoneme set. The [[phoneme]] bracket notation directly
+// accesses eSpeak's base phoneme table, bypassing language-specific restrictions.
+//
 // ============================================
 
-// IPA to eSpeak phoneme mapping
-// 
-// eSpeak-ng phoneme names are based on Kirshenbaum ASCII-IPA with some X-SAMPA influences.
-// This mapping converts IPA symbols to eSpeak phoneme notation.
+// IPA to eSpeak phoneme mapping (Conlang Phoneme Table)
+//
+// Maps IPA symbols to eSpeak-ng's X-SAMPA/Kirshenbaum notation for conlang synthesis.
+// This comprehensive table enables speech synthesis for any constructed language.
 //
 // References:
-// - Kirshenbaum ASCII-IPA: https://github.com/espeak-ng/espeak-ng/blob/master/docs/phonemes/kirshenbaum.md
+// - Kirshenbaum: https://github.com/espeak-ng/espeak-ng/blob/master/docs/phonemes/kirshenbaum.md
 // - X-SAMPA: https://github.com/espeak-ng/espeak-ng/blob/master/docs/phonemes/xsampa.md
 // - eSpeak phonemes: https://github.com/espeak-ng/espeak-ng/blob/master/docs/phonemes.md
-// - English lexical sets: https://github.com/espeak-ng/espeak-ng/blob/master/docs/languages/gmw/en.md
-//
-// The mapping follows: IPA → Kirshenbaum/X-SAMPA → eSpeak phoneme name
 //
 const ipaToEspeakMap = {
   // ============================================
@@ -1583,11 +1584,8 @@ function initEspeak() {
         espeakInstance.set_rate(120);
         espeakInstance.set_pitch(40);
         
-        // Set the voice to British English (en-gb) for clearer, more natural pronunciation
-        // en-gb tends to have crisper phoneme articulation compared to generic 'en'
-        // Using the callback to ensure voice is fully loaded before resolving
-        // Add a timeout fallback in case the callback never fires
-        console.log('[eSpeak] Setting voice to "en-gb"...');
+        // Use "default" voice for conlang synthesis (broadest phoneme coverage)
+        console.log('[eSpeak] Setting default voice for conlang synthesis...');
         let resolved = false;
         
         // Helper to resolve only once
@@ -1604,9 +1602,10 @@ function initEspeak() {
           resolveOnce();
         }, 2000); // 2 second timeout
         
-        espeakInstance.set_voice('en-gb', function() {
+        // Use "default" voice for broadest phoneme coverage
+        espeakInstance.set_voice('default', function() {
           clearTimeout(voiceTimeout);
-          console.log('[eSpeak] Voice "en-gb" set successfully');
+          console.log('[eSpeak] Default voice set successfully');
           resolveOnce();
         });
       });
