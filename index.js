@@ -1045,7 +1045,9 @@ const validIpaCharacters = new Set([
 // This handles multi-character phonemes like "tʃ", "dʒ", "pʲ", etc.
 function parseIpaString(ipaString) {
   const phonemes = [];
-  let remaining = ipaString;
+  // Normalize IPA length marker (ː U+02D0) to ASCII colon (: U+003A)
+  // eSpeak uses ASCII colon for length in phoneme notation
+  let remaining = ipaString.replace(/ː/g, ':');
   
   while (remaining.length > 0) {
     let matched = false;
@@ -1093,13 +1095,33 @@ function isSinglePhoneme(input) {
 // Each phoneme is converted individually and joined
 function ipaWordToEspeak(ipaWord) {
   const phonemes = parseIpaString(ipaWord);
-  const espeakPhonemes = phonemes.map(p => {
+  const espeakPhonemes = [];
+  
+  for (let i = 0; i < phonemes.length; i++) {
+    const p = phonemes[i];
     const mapped = ipaToEspeakMap[p];
+    
+    // Handle standalone colons (length markers)
+    // Skip if the previous phoneme already ends with a colon (long vowel)
+    // Otherwise, pass through the colon as a length modifier
+    if (p === ':' && i > 0) {
+      // Since i > 0, we've processed at least one phoneme before this colon
+      const prevMapped = espeakPhonemes[espeakPhonemes.length - 1];
+      if (prevMapped && prevMapped.endsWith(':')) {
+        // Previous phoneme is already long, skip this redundant colon
+        continue;
+      }
+      // Previous phoneme is not long, so add the colon as a length modifier
+      espeakPhonemes.push(':');
+      continue;
+    }
+    
     if (!mapped && p.length > 0) {
       console.log('[eSpeak] No mapping for phoneme:', p, '- passing through as-is');
     }
-    return mapped || p;
-  });
+    espeakPhonemes.push(mapped || p);
+  }
+  
   return espeakPhonemes.join('');
 }
 
@@ -1184,11 +1206,31 @@ function initEspeak() {
         espeakInstance.set_rate(30);
         espeakInstance.set_pitch(50);
         
-        // Try setting a default voice
+        // Set the default voice to English
+        // Using the callback to ensure voice is fully loaded before resolving
+        // Add a timeout fallback in case the callback never fires
         console.log('[eSpeak] Setting default voice to "en"...');
-        espeakInstance.set_voice('en');
+        let resolved = false;
         
-        resolve(espeakInstance);
+        // Helper to resolve only once
+        const resolveOnce = () => {
+          if (!resolved) {
+            resolved = true;
+            resolve(espeakInstance);
+          }
+        };
+        
+        // Set a timeout to resolve even if voice callback doesn't fire
+        const voiceTimeout = setTimeout(() => {
+          console.warn('[eSpeak] Voice setting callback did not fire within timeout, resolving anyway');
+          resolveOnce();
+        }, 2000); // 2 second timeout
+        
+        espeakInstance.set_voice('en', function() {
+          clearTimeout(voiceTimeout);
+          console.log('[eSpeak] Voice "en" set successfully');
+          resolveOnce();
+        });
       });
       
       console.log('[eSpeak] eSpeakNG instance created, waiting for ready callback...');
