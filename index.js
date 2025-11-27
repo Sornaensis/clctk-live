@@ -937,13 +937,11 @@ function initializeAppVersion() {
 
 // IPA to eSpeak phoneme mapping (Conlang Phoneme Table)
 //
-// Maps IPA symbols to eSpeak-ng's X-SAMPA/Kirshenbaum notation for conlang synthesis.
+// Maps IPA symbols to eSpeak-ng's Kirshenbaum notation for conlang synthesis.
 // This comprehensive table enables speech synthesis for any constructed language.
 //
-// References:
+// Reference:
 // - Kirshenbaum: https://github.com/espeak-ng/espeak-ng/blob/master/docs/phonemes/kirshenbaum.md
-// - X-SAMPA: https://github.com/espeak-ng/espeak-ng/blob/master/docs/phonemes/xsampa.md
-// - eSpeak phonemes: https://github.com/espeak-ng/espeak-ng/blob/master/docs/phonemes.md
 //
 const ipaToEspeakMap = {
   // ============================================
@@ -956,42 +954,42 @@ const ipaToEspeakMap = {
   'b': 'b',
   't': 't',
   'd': 'd',
-  'ʈ': 't`',              // Retroflex t (X-SAMPA: t`, Kirshenbaum: t.)
-  'ɖ': 'd`',              // Retroflex d (X-SAMPA: d`, Kirshenbaum: d.)
+  'ʈ': 't.',              // Retroflex t
+  'ɖ': 'd.',              // Retroflex d
   'c': 'c',               // Voiceless palatal plosive
-  'ɟ': 'J\\',             // Voiced palatal plosive (X-SAMPA: J\, Kirshenbaum: J)
+  'ɟ': 'J',               // Voiced palatal plosive
   'k': 'k',
   'g': 'g',
   'ɡ': 'g',               // IPA g variant (U+0261)
   'q': 'q',               // Voiceless uvular plosive
-  'ɢ': 'G\\',             // Voiced uvular plosive (X-SAMPA: G\, Kirshenbaum: G)
+  'ɢ': 'G',               // Voiced uvular plosive
   'ʔ': '?',               // Glottal stop
   
   // --- Nasals ---
   // Kirshenbaum: m, M, n, n., n^, N, n"
   'm': 'm',               // Bilabial nasal
-  'ɱ': 'F',               // Labiodental nasal (X-SAMPA: F, Kirshenbaum: M)
+  'ɱ': 'M',               // Labiodental nasal
   'n': 'n',               // Alveolar nasal
-  'ɳ': 'n`',              // Retroflex nasal (X-SAMPA: n`, Kirshenbaum: n.)
-  'ɲ': 'J',               // Palatal nasal (X-SAMPA: J, Kirshenbaum: n^)
+  'ɳ': 'n.',              // Retroflex nasal
+  'ɲ': 'n^',              // Palatal nasal
   'ŋ': 'N',               // Velar nasal
-  'ɴ': 'N\\',             // Uvular nasal (X-SAMPA: N\, Kirshenbaum: n")
+  'ɴ': 'n"',              // Uvular nasal
   
   // --- Trills ---
   // Kirshenbaum: r<trl>, B<trl>, R<trl>
-  'ʙ': 'B\\',             // Bilabial trill (X-SAMPA: B\)
+  'ʙ': 'B<trl>',          // Bilabial trill
   'r': 'r',               // Alveolar trill
-  'ʀ': 'R\\',             // Uvular trill (X-SAMPA: R\)
+  'ʀ': 'R<trl>',          // Uvular trill
   
   // --- Taps/Flaps ---
   // Kirshenbaum: *, r.
-  'ⱱ': 'v\\',             // Labiodental flap (X-SAMPA: v\)
-  'ɾ': '4',               // Alveolar tap (X-SAMPA: 4, Kirshenbaum: *)
-  'ɽ': 'r`',              // Retroflex flap (X-SAMPA: r`)
+  'ⱱ': '*',               // Labiodental flap (approximated as tap)
+  'ɾ': '*',               // Alveolar tap
+  'ɽ': 'r.',              // Retroflex flap
   
   // --- Fricatives ---
   // Kirshenbaum: P, B, f, v, T, D, s, z, S, Z, s., z., C, C<vcd>, x, Q, X, g", H, H<vcd>, h, h<?>
-  'ɸ': 'p\\',             // Voiceless bilabial fricative (X-SAMPA: p\, Kirshenbaum: P)
+  'ɸ': 'P',               // Voiceless bilabial fricative
   'β': 'B',               // Voiced bilabial fricative
   'f': 'f',               // Voiceless labiodental fricative
   'v': 'v',               // Voiced labiodental fricative
@@ -1001,48 +999,49 @@ const ipaToEspeakMap = {
   'z': 'z',               // Voiced alveolar fricative
   'ʃ': 'S',               // Voiceless postalveolar fricative
   'ʒ': 'Z',               // Voiced postalveolar fricative
-  'ʂ': 's`',              // Voiceless retroflex fricative (X-SAMPA: s`)
-  'ʐ': 'z`',              // Voiced retroflex fricative (X-SAMPA: z`)
-  'ɕ': 's\\',             // Voiceless alveolo-palatal fricative (X-SAMPA: s\)
-  'ʑ': 'z\\',             // Voiced alveolo-palatal fricative (X-SAMPA: z\)
+  'ʂ': 's.',              // Voiceless retroflex fricative
+  'ʐ': 'z.',              // Voiced retroflex fricative
+  'ɕ': 'S',               // Voiceless alveolo-palatal fricative (approximated as postalveolar)
+  'ʑ': 'Z',               // Voiced alveolo-palatal fricative (approximated as postalveolar)
   'ç': 'C',               // Voiceless palatal fricative
-  'ʝ': 'j\\',             // Voiced palatal fricative (X-SAMPA: j\, Kirshenbaum: C<vcd>)
+  'ʝ': 'C<vcd>',          // Voiced palatal fricative
   'x': 'x',               // Voiceless velar fricative
-  'ɣ': 'G',               // Voiced velar fricative (X-SAMPA: G, Kirshenbaum: Q)
+  'ɣ': 'Q',               // Voiced velar fricative
   'χ': 'X',               // Voiceless uvular fricative
-  'ʁ': 'R',               // Voiced uvular fricative (X-SAMPA: R, Kirshenbaum: g")
-  'ħ': 'X\\',             // Voiceless pharyngeal fricative (X-SAMPA: X\, Kirshenbaum: H)
-  'ʕ': '?\\',             // Voiced pharyngeal fricative (X-SAMPA: ?\, Kirshenbaum: H<vcd>)
+  'ʁ': 'g"',              // Voiced uvular fricative
+  'ħ': 'H',               // Voiceless pharyngeal fricative
+  'ʕ': 'H<vcd>',          // Voiced pharyngeal fricative
   'h': 'h',               // Voiceless glottal fricative
-  'ɦ': 'h\\',             // Voiced glottal fricative (X-SAMPA: h\, Kirshenbaum: h<?>)
+  'ɦ': 'h<?>',            // Voiced glottal fricative
   
   // --- Lateral fricatives ---
   // Kirshenbaum: K, K<vcd>
   'ɬ': 'K',               // Voiceless alveolar lateral fricative
-  'ɮ': 'K\\',             // Voiced alveolar lateral fricative (X-SAMPA: K\)
+  'ɮ': 'K<vcd>',          // Voiced alveolar lateral fricative
   
   // --- Approximants ---
-  // Kirshenbaum: r (for English r), j, w
-  'ʋ': 'v\\',             // Labiodental approximant (X-SAMPA: v\, same as labiodental flap)
-  'ɹ': 'r\\',             // Alveolar approximant (X-SAMPA: r\, English "r")
-  'ɻ': 'r\\`',            // Retroflex approximant (X-SAMPA: r\`)
+  // Kirshenbaum: r<apr>, j, w
+  'ʋ': 'v<apr>',          // Labiodental approximant
+  'ɹ': 'r<apr>',          // Alveolar approximant (English "r")
+  'ɻ': 'r.<apr>',         // Retroflex approximant
   'j': 'j',               // Palatal approximant
-  'ɰ': 'M\\',             // Velar approximant (X-SAMPA: M\)
+  'ɰ': 'Q<apr>',          // Velar approximant (approximated using velar)
+  'ʕ̞': 'H<vcd>',          // Voiced pharyngeal approximant - maps to same as ʕ since eSpeak doesn't distinguish
   
   // --- Lateral approximants ---
   // Kirshenbaum: l, l., l^, L
   'l': 'l',               // Alveolar lateral approximant
-  'ɫ': 'L',               // Velarized alveolar lateral ("dark l") (Kirshenbaum: L)
-  'ɭ': 'l`',              // Retroflex lateral approximant (X-SAMPA: l`)
-  'ʎ': 'L',               // Palatal lateral approximant (X-SAMPA: L, Kirshenbaum: l^)
-  'ʟ': 'L\\',             // Velar lateral approximant (X-SAMPA: L\)
+  'ɫ': 'L',               // Velarized alveolar lateral ("dark l")
+  'ɭ': 'l.',              // Retroflex lateral approximant
+  'ʎ': 'l^',              // Palatal lateral approximant
+  'ʟ': 'L',               // Velar lateral approximant (approximated as dark l)
   
   // --- Other consonants (co-articulated) ---
-  // Kirshenbaum: w (from Other Symbols)
+  // Kirshenbaum: w, w<vls>
   'w': 'w',               // Voiced labial-velar approximant
-  'ʍ': 'W',               // Voiceless labial-velar fricative (X-SAMPA: W)
-  'ɥ': 'H',               // Labial-palatal approximant (X-SAMPA: H)
-  'ɥ̊': 'H',               // Voiceless labial-palatal approximant
+  'ʍ': 'w<vls>',          // Voiceless labial-velar fricative
+  'ɥ': 'j<rnd>',          // Labial-palatal approximant
+  'ɥ̊': 'j<rnd>',          // Voiceless labial-palatal approximant
   
   // --- Affricates ---
   // eSpeak treats affricates as consonant sequences
@@ -1054,14 +1053,14 @@ const ipaToEspeakMap = {
   'd͡z': 'dz',             // With tie bar
   't͡ʃ': 'tS',             // With tie bar
   'd͡ʒ': 'dZ',             // With tie bar
-  'tɕ': 'ts\\',           // Voiceless alveolo-palatal affricate
-  'dʑ': 'dz\\',           // Voiced alveolo-palatal affricate
-  't͡ɕ': 'ts\\',           // With tie bar
-  'd͡ʑ': 'dz\\',           // With tie bar
-  'tʂ': 't`s`',           // Voiceless retroflex affricate
-  'dʐ': 'd`z`',           // Voiced retroflex affricate
-  't͡ʂ': 't`s`',           // With tie bar
-  'd͡ʐ': 'd`z`',           // With tie bar
+  'tɕ': 'tS',             // Voiceless alveolo-palatal affricate (approximated)
+  'dʑ': 'dZ',             // Voiced alveolo-palatal affricate (approximated)
+  't͡ɕ': 'tS',             // With tie bar
+  'd͡ʑ': 'dZ',             // With tie bar
+  'tʂ': 't.s.',           // Voiceless retroflex affricate
+  'dʐ': 'd.z.',           // Voiced retroflex affricate
+  't͡ʂ': 't.s.',           // With tie bar
+  'd͡ʐ': 'd.z.',           // With tie bar
   'pf': 'pf',             // Voiceless labiodental affricate
   'bv': 'bv',             // Voiced labiodental affricate
   
@@ -1074,24 +1073,24 @@ const ipaToEspeakMap = {
   // Using long vowel notation (i:, u:) for clearer pronunciation in eSpeak
   'i': 'i:',              // Close front unrounded
   'y': 'y:',              // Close front rounded
-  'ɨ': '1',               // Close central unrounded (X-SAMPA: 1, Kirshenbaum: i")
-  'ʉ': '}',               // Close central rounded (X-SAMPA: }, Kirshenbaum: u")
-  'ɯ': 'M',               // Close back unrounded (X-SAMPA: M, Kirshenbaum: u-)
+  'ɨ': 'i"',              // Close central unrounded
+  'ʉ': 'u"',              // Close central rounded
+  'ɯ': 'u-',              // Close back unrounded
   'u': 'u:',              // Close back rounded
   
   // --- Near-close vowels ---
   // Kirshenbaum: I, I., U
   'ɪ': 'I',               // Near-close front unrounded (KIT)
-  'ʏ': 'Y',               // Near-close front rounded (X-SAMPA: Y, Kirshenbaum: I.)
+  'ʏ': 'I.',              // Near-close front rounded
   'ʊ': 'U',               // Near-close back rounded (FOOT)
   
   // --- Close-mid vowels ---
   // Kirshenbaum: e, Y, @<umd>, o-, o
   'e': 'e',               // Close-mid front unrounded
-  'ø': '2',               // Close-mid front rounded (X-SAMPA: 2, Kirshenbaum: Y)
-  'ɘ': '@\\',             // Close-mid central unrounded (X-SAMPA: @\, Kirshenbaum: @<umd>)
-  'ɵ': '8',               // Close-mid central rounded (X-SAMPA: 8)
-  'ɤ': '7',               // Close-mid back unrounded (X-SAMPA: 7, Kirshenbaum: o-)
+  'ø': 'Y',               // Close-mid front rounded
+  'ɘ': '@<umd>',          // Close-mid central unrounded
+  'ɵ': '@<umd>',          // Close-mid central rounded (approximated)
+  'ɤ': 'o-',              // Close-mid back unrounded
   'o': 'o',               // Close-mid back rounded
   
   // --- Mid vowels ---
@@ -1101,31 +1100,31 @@ const ipaToEspeakMap = {
   // --- Open-mid vowels ---
   // Kirshenbaum: E, W, V", O", V, O
   'ɛ': 'E',               // Open-mid front unrounded (DRESS)
-  'œ': '9',               // Open-mid front rounded (X-SAMPA: 9, Kirshenbaum: W)
-  'ɜ': '3',               // Open-mid central unrounded (X-SAMPA: 3, Kirshenbaum: V")
-  'ɞ': '3\\',             // Open-mid central rounded (X-SAMPA: 3\, Kirshenbaum: O")
+  'œ': 'W',               // Open-mid front rounded
+  'ɜ': 'V"',              // Open-mid central unrounded
+  'ɞ': 'O"',              // Open-mid central rounded
   'ʌ': 'V',               // Open-mid back unrounded (STRUT)
   'ɔ': 'O',               // Open-mid back rounded (THOUGHT)
   
   // --- Near-open vowels ---
   // Kirshenbaum: &, &"
-  'æ': '{',               // Near-open front unrounded (TRAP) (X-SAMPA: {, Kirshenbaum: &)
-  'ɐ': '6',               // Near-open central (X-SAMPA: 6, Kirshenbaum: &")
+  'æ': '&',               // Near-open front unrounded (TRAP)
+  'ɐ': '&"',              // Near-open central
   
   // --- Open (low) vowels ---
   // Kirshenbaum: a, a., A, A.
   'a': 'a',               // Open front unrounded
-  'ɶ': '&',               // Open front rounded (X-SAMPA: &, Kirshenbaum: a.)
+  'ɶ': 'a.',              // Open front rounded
   'ä': 'a',               // Open central unrounded (centralized a)
   'ɑ': 'A',               // Open back unrounded (PALM)
-  'ɒ': 'Q',               // Open back rounded (LOT in RP) (X-SAMPA: Q, Kirshenbaum: A.)
+  'ɒ': 'A.',              // Open back rounded (LOT in RP)
   
   // --- Rhotic vowels ---
-  // These are common in American English
-  'ɚ': '@`',              // Schwa with r-coloring (LETTER in AmE) (X-SAMPA: @`)
-  'ɝ': '3`',              // Open-mid central unrounded with r-coloring (NURSE in AmE)
-  'ɑ˞': 'A`',             // Open back unrounded with r-coloring
-  'ɔ˞': 'O`',             // Open-mid back rounded with r-coloring
+  // Using Kirshenbaum r-coloring notation
+  'ɚ': '@<r>',            // Schwa with r-coloring (LETTER in AmE)
+  'ɝ': 'V"<r>',           // Open-mid central unrounded with r-coloring (NURSE in AmE)
+  'ɑ˞': 'A<r>',           // Open back unrounded with r-coloring
+  'ɔ˞': 'O<r>',           // Open-mid back rounded with r-coloring
   
   // ============================================
   // DIPHTHONGS
@@ -1158,20 +1157,20 @@ const ipaToEspeakMap = {
   
   // NEAR diphthong
   'ɪə': 'I@',
-  'ɪɚ': 'I@`',            // American English variant
+  'ɪɚ': 'I@<r>',          // American English variant
   
   // SQUARE diphthong
   'eə': 'e@',
   'ɛə': 'E@',
-  'ɛɚ': 'E@`',            // American English variant
+  'ɛɚ': 'E@<r>',          // American English variant
   
   // CURE diphthong
   'ʊə': 'U@',
-  'ʊɚ': 'U@`',            // American English variant
+  'ʊɚ': 'U@<r>',          // American English variant
   
   // Additional diphthongs
   'ʊɪ': 'UI',             // As in some dialects
-  'æɪ': '{I',             // Raised PRICE variant
+  'æɪ': '&I',             // Raised PRICE variant
   'ɑɪ': 'AI',             // As in some dialects
   'ɔʊ': 'OU',             // As in some dialects
   
@@ -1202,39 +1201,38 @@ const ipaToEspeakMap = {
   
   // --- Palatalized consonants ---
   // Kirshenbaum: ; or <;> (feature {pzd})
-  // X-SAMPA: _j suffix, eSpeak uses ' for palatalization
-  'pʲ': "p'", 'bʲ': "b'", 'tʲ': "t'", 'dʲ': "d'",
-  'kʲ': "k'", 'gʲ': "g'",
-  'mʲ': "m'", 'nʲ': "n'", 'ŋʲ': "N'",
-  'fʲ': "f'", 'vʲ': "v'", 'sʲ': "s'", 'zʲ': "z'",
-  'ʃʲ': "S'", 'ʒʲ': "Z'", 'xʲ': "x'", 'ɣʲ': "G'",
-  'hʲ': "h'", 'lʲ': "l'", 'rʲ': "r'", 'ɾʲ': "4'", 'wʲ': "w'",
-  'ɲʲ': "J'", 'jʲ': "j'",
+  'pʲ': 'p<;>', 'bʲ': 'b<;>', 'tʲ': 't<;>', 'dʲ': 'd<;>',
+  'kʲ': 'k<;>', 'gʲ': 'g<;>',
+  'mʲ': 'm<;>', 'nʲ': 'n<;>', 'ŋʲ': 'N<;>',
+  'fʲ': 'f<;>', 'vʲ': 'v<;>', 'sʲ': 's<;>', 'zʲ': 'z<;>',
+  'ʃʲ': 'S<;>', 'ʒʲ': 'Z<;>', 'xʲ': 'x<;>', 'ɣʲ': 'Q<;>',
+  'hʲ': 'h<;>', 'lʲ': 'l<;>', 'rʲ': 'r<;>', 'ɾʲ': '*<;>', 'wʲ': 'w<;>',
+  'ɲʲ': 'n^<;>', 'jʲ': 'j<;>',
   
   // --- Aspirated consonants ---
   // Kirshenbaum: <h> after consonant
-  // X-SAMPA: _h suffix
-  'pʰ': 'p_h', 'tʰ': 't_h', 'kʰ': 'k_h', 'qʰ': 'q_h',
-  'ʈʰ': 't`_h', 'cʰ': 'c_h',
-  'tsʰ': 'ts_h', 'tʃʰ': 'tS_h', 'tɕʰ': 'ts\\_h', 'tʂʰ': 't`s`_h',
-  'bʰ': 'b_h', 'dʰ': 'd_h', 'gʰ': 'g_h',  // Breathy voiced (murmured) stops
+  'pʰ': 'p<h>', 'tʰ': 't<h>', 'kʰ': 'k<h>', 'qʰ': 'q<h>',
+  'ʈʰ': 't.<h>', 'cʰ': 'c<h>',
+  'tsʰ': 'ts<h>', 'tʃʰ': 'tS<h>', 'tɕʰ': 'tS<h>', 'tʂʰ': 't.s.<h>',
+  'bʰ': 'b<h>', 'dʰ': 'd<h>', 'gʰ': 'g<h>',  // Breathy voiced (murmured) stops
   
   // --- Labialized consonants ---
   // Kirshenbaum: <w> after consonant
-  'kʷ': 'k_w', 'gʷ': 'g_w', 'qʷ': 'q_w',
-  'xʷ': 'x_w', 'ɣʷ': 'G_w',
+  'kʷ': 'k<w>', 'gʷ': 'g<w>', 'qʷ': 'q<w>',
+  'xʷ': 'x<w>', 'ɣʷ': 'Q<w>',
   
   // --- Velarized consonants ---
-  // Kirshenbaum: ~ (same as nasalization for vowels)
+  // Kirshenbaum: <G> or ~ for velarization
   'lˠ': 'L',              // Velarized l (same as dark l)
-  'nˠ': 'n_G',            // Velarized n
+  'nˠ': 'n<G>',           // Velarized n
   
   // --- Pharyngealized (emphatic) consonants ---
+  // Kirshenbaum: <phr> for pharyngealized
   // Common in Arabic and other Semitic languages
-  'tˤ': 't_?\\',          // Pharyngealized t
-  'dˤ': 'd_?\\',          // Pharyngealized d
-  'sˤ': 's_?\\',          // Pharyngealized s
-  'ðˤ': 'D_?\\',          // Pharyngealized ð
+  'tˤ': 't<phr>',         // Pharyngealized t
+  'dˤ': 'd<phr>',         // Pharyngealized d
+  'sˤ': 's<phr>',         // Pharyngealized s
+  'ðˤ': 'D<phr>',         // Pharyngealized ð
   
   // --- Nasalized vowels ---
   // Kirshenbaum: ~ after vowel
@@ -1243,80 +1241,82 @@ const ipaToEspeakMap = {
   'ĩ': 'i~',              // Nasalized i
   'õ': 'o~',              // Nasalized o
   'ũ': 'u~',              // Nasalized u
-  'æ̃': '{~',              // Nasalized æ
+  'æ̃': '&~',              // Nasalized æ
   'ɛ̃': 'E~',              // Nasalized ɛ (French "vin")
-  'œ̃': '9~',              // Nasalized œ (French "un")
+  'œ̃': 'W~',              // Nasalized œ (French "un")
   'ɔ̃': 'O~',              // Nasalized ɔ (French "bon")
   'ɑ̃': 'A~',              // Nasalized ɑ (French "an")
   
   // --- Voiceless vowels/sonorants ---
   // Kirshenbaum: <vls> or ring below
-  'n̥': 'n_0',             // Voiceless n
-  'm̥': 'm_0',             // Voiceless m
-  'l̥': 'l_0',             // Voiceless l
-  'r̥': 'r_0',             // Voiceless r
-  'ɹ̥': 'r\\_0',           // Voiceless ɹ
+  'n̥': 'n<vls>',          // Voiceless n
+  'm̥': 'm<vls>',          // Voiceless m
+  'l̥': 'l<vls>',          // Voiceless l
+  'r̥': 'r<vls>',          // Voiceless r
+  'ɹ̥': 'r<apr><vls>',     // Voiceless ɹ
   
   // --- Syllabic consonants ---
-  // Kirshenbaum: . under consonant
-  'n̩': 'n=',              // Syllabic n (as in "button")
-  'm̩': 'm=',              // Syllabic m
-  'l̩': 'l=',              // Syllabic l (as in "bottle")
-  'r̩': 'r=',              // Syllabic r
+  // Kirshenbaum: <syl> feature
+  'n̩': 'n<syl>',          // Syllabic n (as in "button")
+  'm̩': 'm<syl>',          // Syllabic m
+  'l̩': 'l<syl>',          // Syllabic l (as in "bottle")
+  'r̩': 'r<syl>',          // Syllabic r
   
   // --- Dental consonants ---
   // Kirshenbaum: [ after consonant (dental diacritic)
-  't̪': 't_d',             // Dental t
-  'd̪': 'd_d',             // Dental d
-  'n̪': 'n_d',             // Dental n
-  'l̪': 'l_d',             // Dental l
+  't̪': 't[',              // Dental t
+  'd̪': 'd[',              // Dental d
+  'n̪': 'n[',              // Dental n
+  'l̪': 'l[',              // Dental l
   
   // --- Ejective consonants ---
+  // Kirshenbaum: ` after consonant (glottalic egressive)
   // Common in many languages (Caucasian, Mayan, etc.)
-  "p'": 'p_>',            // Ejective p
-  "t'": 't_>',            // Ejective t
-  "k'": 'k_>',            // Ejective k
-  "q'": 'q_>',            // Ejective q
-  "ts'": 'ts_>',          // Ejective ts
-  "tʃ'": 'tS_>',          // Ejective tʃ
-  'pʼ': 'p_>',            // With modifier letter apostrophe
-  'tʼ': 't_>',
-  'kʼ': 'k_>',
-  'qʼ': 'q_>',
-  'tsʼ': 'ts_>',
-  'tʃʼ': 'tS_>',
+  "p'": "p`",             // Ejective p
+  "t'": "t`",             // Ejective t
+  "k'": "k`",             // Ejective k
+  "q'": "q`",             // Ejective q
+  "ts'": "ts`",           // Ejective ts
+  "tʃ'": "tS`",           // Ejective tʃ
+  'pʼ': "p`",             // With modifier letter apostrophe
+  'tʼ': "t`",
+  'kʼ': "k`",
+  'qʼ': "q`",
+  'tsʼ': "ts`",
+  'tʃʼ': "tS`",
   
   // --- Implosive consonants ---
-  // Voiced ingressive stops
-  'ɓ': 'b_<',             // Bilabial implosive
-  'ɗ': 'd_<',             // Alveolar implosive
-  'ʄ': 'J\\_<',           // Palatal implosive
-  'ɠ': 'g_<',             // Velar implosive
-  'ʛ': 'G\\_<',           // Uvular implosive
+  // Kirshenbaum: <imp> feature (glottalic ingressive)
+  'ɓ': 'b<imp>',          // Bilabial implosive
+  'ɗ': 'd<imp>',          // Alveolar implosive
+  'ʄ': 'J<imp>',          // Palatal implosive
+  'ɠ': 'g<imp>',          // Velar implosive
+  'ʛ': 'G<imp>',          // Uvular implosive
   
   // --- Click consonants ---
+  // Kirshenbaum: click notation using ! with place indicator
   // Common in Khoisan and Bantu languages
-  'ʘ': 'O\\',             // Bilabial click
-  'ǀ': '|\\',             // Dental click
-  'ǃ': '!\\',             // Alveolar click
-  'ǂ': '=\\',             // Palatoalveolar click
-  'ǁ': '|\\|\\',          // Alveolar lateral click
+  'ʘ': 'p!',              // Bilabial click
+  'ǀ': 't!',              // Dental click
+  'ǃ': 'k!',              // Alveolar (post-alveolar) click
+  'ǂ': 'c!',              // Palatoalveolar click
+  'ǁ': 'l!',              // Alveolar lateral click
   
   // ============================================
   // ENGLISH-SPECIFIC VOWEL MAPPINGS
   // ============================================
   // These are useful for English TTS (lexical set notation)
-  // Based on eSpeak's English phoneme documentation
+  // All using Kirshenbaum notation
   
-  // Short vowels (using eSpeak English phoneme names)
+  // Short vowels (using Kirshenbaum notation)
   // KIT: ɪ -> I (already mapped)
   // DRESS: e/ɛ -> E (mapped as ɛ)
-  // TRAP: æ -> a (eSpeak English uses 'a' not '{')
-  // LOT: ɒ/ɑ -> 0 (eSpeak specific)
+  // TRAP: æ -> & (already mapped)
+  // LOT: ɒ/ɑ -> A./A (already mapped)
   // STRUT: ʌ -> V (already mapped)
   // FOOT: ʊ -> U (already mapped)
   
-  // Long vowels
+  // Long vowels (Kirshenbaum uses : for length)
   // FLEECE: iː -> i:
   'iː': 'i:',
   // PALM: ɑː -> A:
@@ -1325,18 +1325,18 @@ const ipaToEspeakMap = {
   'ɔː': 'O:',
   // GOOSE: uː -> u:
   'uː': 'u:',
-  // NURSE: ɜː -> 3:
-  'ɜː': '3:',
+  // NURSE: ɜː -> V":
+  'ɜː': 'V":',
   
   // Reduced vowels
   // COMMA: ə -> @ (already mapped)
-  // LETTER (AmE): ɚ -> @` (already mapped)
+  // LETTER (AmE): ɚ -> @<r> (already mapped)
   // happY: i -> i (short high front)
   
   // Additional long vowel variants
   'eː': 'e:',             // Long e
   'oː': 'o:',             // Long o
-  'æː': '{:',             // Long æ (some dialects)
+  'æː': '&:',             // Long æ (some dialects)
   'aː': 'a:',             // Long a
 };
 
@@ -1456,7 +1456,7 @@ function isSinglePhoneme(input) {
   return false;
 }
 
-// Convert an IPA word (multi-phoneme string) to eSpeak X-SAMPA format
+// Convert an IPA word (multi-phoneme string) to eSpeak Kirshenbaum format
 // Each phoneme is converted individually and joined
 function ipaWordToEspeak(ipaWord) {
   const phonemes = parseIpaString(ipaWord);
@@ -1803,7 +1803,7 @@ function clearSynthesisState() {
 
 // Speak a phoneme or word using eSpeak
 // The rebuilt eSpeak library supports [[...]] bracket notation for phoneme input.
-// Phonemes are converted to X-SAMPA format and wrapped in brackets.
+// Phonemes are converted to Kirshenbaum format and wrapped in brackets.
 function speakPhonemeWithEspeak(ipaInput) {
   console.log('[eSpeak] speakPhonemeWithEspeak called with input:', ipaInput);
   
@@ -1826,7 +1826,7 @@ function speakPhonemeWithEspeak(ipaInput) {
     let synthInput;
     
     if (isWord) {
-      // For words: parse into phonemes, convert each to X-SAMPA, join them
+      // For words: parse into phonemes, convert each to Kirshenbaum, join them
       // No schwa is added since vowels are naturally present in the word
       const espeakWord = ipaWordToEspeak(ipaInput);
       // Use bracket notation for phoneme input
@@ -1835,7 +1835,7 @@ function speakPhonemeWithEspeak(ipaInput) {
       console.log('[eSpeak] Parsed phonemes:', parseIpaString(ipaInput));
       console.log('[eSpeak] eSpeak word:', espeakWord);
     } else {
-      // For single phonemes: convert to X-SAMPA
+      // For single phonemes: convert to Kirshenbaum
       // Add schwa after consonants to make them audible
       const espeakPhoneme = ipaToEspeakMap[ipaInput] || ipaInput;
       
