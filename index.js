@@ -1624,9 +1624,9 @@ function initEspeak() {
 const ESPEAK_SAMPLE_RATE = 22050;
 
 // Play audio samples from eSpeak
-// The eSpeak worker returns stereo interleaved Float32Array data.
-// The data format is: [L0, R0, L1, R1, ...] where L=R for each sample.
-// This function accepts either an ArrayBuffer or Float32Array.
+// The eSpeak worker returns Int16 mono audio data which is converted to Float32
+// mono samples by the synthesis callback before being passed to this function.
+// This function accepts Float32Array of mono samples.
 // 
 // IMPORTANT: eSpeak synthesizes audio at 22050 Hz, but browser AudioContexts
 // typically run at 44100 Hz or 48000 Hz. We must resample the audio to match
@@ -1642,24 +1642,18 @@ async function playAudioSamples(samples) {
     return;
   }
   
-  // Handle both ArrayBuffer and Float32Array inputs
-  let float32Samples;
+  // The samples should be Float32Array mono data from the synthesis callback
+  let monoSamples;
   if (samples instanceof Float32Array) {
-    float32Samples = samples;
-    console.log('[eSpeak Audio] Samples length (Float32Array):', float32Samples.length);
-  } else if (samples instanceof ArrayBuffer) {
-    console.log('[eSpeak Audio] Samples byteLength:', samples.byteLength);
-    if (samples.byteLength === 0) {
-      console.warn('[eSpeak Audio] Empty samples buffer (byteLength === 0)');
-      return;
-    }
-    float32Samples = new Float32Array(samples);
+    monoSamples = samples;
+    console.log('[eSpeak Audio] Samples length (Float32Array):', monoSamples.length);
   } else {
-    console.error('[eSpeak Audio] Invalid samples type');
+    const actualType = samples?.constructor?.name || typeof samples;
+    console.error('[eSpeak Audio] Invalid samples type - expected Float32Array, got:', actualType);
     return;
   }
   
-  if (float32Samples.length === 0) {
+  if (monoSamples.length === 0) {
     console.warn('[eSpeak Audio] Empty Float32Array');
     return;
   }
@@ -1700,37 +1694,21 @@ async function playAudioSamples(samples) {
       }
     }
     
-    console.log('[eSpeak Audio] Float32 samples length:', float32Samples.length);
+    console.log('[eSpeak Audio] Mono samples length:', monoSamples.length);
     
     // Log first few samples for debugging
-    if (float32Samples.length > 0) {
-      const samplePreview = Array.from(float32Samples.slice(0, 10)).map(v => v.toFixed(4));
+    if (monoSamples.length > 0) {
+      const samplePreview = Array.from(monoSamples.slice(0, 10)).map(v => v.toFixed(4));
       console.log('[eSpeak Audio] First 10 samples:', samplePreview);
       
       // Check if all samples are zero (silence)
-      const hasNonZero = float32Samples.some(v => Math.abs(v) > 0.0001);
+      const hasNonZero = monoSamples.some(v => Math.abs(v) > 0.0001);
       if (!hasNonZero) {
         console.warn('[eSpeak Audio] WARNING: All samples appear to be zero/silence');
       }
     }
     
-    // The worker doubles the sample count for stereo interleaving,
-    // so the actual mono sample count is half the array length.
-    // Use floor to handle any edge case of odd-length data.
-    const monoSampleCount = Math.floor(float32Samples.length / 2);
-    
-    console.log('[eSpeak Audio] Creating audio buffer with', monoSampleCount, 'mono samples at', ESPEAK_SAMPLE_RATE, 'Hz');
-    
-    if (monoSampleCount === 0) {
-      console.warn('[eSpeak Audio] No mono samples to play');
-      return;
-    }
-    
-    // Extract mono samples from interleaved stereo data (take every other sample)
-    const monoSamples = new Float32Array(monoSampleCount);
-    for (let i = 0; i < monoSampleCount; i++) {
-      monoSamples[i] = float32Samples[i * 2];
-    }
+    console.log('[eSpeak Audio] Creating audio buffer with', monoSamples.length, 'mono samples at', ESPEAK_SAMPLE_RATE, 'Hz');
     
     // Log channel data stats
     let minVal = Infinity, maxVal = -Infinity;
