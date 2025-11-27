@@ -1022,6 +1022,86 @@ function ipaToEspeak(ipa) {
   return ipa;
 }
 
+// Get all IPA phonemes sorted by length (longest first) for greedy matching
+// This ensures multi-character phonemes like "tʃ" are matched before "t"
+// Note: This is computed once at module load since ipaToEspeakMap is constant
+const sortedIpaPhonemes = Object.keys(ipaToEspeakMap).sort((a, b) => b.length - a.length);
+
+// Common IPA characters that might not be in our mapping but are valid phonemes
+// This includes less common symbols and diacritics
+const validIpaCharacters = new Set([
+  // Characters from the mapping
+  ...Object.keys(ipaToEspeakMap).flatMap(k => [...k]),
+  // Additional IPA diacritics and modifiers
+  'ˈ', 'ˌ', ':', 'ː', '̃', '̩', '̥', '̊', '̤', '̰', '͡', '͜',
+  // Long vowel marker
+  'ː',
+  // Common Unicode combining characters for IPA
+  '\u0303', '\u0329', '\u0325', '\u0324', '\u0330'
+]);
+
+// Parse an IPA string into individual phonemes using greedy matching
+// This handles multi-character phonemes like "tʃ", "dʒ", "pʲ", etc.
+function parseIpaString(ipaString) {
+  const phonemes = [];
+  let remaining = ipaString;
+  
+  while (remaining.length > 0) {
+    let matched = false;
+    
+    // Try to match longest phoneme first
+    for (const phoneme of sortedIpaPhonemes) {
+      if (remaining.startsWith(phoneme)) {
+        phonemes.push(phoneme);
+        remaining = remaining.slice(phoneme.length);
+        matched = true;
+        break;
+      }
+    }
+    
+    // If no mapped phoneme found, take one character
+    if (!matched) {
+      const char = remaining.charAt(0);
+      // Log unmapped characters for debugging (only if they look like they should be IPA)
+      if (validIpaCharacters.has(char)) {
+        console.log('[eSpeak] Unmapped IPA character:', char, 'code:', char.charCodeAt(0));
+      }
+      phonemes.push(char);
+      remaining = remaining.slice(1);
+    }
+  }
+  
+  return phonemes;
+}
+
+// Check if a string is a single phoneme (exists in the mapping or is a single IPA character)
+function isSinglePhoneme(input) {
+  // Check if it's directly in our phoneme map
+  if (ipaToEspeakMap[input]) {
+    return true;
+  }
+  // Check if it's a single character that's a valid IPA character
+  if (input.length === 1 && validIpaCharacters.has(input)) {
+    return true;
+  }
+  // Multi-character strings that aren't in the map are likely words
+  return false;
+}
+
+// Convert an IPA word (multi-phoneme string) to eSpeak X-SAMPA format
+// Each phoneme is converted individually and joined
+function ipaWordToEspeak(ipaWord) {
+  const phonemes = parseIpaString(ipaWord);
+  const espeakPhonemes = phonemes.map(p => {
+    const mapped = ipaToEspeakMap[p];
+    if (!mapped && p.length > 0) {
+      console.log('[eSpeak] No mapping for phoneme:', p, '- passing through as-is');
+    }
+    return mapped || p;
+  });
+  return espeakPhonemes.join('');
+}
+
 // eSpeak TTS instance
 let espeakInstance = null;
 let espeakReady = false;
@@ -1260,9 +1340,9 @@ function clearSynthesisState() {
   }
 }
 
-// Speak a phoneme using eSpeak
-function speakPhonemeWithEspeak(ipaPhoneme) {
-  console.log('[eSpeak] speakPhonemeWithEspeak called with phoneme:', ipaPhoneme);
+// Speak a phoneme or word using eSpeak
+function speakPhonemeWithEspeak(ipaInput) {
+  console.log('[eSpeak] speakPhonemeWithEspeak called with input:', ipaInput);
   
   // If synthesis is already in progress, ignore the request
   // This prevents overlapping sounds from multiple rapid clicks
@@ -1274,23 +1354,37 @@ function speakPhonemeWithEspeak(ipaPhoneme) {
   console.log('[eSpeak] Starting synthesis process...');
   
   initEspeak().then(espeak => {
-    // Convert IPA to eSpeak phoneme notation using the mapping
-    const espeakPhoneme = ipaToEspeakMap[ipaPhoneme] || ipaPhoneme;
+    // Determine if this is a single phoneme or a word (multiple phonemes)
+    const isWord = !isSinglePhoneme(ipaInput);
     
     // Build input for eSpeak using phoneme notation [[...]]
     // This tells eSpeak to interpret the input as phonemes, not text
-    // For consonants, we add schwa (@) to make them audible
     let synthInput;
-    if (isConsonantLike(ipaPhoneme)) {
-      // Add schwa after consonant for articulation: "p" -> "[[p@]]"
-      synthInput = '[[' + espeakPhoneme + '@]]';
+    
+    if (isWord) {
+      // For words: parse into phonemes, convert each to X-SAMPA, join them
+      // No schwa is added since vowels are naturally present in the word
+      const espeakWord = ipaWordToEspeak(ipaInput);
+      synthInput = '[[' + espeakWord + ']]';
+      console.log('[eSpeak] Speaking word:', ipaInput);
+      console.log('[eSpeak] Parsed phonemes:', parseIpaString(ipaInput));
+      console.log('[eSpeak] eSpeak word:', espeakWord);
     } else {
-      // For vowels and other sounds, just use the phoneme directly
-      synthInput = '[[' + espeakPhoneme + ']]';
+      // For single phonemes: convert to X-SAMPA
+      // Add schwa after consonants to make them audible
+      const espeakPhoneme = ipaToEspeakMap[ipaInput] || ipaInput;
+      
+      if (isConsonantLike(ipaInput)) {
+        // Add schwa after consonant for articulation: "p" -> "[[p@]]"
+        synthInput = '[[' + espeakPhoneme + '@]]';
+      } else {
+        // For vowels and other sounds, just use the phoneme directly
+        synthInput = '[[' + espeakPhoneme + ']]';
+      }
+      console.log('[eSpeak] Speaking phoneme:', ipaInput);
+      console.log('[eSpeak] eSpeak phoneme:', espeakPhoneme);
     }
     
-    console.log('[eSpeak] Speaking phoneme:', ipaPhoneme);
-    console.log('[eSpeak] eSpeak phoneme:', espeakPhoneme);
     console.log('[eSpeak] Synth input:', synthInput);
     
     synthesisInProgress = true;
