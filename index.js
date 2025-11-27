@@ -1254,10 +1254,18 @@ function initEspeak() {
   });
 }
 
+// eSpeak synthesis sample rate (fixed by eSpeak-ng)
+const ESPEAK_SAMPLE_RATE = 22050;
+
 // Play audio samples from eSpeak
 // The eSpeak worker returns stereo interleaved Float32Array data.
 // The data format is: [L0, R0, L1, R1, ...] where L=R for each sample.
 // This function accepts either an ArrayBuffer or Float32Array.
+// 
+// IMPORTANT: eSpeak synthesizes audio at 22050 Hz, but browser AudioContexts
+// typically run at 44100 Hz or 48000 Hz. We must resample the audio to match
+// the browser's sample rate, otherwise the audio will sound like a "chipmunk"
+// (too fast and high-pitched) due to the sample rate mismatch.
 async function playAudioSamples(samples) {
   console.log('[eSpeak Audio] playAudioSamples called');
   console.log('[eSpeak Audio] Samples type:', typeof samples, 'Constructor:', samples?.constructor?.name);
@@ -1300,9 +1308,9 @@ async function playAudioSamples(samples) {
         return;
       }
       audioContext = new AudioContextClass();
-      console.log('[eSpeak Audio] AudioContext created, state:', audioContext.state);
+      console.log('[eSpeak Audio] AudioContext created, state:', audioContext.state, 'sampleRate:', audioContext.sampleRate);
     } else {
-      console.log('[eSpeak Audio] Reusing existing AudioContext, state:', audioContext.state);
+      console.log('[eSpeak Audio] Reusing existing AudioContext, state:', audioContext.state, 'sampleRate:', audioContext.sampleRate);
     }
     
     // Handle AudioContext state
@@ -1310,7 +1318,7 @@ async function playAudioSamples(samples) {
       console.log('[eSpeak Audio] AudioContext is closed, creating new one...');
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
       audioContext = new AudioContextClass();
-      console.log('[eSpeak Audio] New AudioContext created, state:', audioContext.state);
+      console.log('[eSpeak Audio] New AudioContext created, state:', audioContext.state, 'sampleRate:', audioContext.sampleRate);
     }
     
     // Resume AudioContext if suspended (required by browser autoplay policy)
@@ -1345,42 +1353,97 @@ async function playAudioSamples(samples) {
     // Use floor to handle any edge case of odd-length data.
     const monoSampleCount = Math.floor(float32Samples.length / 2);
     
-    console.log('[eSpeak Audio] Creating audio buffer with', monoSampleCount, 'mono samples at 22050 Hz');
+    console.log('[eSpeak Audio] Creating audio buffer with', monoSampleCount, 'mono samples at', ESPEAK_SAMPLE_RATE, 'Hz');
     
     if (monoSampleCount === 0) {
       console.warn('[eSpeak Audio] No mono samples to play');
       return;
     }
     
-    // Create a mono audio buffer and extract only the left channel samples
-    const buffer = audioContext.createBuffer(1, monoSampleCount, 22050);
-    const channelData = buffer.getChannelData(0);
-    
     // Extract mono samples from interleaved stereo data (take every other sample)
+    const monoSamples = new Float32Array(monoSampleCount);
     for (let i = 0; i < monoSampleCount; i++) {
-      channelData[i] = float32Samples[i * 2];
+      monoSamples[i] = float32Samples[i * 2];
     }
     
     // Log channel data stats
     let minVal = Infinity, maxVal = -Infinity;
-    for (let i = 0; i < channelData.length; i++) {
-      if (channelData[i] < minVal) minVal = channelData[i];
-      if (channelData[i] > maxVal) maxVal = channelData[i];
+    for (let i = 0; i < monoSamples.length; i++) {
+      if (monoSamples[i] < minVal) minVal = monoSamples[i];
+      if (monoSamples[i] > maxVal) maxVal = monoSamples[i];
     }
     console.log('[eSpeak Audio] Channel data range: min=', minVal.toFixed(4), 'max=', maxVal.toFixed(4));
     
-    // Create source and play
+    // Get the target sample rate from the AudioContext
+    const targetSampleRate = audioContext.sampleRate;
+    console.log('[eSpeak Audio] Target sample rate:', targetSampleRate, 'Source sample rate:', ESPEAK_SAMPLE_RATE);
+    
+    // Resample the audio from eSpeak's 22050 Hz to the browser's sample rate
+    // This prevents the "chipmunk" effect caused by sample rate mismatch
+    const resampledBuffer = await resampleAudio(monoSamples, ESPEAK_SAMPLE_RATE, targetSampleRate);
+    
+    // Create source and play the resampled buffer
     const source = audioContext.createBufferSource();
-    source.buffer = buffer;
+    source.buffer = resampledBuffer;
     source.connect(audioContext.destination);
     
-    console.log('[eSpeak Audio] Starting audio playback...');
+    console.log('[eSpeak Audio] Starting audio playback with resampled buffer...');
     source.start();
     console.log('[eSpeak Audio] Audio playback started successfully');
     
   } catch (error) {
     console.error('[eSpeak Audio] Error during audio playback:', error);
     console.error('[eSpeak Audio] Error stack:', error.stack);
+  }
+}
+
+// Resample audio from source sample rate to target sample rate using OfflineAudioContext
+// This ensures proper playback regardless of the browser's native sample rate
+async function resampleAudio(monoSamples, sourceSampleRate, targetSampleRate) {
+  // Validate sample rates to prevent division by zero or unexpected results
+  if (!sourceSampleRate || sourceSampleRate <= 0 || !targetSampleRate || targetSampleRate <= 0) {
+    console.error('[eSpeak Audio] Invalid sample rates:', sourceSampleRate, targetSampleRate);
+    throw new Error('Invalid sample rates for resampling');
+  }
+  
+  // Calculate the duration in seconds and the number of output samples
+  const duration = monoSamples.length / sourceSampleRate;
+  const outputSampleCount = Math.ceil(duration * targetSampleRate);
+  
+  console.log('[eSpeak Audio] Resampling:', monoSamples.length, 'samples from', sourceSampleRate, 'Hz to', targetSampleRate, 'Hz');
+  console.log('[eSpeak Audio] Output sample count:', outputSampleCount, 'Duration:', duration.toFixed(3), 'seconds');
+  
+  // Check for OfflineAudioContext support (may not be available in older browsers)
+  const OfflineAudioContextClass = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  if (!OfflineAudioContextClass) {
+    console.error('[eSpeak Audio] OfflineAudioContext not supported in this browser');
+    throw new Error('OfflineAudioContext not supported');
+  }
+  
+  try {
+    // Create an OfflineAudioContext for resampling
+    // OfflineAudioContext renders audio as fast as possible (not real-time)
+    const offlineCtx = new OfflineAudioContextClass(1, outputSampleCount, targetSampleRate);
+    
+    // Create a buffer at the source sample rate with the original samples
+    const sourceBuffer = offlineCtx.createBuffer(1, monoSamples.length, sourceSampleRate);
+    sourceBuffer.getChannelData(0).set(monoSamples);
+    
+    // Create a buffer source and connect it to the offline context's destination
+    const bufferSource = offlineCtx.createBufferSource();
+    bufferSource.buffer = sourceBuffer;
+    bufferSource.connect(offlineCtx.destination);
+    bufferSource.start(0);
+    
+    // Render the audio - this performs the resampling
+    const renderedBuffer = await offlineCtx.startRendering();
+    
+    console.log('[eSpeak Audio] Resampling complete, output buffer length:', renderedBuffer.length);
+    
+    return renderedBuffer;
+  } catch (error) {
+    console.error('[eSpeak Audio] Error during audio resampling:', error);
+    throw error;
   }
 }
 
