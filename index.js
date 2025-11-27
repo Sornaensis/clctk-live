@@ -1210,16 +1210,18 @@ function initEspeak() {
           }
         });
         
-        // Set voice rate to ~30 wpm for clearer individual phoneme pronunciation
-        // This slower rate helps reduce distortion when playing short phoneme clips
-        console.log('[eSpeak] Setting rate to 30 and pitch to 50');
-        espeakInstance.set_rate(30);
-        espeakInstance.set_pitch(50);
+        // Set voice parameters for clearer phoneme pronunciation
+        // Rate range: 80-450 (default: 175). Using 120 for slower, clearer playback
+        // Pitch range: 0-99 (default: 50). Using 40 for a slightly deeper, more natural tone
+        console.log('[eSpeak] Setting rate to 120 and pitch to 40');
+        espeakInstance.set_rate(120);
+        espeakInstance.set_pitch(40);
         
-        // Set the default voice to English
+        // Set the voice to British English (en-gb) for clearer, more natural pronunciation
+        // en-gb tends to have crisper phoneme articulation compared to generic 'en'
         // Using the callback to ensure voice is fully loaded before resolving
         // Add a timeout fallback in case the callback never fires
-        console.log('[eSpeak] Setting default voice to "en"...');
+        console.log('[eSpeak] Setting voice to "en-gb"...');
         let resolved = false;
         
         // Helper to resolve only once
@@ -1236,9 +1238,9 @@ function initEspeak() {
           resolveOnce();
         }, 2000); // 2 second timeout
         
-        espeakInstance.set_voice('en', function() {
+        espeakInstance.set_voice('en-gb', function() {
           clearTimeout(voiceTimeout);
-          console.log('[eSpeak] Voice "en" set successfully');
+          console.log('[eSpeak] Voice "en-gb" set successfully');
           resolveOnce();
         });
       });
