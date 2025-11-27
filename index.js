@@ -920,6 +920,16 @@ function initializeAppVersion() {
 // ============================================
 // eSpeak-ng TTS Integration
 // ============================================
+//
+// This library has been rebuilt from the echogarden-project/espeak-ng fork
+// with the espeakPHONEMES flag enabled. The [[...]] bracket notation now works
+// for phoneme input.
+//
+// Build source: https://github.com/echogarden-project/espeak-ng (fork branch)
+// Key change in espeakng_glue.cpp:
+//   espeak_Synth(aText, 0, 0, POS_CHARACTER, 0, espeakCHARS_UTF8 | espeakSSML | espeakPHONEMES, NULL, NULL);
+//
+// ============================================
 
 // IPA to eSpeak phoneme mapping
 // eSpeak-ng uses X-SAMPA phoneme notation
@@ -1384,6 +1394,8 @@ function clearSynthesisState() {
 }
 
 // Speak a phoneme or word using eSpeak
+// The rebuilt eSpeak library supports [[...]] bracket notation for phoneme input.
+// Phonemes are converted to X-SAMPA format and wrapped in brackets.
 function speakPhonemeWithEspeak(ipaInput) {
   console.log('[eSpeak] speakPhonemeWithEspeak called with input:', ipaInput);
   
@@ -1401,13 +1413,15 @@ function speakPhonemeWithEspeak(ipaInput) {
     const isWord = !isSinglePhoneme(ipaInput);
     
     // Build input for eSpeak using phoneme notation [[...]]
-    // This tells eSpeak to interpret the input as phonemes, not text
+    // The rebuilt eSpeak library now has espeakPHONEMES flag enabled,
+    // which allows [[...]] bracket notation to be interpreted as phonemes.
     let synthInput;
     
     if (isWord) {
       // For words: parse into phonemes, convert each to X-SAMPA, join them
       // No schwa is added since vowels are naturally present in the word
       const espeakWord = ipaWordToEspeak(ipaInput);
+      // Use bracket notation for phoneme input
       synthInput = '[[' + espeakWord + ']]';
       console.log('[eSpeak] Speaking word:', ipaInput);
       console.log('[eSpeak] Parsed phonemes:', parseIpaString(ipaInput));
@@ -1438,11 +1452,18 @@ function speakPhonemeWithEspeak(ipaInput) {
     
     espeak.synthesize(synthInput, function(samples, events) {
       console.log('[eSpeak Callback] Received callback');
+      console.log('[eSpeak Callback] samples:', samples);
       console.log('[eSpeak Callback] samples byteLength:', samples?.byteLength);
       
       if (samples && samples.byteLength > 0) {
-        // Convert ArrayBuffer to Float32Array and accumulate
-        const float32Chunk = new Float32Array(samples);
+        // The echogarden worker returns Int16 samples as ArrayBuffer
+        // Convert Int16 samples to Float32 normalized to [-1, 1]
+        const int16Samples = new Int16Array(samples);
+        const float32Chunk = new Float32Array(int16Samples.length);
+        for (let i = 0; i < int16Samples.length; i++) {
+          float32Chunk[i] = int16Samples[i] / 32768;
+        }
+        
         // Count non-zero samples efficiently without creating intermediate array
         let nonZeroCount = 0;
         for (let i = 0; i < float32Chunk.length; i++) {
