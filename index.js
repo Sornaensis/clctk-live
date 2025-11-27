@@ -974,9 +974,10 @@ const ipaToEspeakMap = {
   'tɕ': 'ts\\', 'dʑ': 'dz\\',  // Alveolo-palatal affricates
   'tʂ': 't`s`', 'dʐ': 'd`z`',  // Retroflex affricates
   
-  // Close vowels
-  'i': 'i', 'y': 'y', 'ɨ': '1', 'ʉ': '}',  // X-SAMPA: 1 for close central unrounded, } for rounded
-  'ɯ': 'M', 'u': 'u',  // X-SAMPA: M for close back unrounded
+  // Close vowels - use long vowel notation for clearer pronunciation
+  // In eSpeak phoneme mode, i: and u: produce clearer close vowels than i and u alone
+  'i': 'i:', 'y': 'y:', 'ɨ': '1', 'ʉ': '}',  // X-SAMPA: 1 for close central unrounded, } for rounded
+  'ɯ': 'M', 'u': 'u:',  // X-SAMPA: M for close back unrounded
   
   // Near-close vowels
   'ɪ': 'I', 'ʏ': 'Y', 'ʊ': 'U',
