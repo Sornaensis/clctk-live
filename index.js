@@ -1130,7 +1130,7 @@ const ipaToEspeakMap = {
   'ɚ': '3',               // Schwa with r-coloring (LETTER in AmE)
   'ɝ': '3:',              // Open-mid central with r-coloring (NURSE in AmE)
   'ɑ˞': 'A:',             // Open back unrounded with r-coloring → approx
-  'ɔ˞': 'O:'              // Open-mid back rounded with r-coloring → approx
+  'ɔ˞': 'O:',             // Open-mid back rounded with r-coloring → approx
   
   // ============================================
   // DIPHTHONGS
