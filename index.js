@@ -655,6 +655,27 @@ function setupPortSubscriptions() {
     console.log('[Port] stopSpeaking received');
     stopCurrentSpeech();
   });
+
+  // eSpeak voice selection port subscriptions
+  safeSubscribe('setEspeakVoice', (voiceIdentifier) => {
+    console.log('[Port] setEspeakVoice received:', voiceIdentifier);
+    setEspeakVoice(voiceIdentifier);
+  });
+
+  safeSubscribe('requestEspeakVoices', () => {
+    console.log('[Port] requestEspeakVoices received');
+    sendAvailableVoicesToElm();
+  });
+
+  safeSubscribe('autoSelectEspeakVoice', (phonemes) => {
+    console.log('[Port] autoSelectEspeakVoice received with phonemes:', phonemes);
+    const selectedVoice = autoSelectVoice(phonemes);
+    setEspeakVoice(selectedVoice);
+    // Notify Elm of the selected voice
+    if (app.ports.receiveSelectedEspeakVoice) {
+      app.ports.receiveSelectedEspeakVoice.send(selectedVoice);
+    }
+  });
 }
 
 // Save template to IndexedDB
@@ -1953,6 +1974,75 @@ function stopCurrentSpeech() {
   // This is a no-op but included for API completeness
 }
 
+// ============================================
+// eSpeak Voice Selection
+// ============================================
+
+// Current voice selection state
+let currentEspeakVoice = 'default';
+let availableEspeakVoices = [];
+
+// Send the list of available voices to Elm
+function sendAvailableVoicesToElm() {
+  if (!espeakInstance || !app || !app.ports || !app.ports.receiveEspeakVoices) {
+    console.warn('[eSpeak] Cannot send voices to Elm - instance or port not ready');
+    return;
+  }
+  
+  espeakInstance.list_voices(function(voices) {
+    availableEspeakVoices = voices;
+    console.log('[eSpeak] Sending', voices.length, 'voices to Elm');
+    
+    // Map voices to a simpler structure for Elm
+    // Extract language names from the languages array (which contains objects with {name, priority})
+    const voiceList = voices.map(v => ({
+      identifier: v.identifier || v.name,
+      name: v.name,
+      languages: (v.languages || []).map(lang => lang.name || lang)
+    }));
+    
+    if (app.ports.receiveEspeakVoices) {
+      app.ports.receiveEspeakVoices.send(voiceList);
+    }
+  });
+}
+
+// Set the eSpeak voice
+function setEspeakVoice(voiceIdentifier) {
+  if (!espeakInstance) {
+    console.warn('[eSpeak] Cannot set voice - eSpeak not initialized');
+    return;
+  }
+  
+  console.log('[eSpeak] Setting voice to:', voiceIdentifier);
+  currentEspeakVoice = voiceIdentifier;
+  
+  espeakInstance.set_voice(voiceIdentifier, function() {
+    console.log('[eSpeak] Voice set successfully to:', voiceIdentifier);
+  });
+}
+
+// Auto-select the best voice based on the phonemes in the current language
+// This attempts to find a built-in language voice that best matches the phoneme inventory
+function autoSelectVoice(phonemes) {
+  if (!espeakInstance || availableEspeakVoices.length === 0) {
+    console.warn('[eSpeak] Cannot auto-select voice - not initialized or no voices');
+    return 'default';
+  }
+  
+  console.log('[eSpeak] Auto-selecting voice based on phonemes:', phonemes);
+  
+  // NOTE: For now, use 'default' for the broadest phoneme coverage.
+  // Future enhancement: Analyze the phoneme inventory and select a voice that best
+  // matches the language's phonological profile. For example:
+  // - If the language has retroflex consonants, consider Hindi voice
+  // - If it has many front rounded vowels, consider German or French
+  // - If it has clicks, consider Zulu
+  // The 'default' voice provides the most comprehensive phoneme coverage
+  // for conlang work, as it doesn't restrict phonemes to a specific language.
+  return 'default';
+}
+
 // Show loading message while initializing
 const appContainer = document.getElementById('app');
 appContainer.innerHTML = `
@@ -1991,6 +2081,20 @@ openDatabase()
     loadFromIndexedDB();
     loadAllTemplates();
     loadPreferences();
+    
+    // Initialize eSpeak-ng TTS engine eagerly on page load
+    // This pre-loads the audio engine so phoneme playback is instant
+    console.log('[eSpeak] Pre-initializing eSpeak-ng TTS engine on page load...');
+    initEspeak()
+      .then(() => {
+        console.log('[eSpeak] eSpeak-ng TTS engine pre-initialized successfully');
+        // Send the list of available voices to Elm
+        sendAvailableVoicesToElm();
+      })
+      .catch((error) => {
+        console.warn('[eSpeak] eSpeak-ng TTS pre-initialization failed (non-critical):', error);
+        // Non-critical error - TTS will try to initialize again when needed
+      });
   })
   .catch((error) => {
     console.error('Database initialization failed:', error);
