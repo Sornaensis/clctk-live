@@ -5276,7 +5276,7 @@ var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
 			A: $elm$core$Maybe$Nothing,
-			ak: 'languages',
+			ak: 'projects',
 			aJ: 'languages',
 			a1: '',
 			a2: '',
@@ -14620,7 +14620,7 @@ var $author$project$Main$update = F2(
 				var defaultSection = function () {
 					switch (tab) {
 						case 'languages':
-							return 'languages';
+							return 'projects';
 						case 'phonology':
 							return 'ipa-charts';
 						case 'morphology':
@@ -14628,7 +14628,7 @@ var $author$project$Main$update = F2(
 						case 'lexicon':
 							return 'lexicon';
 						default:
-							return 'languages';
+							return 'projects';
 					}
 				}();
 				var newSection = A2(
@@ -14658,6 +14658,8 @@ var $author$project$Main$update = F2(
 				var updatedTabSections = A3($elm$core$Dict$insert, model.aJ, section, model.Y);
 				var sectionCmd = function () {
 					switch (section) {
+						case 'projects':
+							return $author$project$Main$loadAllLanguageProjects(0);
 						case 'languages':
 							return $author$project$Main$loadAllProjects(0);
 						case 'language-families':
@@ -16533,24 +16535,18 @@ var $author$project$Main$update = F2(
 						return $elm$core$Platform$Cmd$none;
 					}
 				}();
-				var activeTab = function (tab) {
-					return (tab === 'projects') ? 'languages' : tab;
-				}(
+				var activeTab = A2(
+					$elm$core$Result$withDefault,
+					model.aJ,
 					A2(
-						$elm$core$Result$withDefault,
-						model.aJ,
-						A2(
-							$elm$json$Json$Decode$decodeValue,
-							A2($elm$json$Json$Decode$field, 'activeTab', $elm$json$Json$Decode$string),
-							value)));
+						$elm$json$Json$Decode$decodeValue,
+						A2($elm$json$Json$Decode$field, 'activeTab', $elm$json$Json$Decode$string),
+						value));
 				var activeSection = function (section) {
-					switch (section) {
-						case 'projects':
-							return 'languages';
-						case 'current-project':
-							return 'languages';
-						default:
-							return section;
+					if (section === 'current-project') {
+						return 'projects';
+					} else {
+						return section;
 					}
 				}(
 					A2(
@@ -16562,6 +16558,8 @@ var $author$project$Main$update = F2(
 							value)));
 				var sectionCmd = function () {
 					switch (activeSection) {
+						case 'projects':
+							return $author$project$Main$loadAllLanguageProjects(0);
 						case 'languages':
 							return $author$project$Main$loadAllProjects(0);
 						case 'language-families':
@@ -26537,7 +26535,7 @@ var $author$project$ViewLanguages$viewLanguagesSection = F2(
 			case 'templates':
 				return $author$project$ViewLanguages$viewTemplatesManagement(model);
 			default:
-				return $author$project$ViewLanguages$viewLanguagesManagement(model);
+				return $author$project$ViewLanguages$viewProjectsManagement(model);
 		}
 	});
 var $author$project$Msg$SwitchSection = function (a) {
