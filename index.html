@@ -29,6 +29,11 @@
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        header:hover {
+            box-shadow: 0 4px 16px rgba(74, 85, 104, 0.35);
         }
         
         h1 {
@@ -47,6 +52,11 @@
             margin-bottom: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .section:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
         }
         
         .section h2 {
@@ -66,6 +76,7 @@
             border: 1px solid #cbd5e0;
             border-radius: 4px;
             margin-bottom: 10px;
+            transition: all 0.2s ease;
         }
         
         input[type="text"].error, textarea.error {
@@ -76,7 +87,8 @@
         input[type="text"]:focus, textarea:focus {
             outline: none;
             border-color: #4299e1;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+            transform: translateY(-1px);
         }
         
         input[type="text"].error:focus, textarea.error:focus {
@@ -93,6 +105,7 @@
             cursor: pointer;
             margin-right: 8px;
             margin-bottom: 8px;
+            transition: all 0.2s ease;
         }
         
         button.plus-btn {
@@ -121,6 +134,8 @@
         
         button:hover {
             background: #3182ce;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
         }
         
         button:hover:disabled {
@@ -133,6 +148,8 @@
         
         button.secondary:hover {
             background: #4a5568;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(74, 85, 104, 0.3);
         }
         
         button.danger {
@@ -141,6 +158,8 @@
         
         button.danger:hover {
             background: #e53e3e;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(245, 101, 101, 0.3);
         }
         
         .error-message {
@@ -185,6 +204,14 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            transition: all 0.2s ease;
+            cursor: default;
+        }
+        
+        .phoneme-tag:hover {
+            background: #b2f5ea;
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(56, 178, 172, 0.25);
         }
         
         .phoneme-tag button {
@@ -208,6 +235,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.2s ease;
+        }
+        
+        .word-item:hover {
+            background: #f7fafc;
+            transform: translateX(4px);
         }
         
         .word-item:last-child {
@@ -292,12 +325,14 @@
             min-width: 100px;
             min-height: 60px;
             position: relative;
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.3s ease-out forwards;
         }
 
         .generated-word:hover {
             border-color: #9f7aea;
-            box-shadow: 0 2px 8px rgba(159, 122, 234, 0.2);
+            box-shadow: 0 6px 16px rgba(159, 122, 234, 0.3);
+            transform: translateY(-4px) scale(1.02);
         }
 
         .generated-word-forms {
@@ -415,6 +450,13 @@
             align-items: center;
             gap: 8px;
             font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .pattern-tag:hover {
+            background: #fed7d7;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(197, 48, 48, 0.2);
         }
         
         .pattern-tag button {
@@ -448,10 +490,13 @@
             font-size: 14px;
             font-weight: 500;
             margin: 0;
+            transition: all 0.2s ease;
         }
         
         .pattern-button:hover {
             background: #6b46c1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(128, 90, 213, 0.35);
         }
         
         .pattern-button-selected {
@@ -777,6 +822,7 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            animation: fadeIn 0.2s ease-out;
         }
 
         .modal-content {
@@ -786,6 +832,7 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             max-height: 80vh;
             overflow-y: auto;
+            animation: scaleIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .phoneme-selector-grid {
@@ -811,7 +858,8 @@
         .phoneme-selector-item:hover {
             border-color: #805ad5;
             background: #f7fafc;
-            transform: translateY(-2px);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(128, 90, 213, 0.2);
         }
 
         .phoneme-selector-item.included {
@@ -845,16 +893,42 @@
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: #805ad5;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-50%);
         }
 
         .tab:hover {
             background: #cbd5e0;
+            transform: translateY(-2px);
+        }
+
+        .tab:hover::after {
+            width: 60%;
         }
 
         .tab.active {
             background: #805ad5;
             color: white;
+            box-shadow: 0 4px 12px rgba(128, 90, 213, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .tab.active::after {
+            width: 80%;
+            background: white;
         }
 
         /* Morphology features */
@@ -864,6 +938,12 @@
             margin-bottom: 15px;
             border-radius: 6px;
             border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .feature-group:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
 
         .feature-header {
@@ -898,6 +978,14 @@
             border: 1px solid #e2e8f0;
             border-radius: 6px;
             margin-bottom: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .morpheme-item:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+            transform: translateX(4px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
         }
 
         .morpheme-content {
@@ -932,6 +1020,12 @@
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .paradigm-card:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .paradigm-header {
@@ -978,8 +1072,12 @@
             border-top: 1px solid #e2e8f0;
         }
 
+        .paradigm-table tr {
+            transition: background 0.15s ease;
+        }
+
         .paradigm-table tr:hover {
-            background: #f7fafc;
+            background: #edf2f7;
         }
 
         .paradigm-form {
@@ -1107,12 +1205,17 @@
             margin-bottom: 10px;
             background-color: white;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        select:hover {
+            border-color: #a0aec0;
         }
 
         select:focus {
             outline: none;
             border-color: #4299e1;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
         }
 
         /* Semantic Links Styles */
@@ -1149,6 +1252,12 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        .tag:hover {
+            background: #b2f5ea;
+            transform: scale(1.05);
         }
 
         .tag-remove {
@@ -1295,18 +1404,43 @@
             font-size: 14px;
             font-weight: 500;
             text-align: left;
-            transition: all 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             margin: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-button::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #805ad5;
+            transform: scaleY(0);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .section-button:hover {
             background: #edf2f7;
             color: #2d3748;
+            padding-left: 20px;
+        }
+
+        .section-button:hover::before {
+            transform: scaleY(0.6);
         }
 
         .section-button.active {
             background: #805ad5;
             color: white;
+            box-shadow: 0 2px 8px rgba(128, 90, 213, 0.3);
+        }
+
+        .section-button.active::before {
+            background: white;
+            transform: scaleY(0.6);
         }
 
         .section-content {
@@ -1349,6 +1483,62 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(128, 90, 213, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(128, 90, 213, 0);
+            }
+        }
+
+        /* Apply animations to content sections */
+        .section-content .section {
+            animation: fadeIn 0.25s ease-out;
         }
 
         .ipa-symbol-item {
